@@ -1,0 +1,51 @@
+<style>
+  #features {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+  }
+  #features table {
+      width: calc(168px * 4 + 24px * 3);
+      table-layout: fixed;
+  }
+  #features th, #features td {
+      width: calc(100% / 8 - 12px);
+  }
+  #features .yes {
+      color: #007f55; /* 2080-G */
+  }
+  #features .no {
+      color: #9c0128; /* 2080-R */
+  }
+  #features .maybe {
+      color: #333333; /* 8000-N */
+  }
+  #features .na {
+      color: #333333; /* 8000-N */
+  }
+  #features tr th:first-child {
+      position: -webkit-sticky;
+      position: sticky;
+      left: 0;
+      z-index: 1;
+  }
+</style>
+<h1>Features</h1>
+<p>This table shows what features are supported for each platform.</p>
+<div id="features">
+  <table>
+    <tr><th></th><th>Windows</th><th>macOS</th><th>Linux</th><th>FreeBSD</th><th>Web</th><th>Android<a href="#footnote_1">*1</a></th><th>iOS<a href="#footnote_1">*1</a></th></tr>
+    <tr><th><div>Graphics</div></th><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+    <tr><th>Window</th><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="na">N/A</td><td class="na">N/A</td><td class="na">N/A</td></tr>
+    <tr><th>Keyboard</th><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="no">No<a href="#footnote_2">*2</a></td></tr>
+    <tr><th>Mouse</th><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="no">No</td><td class="no">No</td></tr>
+    <tr><th>Gamepad</th><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="no">No</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+    <tr><th>Touch</th><td class="no">No<a href="#footnote_3">*3</a></td><td class="no">No<a href="#footnote_3">*3</a></td><td class="no">No<a href="#footnote_3">*3</a></td><td class="no">No<a href="#footnote_3">*3</a></td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+    <tr><th>Audio</th><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+  </table>
+</div>
+<ul>
+  <li><span id="footnote_1">*1</span> It is assumed to use <a href="/en/documents/mobile.html">ebitenmobile command</a> on mobile platforms.</li>
+  <li><span id="footnote_2">*2</span> Planned to be supported in the future (<a href="https://github.com/hajimehoshi/ebiten/issues/1090">Issue #1090</a>)</li>
+  <li><span id="footnote_3">*3</span> <a href="https://github.com/hajimehoshi/ebiten/issues/1013">Issue #1013</a></li>
+</ul>

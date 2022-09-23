@@ -1,0 +1,64 @@
+<h1>Breaking change to 1.12: rendering sub-images</h1>
+<p class="meta">Hajime Hoshi<br><span id="meta-created">2020-06-28</span></p>
+<p>This artcile includes the information in June 2020. There's a possibility the plan will change.</p>
+<h2>TL;DR</h2>
+<p>Ebiten is adding a breaking change to 1.12 (the current master branch). Ebiten will no longer check the source-image region when rendering an image, and unexpected pixels might be rendered in some cases. This rendering result's difference might be seen when all the following conditions are satisfied:</p>
+<ul>
+  <li>A sub-image (an image created by <code>SubImage</code> function) is used</li>
+  <li>The image is rendered with scaling or rotating</li>
+  <li>The adjacent areas's graphics are not continuous</li>
+</ul>
+<p>For example, rendering tiles on texture atlas with scaling or rotating might cause a different result from 1.11. The rendering result might include pixels in its adjacent area. On the other hand, for example, rendering 9-patches should not be problematic since the graphics are continuous.</p>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <p>The next image is an example of a sub-image and the graphics that are not continuous on the right side.</p>
+    <p>If necessary, you'd need to create a texture atlas with paddings for each area.</p>
+  </div>
+  <div class="grid-item-2">
+    <p class="img"><img src="/images/blog/subimage/subimage.png" width="360"></p>
+  </div>
+</div>
+<h2>Background</h2>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <p>Ebiten has a feature called automatic texture atlases. Even if you create many <code>ebiten.Image</code> objects, Ebiten tries to allocate them onto one texture atlas when possible. This is for an efficient rendering by reducing graphics commands sent to the GPU. Additionally, Ebiten users don't have to care about this. That's great!</p>
+  </div>
+  <div class="grid-item-2">
+    <p class="img"><img src="/images/blog/subimage/textureatlas.png" width="300"></p>
+  </div>
+</div>
+<p>When Ebiten rendered a part of a texture atlas, Ebiten did a hack not to expose the pixels in the adjacent areas. Without the hack, such adjacent pixels can be exposed, especially when the image is rendered with rotating or scaling. This is a general issue of graphics programming. As the hack, Ebiten did two things:</p>
+<ul>
+  <li>Shift the texels a little bit.</li>
+  <li>Check the source region in the shader.</li>
+</ul>
+<p>Both were problematic in terms of code maintainability, and the second hack was especially problematic. One reason is performance. This hack requires 'if' branches in the shader programs and degrades the performance. Another thing is that this hack made it hard to define custom shaders, we are now introducing at 1.12. In the custom shaders, we wanted the users to take pixels from an image in an easy way, but we would need a special function for this purpose to perform this hack.</p>
+<h2>Removing the hacks</h2>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <p>We decided to remove these hacks. Instead, all the images are allocated onto the automatic texture atlas with 1px paddings. Even without the check of the source region, the outside pixels are transparent color and then this never violates the adjacent areas.</p>
+  </div>
+  <div class="grid-item-2">
+    <p class="img"><img src="/images/blog/subimage/textureatlas_with_paddings.png" width="300"></p>
+  </div>
+  <div class="grid-item-2">
+    <p>However, Ebiten can treat sub-images, which are created by <code>(*ebiten.Image).SubImage</code> function. They are parts of existing images. They cannot be allocated with paddings independently. There was an idea to allocate all the sub-images as independent images with paddings, but this was not good for performance and memory. If a user called <code>SubImage</code> onto an image many times with 1px-shifted regions, each sub-image would be allocated.</p>
+  </div>
+  <div class="grid-item-2">
+    <p class="img"><img src="/images/blog/subimage/subimage_textureatlas.png" width="456"></p>
+  </div>
+</div>
+<p>Then, we gave up to support such paddings around sub-images. As a result, rendering a sub-image can cause different results compared to 1.11. The adjacent area's pixels can be rendered, especially when the image is rotated or scaled.</p>
+<h2>Example</h2>
+<p>This is an example that causes bleeding edges by a scaled and rotated sub-image. You can see an unexpected green pixel on the right side. This rendering is tested on the latest master branch (<a href="https://github.com/hajimehoshi/ebiten/tree/aee5d6d7084732e4d608ec72e9938e04ceddef5c">aee5d6d7</a>). The result depends on the machine's GPU.</p>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <pre data-codesrc="/go/blog/subimage/example.go"></pre>
+  </div>
+  <div class="grid-item-2">
+    <p class="img"><img src="/images/blog/subimage/example.png" width="320"></p>
+    <p class="img"><img src="/images/blog/subimage/example_enlarged.png" width="276"></p>
+  </div>
+</div>
+<h2>What you should do</h2>
+<p>If you have your own texture atlas, and the parts are rendered with scaling or rotating, and the parts' graphics are not continuous, you need to add paddings for each part.</p>

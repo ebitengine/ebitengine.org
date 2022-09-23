@@ -1,0 +1,28 @@
+<h1>Roadmap in 2020 and later</h1>
+<p class="meta">Hajime Hoshi<br><span id="meta-created">2020-07-25</span></p>
+<p>This is the roadmap of Ebiten in 2020 and later. As this is just a plan, we might change this anytime.</p>
+<h2>Ebiten 1.12 - September, 2020</h2>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <p>The most significant new feature is a shader. This enables users to write custom shaders. To make shaders portable, we are developing a new Go-flavored shader language: Kage (影 - a shade in Japanese).</p>
+    <p>This is an example of a fragment shader in Kage:</p>
+    <pre data-codesrc="/go/blog/roadmap2020/example.go"></pre>
+    <p>This is compatible with Go syntax, and you can do go-fmt!</p>
+    <p>Now we are implementing more bulitin functions and necessary syntax items. Stay tuned.</p>
+    <p>Ebiten is released about one month after a new Go compiler is released. As Go compiler is regularly released in February and August every year, we release Ebiten in March and September every year, hopefully.</p>
+  </div>
+  <div class="grid-item-2">
+    <blockquote class="twitter-tweet"><p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/ebiten?src=hash&amp;ref_src=twsrc%5Etfw">#ebiten</a> shader current progress: lighting! <a href="https://twitter.com/hashtag/golang?src=hash&amp;ref_src=twsrc%5Etfw">#golang</a> <a href="https://t.co/6hXEgmFcaI">https://t.co/6hXEgmFcaI</a> <a href="https://t.co/NV8gJ9ge8S">pic.twitter.com/NV8gJ9ge8S</a></p>&mdash; Hajime Hoshi (星一) (@hajimehoshi) <a href="https://twitter.com/hajimehoshi/status/1284741206744788992?ref_src=twsrc%5Etfw">July 19, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+<h2>Ebiten 2.0 - November, 2020</h2>
+<p>This will be the first update of the major version. We don't add drastic changes. Instead, we plan to add quiet changes to reduce the pain for Ebiten users to migrate as much as possible.</p>
+<ul>
+  <li>Removing already-deprecated features (e.g., <code>Run</code>)</li>
+  <li>Removing 'error' returning values from some functions (e.g., <code>DrawImage</code>)</li>
+  <li>Adding new types to replace integers (e.g., <code>GamepadIDs</code> will return <code>[]GamepadID</code> instead of <code>[]int</code>)</li>
+</ul>
+<h2>Ebiten 2.1 - March, 2021</h2>
+<p>We want to support Nintendo Switch. We have developed <a href="https://github.com/hajimehoshi/go2cpp">go2cpp</a>, a converter from Go to C++, and we plan to use this.</p>
+<h2>Ebiten 2.2 - Steptember, 2021</h2>
+<p>No plan yet. We might support vector graphics or DirectX.</p>

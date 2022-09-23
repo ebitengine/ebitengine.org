@@ -1,0 +1,216 @@
+<h1>Shader</h1>
+<p>As of 1.12.0, Ebitengine has APIs to render custom shaders. This document explains how to use custom shaders.</p>
+<h2>What's a shader?</h2>
+<p>A shader is a program executed on GPU. A custom shader is a shader an Ebitengine user can write. With shaders, you can execute a complex rendering on GPU efficiently.</p>
+<p>In Ebitengine, you can write a 'fragment shader'. A fragment shader is a shader executed on each pixel. Roughly speaking, this is a function to calculate a color for each pixel. This color calculation is executed on GPU in parallel.</p>
+<p>With shaders, you can execute various effects like lighting or blur. For an example, see <code>examples/shader</code>.</p>
+<pre><code>go run -tags=example github.com/hajimehoshi/ebiten/v2/examples/shader@latest</code></pre>
+<p>Ebitengine adopts an original shading language 'Kage'. This has a compatible syntax with Go, but the details are different. Kage has high portability. Ebitengine uses graphics libraries like OpenGL or Metal and this depends on environments, but Kage is compiled on the fly so that this works equally everywhere.</p>
+<h2>Example</h2>
+<pre><code>package main
+
+// Uniform variables.
+var Time float
+var Cursor vec2
+var ScreenSize vec2
+
+// Fragment is the entry point of the fragment shader.
+// Fragment returns the color value for the current position.
+func Fragment(position vec4, texCoord vec2, color vec4) vec4 {
+	// You can define variables with a short variable declaration like Go.
+	lightpos := vec3(Cursor, 50)
+	lightdir := normalize(lightpos - position.xyz)
+	normal := normalize(imageSrc1UnsafeAt(texCoord) - 0.5)
+	ambient := 0.25
+	diffuse := 0.75 * max(0.0, dot(normal.xyz, lightdir))
+
+	// You can treat multiple source images by
+	// imageSrc[N]At or imageSrc[N]UnsafeAt.
+	return imageSrc0UnsafeAt(texCoord) * (ambient + diffuse)
+}</code></pre>
+<p class="img"><video controls autoplay src="/images/documents/shader/lighting.mp4" width="456"></p>
+<h2>Ebitengine API</h2>
+<h3><code>NewShader</code></h3>
+<pre><code>func NewShader(src []byte) (*Shader, error)</code></pre>
+<p><code>NewShader</code> compiles a shader program in the shading language Kage, and returns the result.</p>
+<p>If the compilation fails, <code>NewShader</code> returns an error.</p>
+<h3><code>(*Image).DrawRectShader</code></h3>
+<pre><code>func DrawRectShader(width, height int, shader *Shader, options *DrawRectShaderOptions)</code></pre>
+<p><code>DrawRectShader</code> draws a rectangle with the specified width and height with the specified shader.</p>
+<h3><code>DrawRectShaderOptions</code></h3>
+<pre><code>type DrawRectShaderOptions struct {
+    // GeoM is a geometry matrix to draw.
+    // The default (zero) value is identity, which draws the rectangle at (0, 0).
+    GeoM GeoM
+
+    // CompositeMode is a composite mode to draw.
+    // The default (zero) value is regular alpha blending.
+    CompositeMode CompositeMode
+
+    // Uniforms is a set of uniform variables for the shader.
+    // The keys are the names of the uniform variables.
+    // The values must be float or []float.
+    // If the uniform variable type is an array, a vector or a matrix,
+    // you have to specify linearly flattened values as a slice.
+    // For example, if the uniform variable type is [4]vec4, the number of the slice values will be 16.
+    Uniforms map[string]interface{}
+
+    // Images is a set of the source images.
+    // All the image must be the same size with the rectangle.
+    Images [4]*Image
+}</code></pre>
+<h3>The others</h3>
+<p>For more primitive rendering, there are also <code>(*Image).DrawTrianglesShader</code> and <code>DrawTrianglesShaderOptions</code>.</p>
+<h2>Shading language Kage</h2>
+<h3>Syntax</h3>
+<p>The syntax is basically same as Go. This is completely same in the syntax level. You can do even <code>gofmt</code>.</p>
+<p>Kage doesn't have these Go's features so far.</p>
+<ul>
+  <li>Most types (<code>rune</code>, <code>string</code>, numeric types except for <code>int</code>, <code>interface</code>, slices, pointers, structs, function types, channels)</li>
+  <li>Built-in functions except for <code>len</code> (e.g., <code>new</code>, <code>make</code>, <code>panic</code>)</li>
+  <li>New type definition with <code>type</code></li>
+  <li>Structs</li>
+  <li><code>import</code></li>
+  <li><code>switch</code></li>
+  <li><code>goto</code></li>
+  <li><code>for-range</code></li>
+  <li>Goroutines</li>
+  <li><code>defer</code></li>
+  <li><code>init</code> functions</li>
+  <li>Method definition</li>
+</ul>
+<h3>Entry point</h3>
+<p>Kage can define only a fragment shader. The <code>Fragment</code> function with the below signature is the entrypoint.</p>
+<pre><code>func Fragment(position vec4, texCoord vec2, color vec4) vec4</code></pre>
+<table>
+  <tr><th>Name</th><th>Type</th><th>Description</th></tr>
+  <tr><td><code>position</code></td><td><code>vec4</code><td>The destination position in pixels. The 3rd and 4th components are always 0 and 1.</td></tr>
+  <tr><td><code>texCoord</code></td><td><code>vec2</code><td>The source texture's position in texels.</td></tr>
+  <tr><td><code>color</code></td><td><code>vec4</code><td>Supplemental color information given from vertices. Each component values are in between 0 and 1. This value is meaningful only when <code>DrawTrianglesShader</code> is used.</td></tr>
+  <tr><td>(Returning value)</td><td><code>vec4</code><td>The current position's color. Each component values are in between 0 and 1.</td></tr>
+</table>
+<h3>Built-in types</h3>
+<p>Kage has these built-in types.</p>
+<ul>
+  <li><code>bool</code></li>
+  <li><code>int</code></li>
+  <li><code>float</code></li>
+  <li><code>vec2</code>, <code>vec3</code>, <code>vec4</code> (Vector)</li>
+  <li><code>mat2</code>, <code>mat3</code>, <code>mat4</code> (Matrix)</li>
+</ul>
+<p><code>float</code> is a floating point number. Unlike Go's <code>float32</code> and <code>float64</code>, <code>float</code> doesn't have a guarantee for the precision.</p>
+<p><code>vec2</code>, <code>vec3</code>, <code>vec4</code>, called vectors, are tuples that has 2, 3, and 4 components respectively. Each component is <code>float</code>. Swizzling operation is available on vector values.</p>
+<p><code>mat2</code>, <code>mat3</code>, <code>mat4</code> are 2, 3 and 4 dimensional square matrices. Each component is <code>float</code>.</p>
+<p>Kage also supports arrays. Kage doesn't support structs yet.</p>
+<h3>Initializing functions for built-in types</h3>
+<p>Similar to Go, you can get the type's value by using the type name as a function. Vector types and matrix types are so special that they can take flexible arguments.</p>
+<pre><code>v1 := vec4(0)              // Returns a vec4 whose components are all 0.
+v2 := vec4(1, 2, 3, 4)     // Returns a vec4 whose components are 1, 2, 3 and 4.
+v3 := vec3(5, 6, 7)
+v4 := vec4(1, v3)          // Returns a vec4 whose components are 1, 5, 6 and 7.
+
+m1 := mat4(2)              // Returns a mat4 whose diagonal components are 2 and the others are 0.
+m2 := mat4(v1, v2, v3, v1) // Returns a mat4 whose columns are v1, v2, v3 and v1.</code></pre>
+<h3>Swizzling</h3>
+<p>There is a special operation called Swizzling for vector types. You can read and write multiple components at the same time.</p>
+<pre><code>v1 := vec4(1, 2, 3, 4)
+v2 := v1.xyz           // Get vec3(1, 2, 3) and initialize v2 with this.
+v2.xyz = v2.xxx        // Get vec3(1, 1, 1), and set it to all the components to v2.
+                       // Then, v2 is now (1, 1, 1).</code></pre>
+<p>Each component is represent like below. You can mix them in the same group, but you cannot in different groups. For example, <code>.xxyy</code> and <code>.abgr</code> are available, but <code>.xxgg</code> is invalid.</p>
+<ul>
+  <li><code>x</code>, <code>y</code>, <code>z</code>, <code>w</code></li>
+  <li><code>r</code>, <code>g</code>, <code>b</code>, <code>a</code></li>
+  <li><code>s</code>, <code>t</code>, <code>p</code>, <code>q</code></li>
+</ul>
+<h3>Uniform variables</h3>
+<p>A uniform variable is a global variable whose value is given externally. This value is the same regardless of the position of the pixel.</p>
+<p>In Kage, uniform variables are global variables that start with upper cases (i.e., exported variables).</p>
+<p>You cannot assign a value into a uniform variable in Kage.</p>
+<p>You cannot define other global variables than uniform variables in Kage.</p>
+<h3>Built-in functions (Go)</h3>
+<table>
+  <tr><th>Function</th><th>Description</th></tr>
+  <tr><th><code>cap(x T) int</code></th><td><code>T</code> is an array type. Returns the length of the array. (v2.1.0)</td></tr>
+  <tr><th><code>len(x T) int</code></th><td><code>T</code> is an array type. Returns the length of the array.</td></tr>
+</table>
+<h3>Built-in functions (Control)</h3>
+<table>
+  <tr><th>Function</th><th>Description</th></tr>
+  <tr><th><code>discard()</code></th><td>Stop outputting the current fragment. (v2.4.0)</td></tr>
+</table>
+<h3>Built-in functions (mathematics)</h3>
+<p>Most of the built-in functions are generic. <code>T</code> represents <code>float</code>, <code>vec2</code>, <code>vec3</code> or <code>vec4</code> unless otherwise noted. When the type is a vector, the function is applied for each component.</p>
+<table>
+  <tr><th>Function</th><th>Description</th></tr>
+  <tr><th><code>sin(x T) T</code></th><td>Returns <span class="math">\sin{x}</span></td></tr>
+  <tr><th><code>cos(x T) T</code></th><td>Returns <span class="math">\cos{x}</span></td></tr>
+  <tr><th><code>tan(x T) T</code></th><td>Returns <span class="math">\tan{x}</span></td></tr>
+  <tr><th><code>asin(x T) T</code></th><td>Returns <span class="math">\arcsin{x}</span></td></tr>
+  <tr><th><code>acos(x T) T</code></th><td>Returns <span class="math">\arccos{x}</span></td></tr>
+  <tr><th><code>atan(y_over_x T) T</code></th><td>Returns <span class="math">\arctan(\mathit{y\_over\_x})</span></td></tr>
+  <tr><th><code>atan2(y, x T) T</code></th><td>Returns <span class="math">\arctan(y/x)</span></td></tr>
+  <tr><th><code>pow(x, y T) T</code></th><td>Returns <span class="math">x^y</span></td></tr>
+  <tr><th><code>exp(x T) T</code></th><td>Returns <span class="math">e^{x}</span></td></tr>
+  <tr><th><code>log(x T) T</code></th><td>Returns <span class="math">\log_e{x}</span></td></tr>
+  <tr><th><code>exp2(x T) T</code></th><td>Returns <span class="math">2^{x}</span></td></tr>
+  <tr><th><code>log2(x T) T</code></th><td>Returns <span class="math">\log_2{x}</span></td></tr>
+  <tr><th><code>sqrt(x T) T</code></th><td>Returns <span class="math">\sqrt{x}</span></td></tr>
+  <tr><th><code>inversesqrt(x T) T</code></th><td>Returns <span class="math">1/\sqrt{x}</span></td></tr>
+  <tr><th><code>abs(x T) T</code></th><td>Returns <span class="math">x</span> if <span class="math">x \ge 0</span>, or <span class="math">-x</span> otherwise</td></tr>
+  <tr><th><code>sign(x T) T</code></th><td>Returns <span class="math">1</span> if <span class="math">x \gt 0</span>, <span class="math">0</span> if <span class="math">x = 0</span>, or <span class="math">-1</span> otherwise</td></tr>
+  <tr><th><code>floor(x T) T</code></th><td>Returns a value equal to the nearest integer that is less than or equal to <span class="math">x</span></td></tr>
+  <tr><th><code>ceil(x T) T</code></th><td>Returns a value equal to the nearest integer that is greater than or equal to <span class="math">x</span></td></tr>
+  <tr><th><code>fract(x T) T</code></th><td>Returns <span class="math">x - \mathrm{floor}(x)</span></td></tr>
+  <tr><th><code>mod(x, y T) T</code></th><td>Returns <span class="math">x - y \cdot \mathrm{floor}(x/y)</span></td></tr>
+  <tr><th><code>min(x, y T) T</code></th><td>Returns <span class="math">x</span> if <span class="math">x \lt y</span>, or <span class="math">y</span> otherwise</td></tr>
+  <tr><th><code>max(x, y T) T</code></th><td>Returns <span class="math">y</span> if <span class="math">x \lt y</span>, or <span class="math">x</span> otherwise</td></tr>
+  <tr><th><code>clamp(x, min_value, max_value T) T</code></th><td>Returns <span class="math">\min(\max(x, \mathit{min\_value}), \mathit{max\_value})</span></td></tr>
+  <tr><th><code>mix(x, y, a T) T</code></th><td>Returns <span class="math">x \cdot (1 - a) + y \cdot a</span></td></tr>
+  <tr><th><code>step(edge, x T) T</code></th><td>Returns <span class="math">0</span> if <span class="math">x \lt \mathit{edge}</span>, or <span class="math">1</span> otherwise</td></tr>
+  <tr><th><code>smoothstep(edge0, edge1, x T) T</code></th><td>Returns <span class="math">0</span> if <span class="math">x \le \mathit{edge0}</span>, <span class="math">1</span> if <span class="math">x \ge \mathit{edge1}</span>, or performs smooth Hermite interpolation between <span class="math">0</span> and <span class="math">1</span> otherwise</td></tr>
+  <tr><th><code>length(x T) float</code></th><td>Returns <span class="math">\sqrt{x[0]^2 + x[1]^2 + \cdots}</span></td></tr>
+  <tr><th><code>distance(p0, p1 T) float</code></th><td>Returns <span class="math">\mathrm{length}(p0 - p1)</span></td></tr>
+  <tr><th><code>dot(x, y T) float</code></th><td>Returns <span class="math">x[0] \cdot y[0] + x[1] \cdot y[1] + \cdots</span></td></tr>
+  <tr><th><code>cross(x, y vec3) vec3</code></th><td>Returns <span class="math">x \times y</span> (cross product)</td></tr>
+  <tr><th><code>normalize(x T) T</code></th><td>Returns a vector in the same direction as <span class="math">x</span> but with a length of 1</td></tr>
+  <tr><th><code>faceforward(n, i, nref T) T</code></th><td>Returns <span class="math">n</span> if <span class="math">\mathrm{dot}(\mathit{nref}, i) \lt 0</span>, or <span class="math">-n</span> otherwise</td></tr>
+  <tr><th><code>reflect(i, n T) T</code></th><td>Returns <span class="math">i - 2 \cdot \mathrm{dot}(n, i) \cdot n</span></td></tr>
+  <tr><th><code>refract(i, n T, eta float) T</code></th><td>(v2.4.0)</td></tr>
+  <tr><th><code>transpose(m T) T</code></th><td><code>T</code> is a matrix type. Returns a matrix that is the transpose of <span class="math">x</span></td></tr>
+  <tr><th><code>dfdx(p T) T</code></th><td></td></tr>
+  <tr><th><code>dfdy(p T) T</code></th><td></td></tr>
+  <tr><th><code>fwidth(p T) T</code></th><td></td></tr>
+</table>
+<h3>Built-in functions (images)</h3>
+<table>
+  <tr><th>Function</th><th>Description</th></tr>
+  <tr><th><code>imageSrc<i>N</i>At(pos vec2) vec4</code></th><td>Returns the color value as <code>vec4</code> at the given position <code>pos</code> in texels of the source image <i>N</i>. <i>N</i> is 0 to 3.</td></tr>
+  <tr><th><code>imageSrc<i>N</i>UnsafeAt(pos vec2) vec4</code></th><td>Returns the color value as <code>vec4</code> at the given position <code>pos</code> in texels of the source image <i>N</i>. <i>N</i> is 0 to 3. The difference from the safe version (<code>imageSrc<i>N</i>At</code>) is the returning value when the position is out of the bounds. The safe version returns <code>vec4(0)</code> in this case, while the unsafe version's returning value is undefined. The unsafe version is faster. If you are sure that the position is in the bounds, you can use the unsafe version for performance.</td></tr>
+  <tr><th><code>imageSrcTextureSize() vec2</code></th><td>Returns the source image's texture size in pixels</td></tr>
+  <tr><th><code>imageDstTextureSize() vec2</code></th><td>Returns the destination image's texture size in pixels</td></tr>
+  <tr><th><code>imageSrcRegionOnTexture() (vec2, vec2)</code></th><td>Returns the source image's origin position and the size on the texture in texels</td></tr>
+  <tr><th><code>imageDstRegionOnTexture() (vec2, vec2)</code></th><td>Returns the destination image's origin position and the size on the texture in texels (v2.1.0)</td></tr>
+</table>
+<h3>Textures and images</h3>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <p>Ebitengine's image (<code>ebiten.Image</code>) is actually a part of an internal texture. Then, position calculations in shaders are a little complex.</p>
+    <p>A pixel is a unit for one color dot. On the other hand, texel is a unit covering the whole area with values in between 0 and 1. The meaning of texels depends on a texture, then you cannot mix texels with different textures.</p>
+    <p>To convert pixels and texels each other, you can use these formulas.</p>
+    <p class="math">\begin{aligned}
+(\text{texels}) &= \frac{(\text{pixels})}{(\text{the texture's size in pixels})} \\
+(\text{pixels}) &= (\text{texels}) \cdot (\text{the texture's size in pixels}) \\
+\end{aligned}</p>
+  </div>
+  <div class="grid-item-2">
+    <p class="img"><img src="/images/documents/shader/textureandimage.png" width="456"></p>
+  </div>
+</div>
+<h2>Editor Plugins</h2>
+<p>There are plugins for some editors by volunteers to edit Kage programs.</p>
+<ul>
+  <li><a href="https://github.com/sedyh/ebitengine-kage-vscode">Visual Studio Code</a></li>
+  <li><a href="https://github.com/sedyh/ebitengine-kage-vim">Vim</a></li>
+  <li><a href="https://github.com/sedyh/ebitengine-kage-sublime">Sublime</a></li>
+</ul>

@@ -1,0 +1,194 @@
+<style>
+  span.new {
+      color: #007f55; /* 2080-G */
+      font-weight: bold;
+  }
+  span.old {
+      color: #9c0128; /* 2080-R */
+      font-weight: bold;
+  }
+</style>
+<h1>Ebitengine v2 Migration Guide</h1>
+<h2>Overview</h2>
+<p>Ebitengine v2 is a major version update from v1. There are some breaking changes in the API. Thus, you have to update the program in order to migrate to Ebitengine v2.</p>
+<p>This document lists the action items for the migration to Ebitengine v2.</p>
+<p>We don't add drastic changes to v2. Instead, we plan to add quiet changes.</p>
+<ul>
+  <li>Removing already-deprecated features (e.g., <code>Run</code>)</li>
+  <li>Removing 'error' returning values from some functions (e.g., <code>DrawImage</code>)</li>
+  <li>Adding new types to replace integers (e.g., <code>GamepadIDs</code>s will return <code>[]GamepadID</code> instead of <code>[]int</code>)</li>
+</ul>
+<h2>Platforms</h2>
+<ul>
+  <li><a href="/en/documents/gopherjs.html">GopherJS</a> is no longer supported as of v2. Use <a href="/en/documents/webassembly.html">WebAssembly</a> instead.</li>
+</ul>
+<h2>Action items</h2>
+<h3>Updating the import paths</h2>
+<p>Update all the <code>github.com/hajimehoshi/ebiten</code> in <code>import</code> to <code>github.com/hajimehoshi/ebiten/v2</code>. <code>github.com/hajimehoshi/ebiten/text</code> will be <code>github.com/hajimehoshi/ebiten/v2/text</code>.</p>
+<p>Lastly, execute <code>go mod tidy</code> command so that your <code>go.mod</code> will include <code>github.com/hajimehoshi/ebiten/v2</code> and exclude <code>github.com/hajimehoshi/ebiten</code>.</p>
+<p>You cannot mix Ebitengine v1 and v2 for one application. If you run <code>go mod tidy</code> but there are both version in your <code>go.mod</code>, confirm the dependency relationships and remove the dependency on v1. However, you don't have to do it if you intentionally manage multiple applications in one module.</p>
+<h3>Updating the API usages</h2>
+<h4><code>github.com/hajimehoshi/ebiten</code></h4>
+<ul>
+  <li>The default value of <code>DrawTriangleOptions</code>'s <code>Address</code> is <code>AddressUnsafe</code> in v2.</li>
+  <li>Interface <code>Game</code>'s <code>Draw</code> function was optional in v1, but is mandatory in v2.</li>
+  <li>The argument in interface <code>Game</code>'s <code>Update</code> is removed in v2.</li>
+  <li>The default value of <code>IsRunnableOnUnfocused</code> is <code>true</code> in v2.</li>
+</ul>
+<p>These types are introduced.</p>
+<ul>
+  <li><code>GamepadID</code></li>
+  <li><code>TouchID</code></li>
+</ul>
+<p>These APIs' signatures are changed.</p>
+<table>
+  <tr><th>v1</th><th>v2</th></tr>
+  <tr><td><code>func GamepadAxisNum(id <span class="old">int</span>, axis int) int</code></td><td><code>func GamepadAxisNum(id <span class="new">GamepadID</span>, axis int) int</code></td></tr>
+  <tr><td><code>func GamepadAxisNum(id <span class="old">int</span>) int</code></td><td><code>func GamepadAxisNum(id <span class="new">GamepadID</span>) int</code></td></tr>
+  <tr><td><code>func GamepadButtonNum(id <span class="old">int</span>) int</code></td><td><code>func GamepadButtonNum(id <span class="new">GamepadID</span>) int</code></td></tr>
+  <tr><td><code>func GamepadIDs() <span class="old">[]int</span></code></td><td><code>func GamepadIDs() <span class="new">[]GamepadID</span></code></td></tr>
+  <tr><td><code>func GamepadName(id <span class="old">int</span>) string</code></td><td><code>func GamepadName(id <span class="new">GamepadID</span>) string</code></td></tr>
+  <tr><td><code>func GamepadSDLID(id <span class="old">int</span>) string</code></td><td><code>func GamepadSDLID(id <span class="new">GamepadID</span>) string</code></td></tr>
+  <tr><td><code>func (*Image).Clear() <span class="old">error</span></code></td><td><code>func (*Image).Clear()</code></td></tr>
+  <tr><td><code>func (*Image).Dispose() <span class="old">error</span></code></td><td><code>func (*Image).Dispose()</code></td></tr>
+  <tr><td><code>func (*Image).DrawImage(img *Image, options *DrawImageOptions) <span class="old">error</span></code></td><td><code>func (*Image).DrawImage(img *Image, options *DrawImageOptions)</code></td></tr>
+  <tr><td><code>func (*Image).Fill(clr color.Color) <span class="old">error</span></code></td><td><code>func (*Image).Fill(clr color.Color)</code></td></tr>
+  <tr><td><code>func (*Image).ReplacePixels(pixels []byte) <span class="old">error</span></code></td><td><code>func (*Image).ReplacePixels(pixels []byte)</code></td></tr>
+  <tr><td><code>func IsGamepadButtonPressed(id <span class="old">int</span>, button GamepadButton) bool</code></td><td><code>func IsGamepadButtonPressed(id <span class="new">GamepadID</span>, button GamepadButton) bool</code></td></tr>
+  <tr><td><code>func NewImage(width, height int, <span class="old">filter Filter</span>) (*Image, <span class="old">error</span>)</code></td><td><code>func NewImage(width, height int) *Image</code></td></tr>
+  <tr><td><code>func NewImageFromImage(source image.Image, <span class="old">filter Filter</span>) (*Image, <span class="old">error</span>)</code></td><td><code>func NewImageFromImage(source image.Image) *Image</code></td></tr>
+  <tr><td><code>func TouchIDs() <span class="old">[]int</span></code></td><td><code>func TouchIDs() <span class="new">[]TouchID</span></code></td></tr>
+  <tr><td><code>func TouchPosition(id <span class="old">int</span>) (int, int)</code></td><td><code>func TouchPosition(id <span class="new">TouchID</span>) (int, int)</code></td></tr>
+</table>
+<p>These APIs are removed or replaced.</p>
+<table>
+  <tr><th>v1</th><th>v2</th></tr>
+  <tr><td><code>const FilterDefault</code></td><td>(No replacement)</td></tr>
+  <tr><td><code>const FPS</code></td><td>(No replacement)</td></tr>
+  <tr><td><code>const MaxImageSize</code></td><td>(No replacement)</td></tr>
+  <tr><td><code>struct DrawImageOptions</code>'s <code>ImageParts</code></td><td><code>func (*Image).SubImage</code></td></tr>
+  <tr><td><code>struct DrawImageOptions</code>'s <code>Parts</code></td><td><code>func (*Image).SubImage</code></td></tr>
+  <tr><td><code>struct DrawImageOptions</code>'s <code>SourceRect</code></td><td><code>func (*Image).SubImage</code></td></tr>
+  <tr><td><code>interface Touch</code></td><td>func TouchPosition</td></tr>
+  <tr><td><code>func (*ColorM).Add</code></td><td>(No replacement)</td></tr>
+  <tr><td><code>func (*GeoM).Add</code></td><td>(No replacement)</td></tr>
+  <tr><td><code>func IsCursorVisible</code></td><td><code>func CursorMode</code></td></tr>
+  <tr><td><code>func IsDrawingSkipped</code></td><td><code>func RunGame</code> and interface <code>Game</code>'s <code>Draw</code></td></tr>
+  <tr><td><code>func IsRunningInBackground</code></td><td><code>func IsRunnableOnUnfocused</code></td></tr>
+  <tr><td><code>func IsRunningSlowly</code></td><td><code>func RunGame</code> and interface <code>Game</code>'s <code>Draw</code></td></tr>
+  <tr><td><code>func MonitorSize</code></td><td><code>func ScreenSizeInFullscreen</code></td></tr>
+  <tr><td><code>func Monochrome</code></td><td><code>func (*ColorM).ChangeHSV</code> with arguments <code>0, 0, 1</code></td></tr>
+  <tr><td><code>func RotateGeo</code></td><td><code>func (*GeoM).Rotate</code></td></tr>
+  <tr><td><code>func RotateHue</code></td><td><code>func (*ColorM).RotateHue</code></td></tr>
+  <tr><td><code>func Run</code></td><td><code>func RunGame</code></td></tr>
+  <tr><td><code>func ScaleColor</code></td><td><code>func (*ColorM).Scale</code></td></tr>
+  <tr><td><code>func ScaleGeo</code></td><td><code>func (*GeoM).Scale</code></td></tr>
+  <tr><td><code>func ScreenScale</code></td><td><code>func WindowSize</code></td></tr>
+  <tr><td><code>func SetCursorVisible</code></td><td><code>func SetCursorMode</code></td></tr>
+  <tr><td><code>func SetCursorVisibility</code></td><td><code>func SetCursorMode</code></td></tr>
+  <tr><td><code>func SetRunningInBackground</code></td><td><code>func SetRunnableOnUnfocused</code></td></tr>
+  <tr><td><code>func SetScreenScale</code></td><td><code>func RunGame</code> and interface <code>Game</code>'s <code>Layout</code></td></tr>
+  <tr><td><code>func SetScreenSize</code></td><td><code>func RunGame</code> and interface <code>Game</code>'s <code>Layout</code></td></tr>
+  <tr><td><code>func Touches</code></td><td><code>func TouchIDs</code></td></tr>
+  <tr><td><code>func TranslateColor</code></td><td><code>func (*ColorM).Translate</code></td></tr>
+  <tr><td><code>func TranslateGeo</code></td><td><code>func (*GeoM).Translate</code></td></tr>
+</table>
+<h4><code>github.com/hajimehoshi/ebiten/audio</code></h4>
+<ul>
+  <li><code>Player</code> can take a source that doesn't implement <code><a href="https://golang.org/pkg/io/#Closer">io.Closer</a></code>, and <code>Player</code> no longer closes the original source in v2.</li>
+</ul>
+<p>These APIs' signatures are changed.</p>
+<table>
+  <tr><th>v1</th><th>v2</th></tr>
+  <tr><td><code>func NewContext(sampleRate int) (*Context, <span class="old">error</span>)</code></td><td><code>func NewContext(sampleRate int) *Context</code></td></tr>
+  <tr><td><code>func NewInfiniteLoop(src <span class="old">ReadSeekCloser</span>, length int64) *InfiniteLoop</code></td><td><code>func NewInfiniteLoop(src <span class="new">io.ReadSeeker</span>, length int64) *InfiniteLoop</code></td></tr>
+  <tr><td><code>func NewInfiniteLoopWithIntro(src <span class="old">ReadSeekCloser</span>, introLength int64, loopLength int64) *InfiniteLoop</code></td><td><code>func NewInfiniteLoopWithIntro(src <span class="new">io.ReadSeeker</span>, introLength int64, loopLength int64) *InfiniteLoop</code></td></tr>
+  <tr><td><code>func NewPlayer(context *Context, src io.ReadCloser) (*Player, <span class="old">error</span>)</code></td><td><code>func NewPlayer(context *Context, src io.Reader) (*Player, error)</code></td></tr>
+  <tr><td><code>func NewPlayerFromBytes(context *Context, src []byte) (*Player, <span class="old">error</span>)</code></td><td><code>func NewPlayerFromBytes(context *Context, src []byte) *Player</code></td></tr>
+  <tr><td><code>func (*Player).Pause() <span class="old">error</span></code></td><td><code>func (*Player).Pause()</code></td></tr>
+  <tr><td><code>func (*Player).Play() <span class="old">error</span></code></td><td><code>func (*Player).Play()</code></td></tr>
+</table>
+<p>These APIs are removed or replaced.</p>
+<table>
+  <tr><th>v1</th><th>v2</th></tr>
+  <tr><td><code>BytesReadSeekCloser</code></td><td>(No replacement, but <code><a href="https://golang.org/pkg/bytes/#NewReader">bytes.NewReader</a></code> works in most cases)</td></tr>
+  <tr><td><code>func (*Context).Update</code></td><td>(No replacement)</td></tr>
+  <tr><td><code>ReadSeekCloser</code></td><td>(No replacement, but <code><a href="https://golang.org/pkg/io/#ReadSeeker">io.ReadSeeker</a></code> works in most cases)</td></tr>
+</table>
+<h4><code>github.com/hajimehoshi/ebiten/audio/mp3</code></h4>
+<ul>
+  <li><code>Stream</code>'s <code>Close</code> is removed, and <code>Stream</code> no longer closes the original source in v2.</li>
+</ul>
+<p>These APIs' signatures are changed.</p>
+<table>
+  <tr><th>v1</th><th>v2</th></tr>
+  <tr><td><code>func Decode(context *audio.Context, src <span class="old">audio.ReadSeekCloser</span>) (*Stream, error)</code></td><td><code>func Decode(context *audio.Context, src <span class="new">io.ReadSeeker</span>) (*Stream, error)</code></td></tr>
+</table>
+<p>These APIs are removed or replaced.</p>
+<table>
+  <tr><th>v1</th><th>v2</th></tr>
+  <tr><td><code>func (*Stream).Close</code></td><td><code>(No replacement)</code></td></tr>
+  <tr><td><code>func (*Stream).Size</code></td><td><code>func (*Stream).Length</code></td></tr>
+</table>
+<h4><code>github.com/hajimehoshi/ebiten/audio/vorbis</code></h4>
+<ul>
+  <li><code>Stream</code>'s <code>Close</code> is removed, and <code>Stream</code> no longer closes the original source in v2.</li>
+</ul>
+<p>These APIs' signatures are changed.</p>
+<table>
+  <tr><th>v1</th><th>v2</th></tr>
+  <tr><td><code>func Decode(context *audio.Context, src <span class="old">audio.ReadSeekCloser</span>) (*Stream, error)</code></td><td><code>func Decode(context *audio.Context, src <span class="new">io.ReadSeeker</span>) (*Stream, error)</code></td></tr>
+</table>
+<p>These APIs are removed or replaced.</p>
+<table>
+  <tr><th>v1</th><th>v2</th></tr>
+  <tr><td><code>func (*Stream).Close</code></td><td><code>(No replacement)</code></td></tr>
+  <tr><td><code>func (*Stream).Size</code></td><td><code>func (*Stream).Length</code></td></tr>
+</table>
+<h4><code>github.com/hajimehoshi/ebiten/audio/wav</code></h4>
+<ul>
+  <li><code>Stream</code>'s <code>Close</code> is removed, and <code>Stream</code> no longer closes the original source in v2.</li>
+</ul>
+<p>These APIs' signatures are changed.</p>
+<table>
+  <tr><th>v1</th><th>v2</th></tr>
+  <tr><td><code>func Decode(context *audio.Context, src <span class="old">audio.ReadSeekCloser</span>) (*Stream, error)</code></td><td><code>func Decode(context *audio.Context, src <span class="new">io.ReadSeeker</span>) (*Stream, error)</code></td></tr>
+</table>
+<p>These APIs are removed or replaced.</p>
+<table>
+  <tr><th>v1</th><th>v2</th></tr>
+  <tr><td><code>func (*Stream).Close</code></td><td><code>(No replacement)</code></td></tr>
+  <tr><td><code>func (*Stream).Size</code></td><td><code>func (*Stream).Length</code></td></tr>
+</table>
+<h4><code>github.com/hajimehoshi/ebiten/ebitenutil</code></h4>
+<ul>
+  <li><code>ebitenutil</code> no longer imports <code>image/gif</code> or <code>image/png</code> in v2. This affects the behavior of <code><a href="https://golang.org/pkg/image/#Decode">image.Decode</a></code>.</li>
+</ul>
+<p>These APIs' signatures are changed.</p>
+<table>
+  <tr><th>v1</th><th>v2</th></tr>
+  <tr><td><code>func DebugPrint(image *ebiten.Image, str string) <span class="old">error</span></code></td><td><code>func DebugPrint(image *ebiten.Image, str string)</code></td></tr>
+</table>
+<h4><code>github.com/hajimehoshi/ebiten/inpututil</code></h4>
+<p>These APIs' signatures are changed.</p>
+<table>
+  <tr><th>v1</th><th>v2</th></tr>
+  <tr><td><code>func GamepadButtonPressDuration(id <span class="old">int</span>, button ebiten.GamepadButton) int</code></td><td><code>func GamepadButtonPressDuration(id <span class="new">ebiten.GamepadID</span>, button ebiten.GamepadButton) int</code></td></tr>
+  <tr><td><code>func IsGamepadButtonJustPressed(id <span class="old">int</span>, button ebiten.GamepadButton) bool</code></td><td><code>func IsGamepadButtonJustPressed(id <span class="new">ebiten.GamepadID</span>, button ebiten.GamepadButton) bool</code></td></tr>
+  <tr><td><code>func IsGamepadButtonJustReleased(id <span class="old">int</span>, button ebiten.GamepadButton) bool</code></td><td><code>func IsGamepadButtonJustReleased(id <span class="new">ebiten.GamepadID</span>, button ebiten.GamepadButton) bool</code></td></tr>
+  <tr><td><code>func IsGamepadJustDisconnected(id <span class="old">int</span>) bool</code></td><td><code>func IsGamepadJustDisconnected(id <span class="new">ebiten.GamepadID</span>) bool</code></td></tr>
+  <tr><td><code>func IsTouchJustReleased(id <span class="old">int</span>) bool</code></td><td><code>func IsTouchJustReleased(id <span class="new">ebiten.TouchID</span>) bool</code></td></tr>
+  <tr><td><code>func JustConnectedGamepadIDs() <span class="old">[]int</span></code></td><td><code>func JustConnectedGamepadIDs() <span class="new">[]ebiten.GamepadID</span></code></td></tr>
+  <tr><td><code>func JustPressedTouchIDs() <span class="old">[]int</span></code></td><td><code>func JustPressedTouchIDs() <span class="new">[]ebiten.TouchID</span></code></td></tr>
+  <tr><td><code>func TouchPressDuration(id <span class="old">int</span>) int</code></td><td><code>func TouchPressDuration(id <span class="new">ebiten.TouchID</span>) int</code></td></tr>
+</table>
+<h4><code>github.com/hajimehoshi/ebiten/mobile</code></h4>
+<p>These APIs are removed or replaced.</p>
+<table>
+  <tr><th>v1</th><th>v2</th></tr>
+  <tr><td><code>interface Game</code></td><td><code>ebiten</code>'s <code>interface Game</code></td></tr>
+  <tr><td><code>func Start</code></td><td><code>ebitenmobile</code> command and <code>func SetGame</code></td></tr>
+  <tr><td><code>func Update</code></td><td><code>ebitenmobile</code> command and <code>func SetGame</code></td></tr>
+  <tr><td><code>func UpdateTouchesOnAndroid</code></td><td><code>ebitenmobile</code> command</td></tr>
+  <tr><td><code>func UpdateTouchesOnIOS</code></td><td><code>ebitenmobile</code> command</td></tr>
+</table>

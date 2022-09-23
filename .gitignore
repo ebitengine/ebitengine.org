@@ -1,0 +1,5 @@
+*~
+.DS_Store
+Thumbs.db
+_site/**/*.html
+!_site/**/_*.html

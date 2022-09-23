@@ -1,0 +1,34 @@
+<h1>v1.12.0 is released</h1>
+<p class="meta">Hajime Hoshi<br><span id="meta-created">2020-10-01</span></p>
+<p>We are very happy to announce the release of v1.12.0 (<a href="/en/documents/1.12.html">Release Note</a>).</p>
+<p>I appreciate all the contributors and <a href="https://github.com/sponsors/hajimehoshi">all the sponsors</a>. Thank you very much!</p>
+<p>The main new feature is <a href="/en/documents/shader.html">a custom shader with a new shading languge Kage</a>. You can write a fragment shader in a Go-flavored language.</p>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <pre><code>package main
+
+// Uniform variables.
+var Time float
+var Cursor vec2
+var ScreenSize vec2
+
+// Fragment is the entry point of the fragment shader.
+// Fragment returns the color value for the current position.
+func Fragment(position vec4, texCoord vec2, color vec4) vec4 {
+	// You can define variables with a short variable declaration like Go.
+	lightpos := vec3(Cursor, 50)
+	lightdir := normalize(lightpos - position.xyz)
+	normal := normalize(imageSrc1UnsafeAt(texCoord) - 0.5)
+	ambient := 0.25
+	diffuse := 0.75 * max(0.0, dot(normal.xyz, lightdir))
+
+	// You can treat multiple source images by
+	// imageSrc[N]At or imageSrc[N]UnsafeAt.
+	return imageSrc0UnsafeAt(texCoord) * (ambient + diffuse)
+}</code></pre>
+  </div>
+  <div class="grid-item-2">
+    <p class="img"><video controls autoplay src="/images/documents/shader/lighting.mp4" width="456"></p>
+  </div>
+</div>
+<p>Enjoy!</p>

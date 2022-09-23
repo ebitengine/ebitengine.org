@@ -1,0 +1,162 @@
+<h1>Ebiten 1.11 リリースノート</h1>
+<h2>v1.11.0</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/28?closed=1">Issues for v1.11.0</a></p>
+<h3>新機能</h3>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <h4><code>Game</code> インターフェイスと <code>RunGame</code></h4>
+    <p><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#Game">Game</a></code> インターフェイスと <code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#RunGame">RunGame</a></code> 関数が新規追加されました。これらはゲームを実行するための新しい API です。</p>
+    <p><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#Run">Run</a></code> 関数は廃止されず当面残りますが、新規案件では <code>Game</code> インターフェイスと <code>RunGame</code> 関数を使うことが推奨されます。</p>
+    <p>ウィンドウを可変サイズにするために <code>Run</code> の代わりに使う必要があります (<a href="https://github.com/hajimehoshi/ebiten/issues/943">Issue 943</a>)。</p>
+    <h4>サイズ可変ウィンドウ</h4>
+    <p>サイズ可変ウィンドウの詳細については<a href="/ja/blog/resizable.html">ブログ記事</a>を参照してください。</p>
+    <ul>
+      <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#IsWindowResizable">IsWindowResizable</a></code> / <code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#SetWindowResizable">SetWindowResizable</a></code> が新規追加されました (<a href="https://github.com/hajimehoshi/ebiten/issues/320">Issue 320</a>)。</li>
+      <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#WindowSize">WindowSize</a></code> / <code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#SetWindowSize">SetWindowSize</a></code> が新規追加されました (<a href="https://github.com/hajimehoshi/ebiten/issues/320">Issue 320</a>)。</li>
+      <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#MaximizeWindow">MaximizeWindow</a></code> / <code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#IsWindowMaximized">IsWindowMazimized</a></code> が新規追加されました (<a href="https://github.com/hajimehoshi/ebiten/issues/994">Issue 994</a>)。</li>
+      <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#MinimizeWindow">MinimizeWindow</a></code> / <code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#IsWindowMinimized">IsWindowMinimized</a></code> が新規追加されました (<a href="https://github.com/hajimehoshi/ebiten/issues/994">Issue 994</a>)。</li>
+      <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#RestoreWindow">RestoreWindow</a></code> が新規追加されました (<a href="https://github.com/hajimehoshi/ebiten/issues/994">Issue 994</a>)。</li>
+    </ul>
+  </div>
+  <div class="grid-item-2">
+    <pre><code>type Game struct{}
+
+func (g *Game) Update(screen *ebiten.Image) error {
+    // Update the game state
+    return nil
+}
+
+func (g *Game) Draw(screen *ebiten.Image) {
+    // Draw the current game state
+}
+
+func (g *Game) Layout(outsideWidth, outsideHeight int)
+    (screenWidth, screenHeight int) {
+    // Accepts the outside size (e.g., window size), and
+    // returns the game screen size.
+    // The game screen scale is automatically adjusted.
+    return 320, 240
+}
+
+func main() {
+    g := &amp;Game{}
+    if err := ebiten.RunGame(g); err != nil {
+        panic(err)
+    }
+}</code></pre>
+  </div>
+</div>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <h4>ウィンドウ位置</h4>
+    <ul>
+      <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#WindowPosition">WindowPosition</a></code> / <code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#SetWindowPosition">SetWindowPosition</a></code> が新規追加されました (<a href="https://github.com/hajimehoshi/ebiten/issues/936">Issue 936</a>)。</li>
+    </ul>
+    <h4>透過スクリーン</h4>
+    <ul>
+      <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#SetScreenTransparent">SetScreenTransparent</a></code> / <code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#IsScreenTransparent">IsScreenTransparent</a></code> が新規追加されました (<a href="https://github.com/hajimehoshi/ebiten/issues/1001">Issue 1001</a>)。</li>
+    </ul>
+    <h4>常時最前面ウィンドウ</h4>
+    <ul>
+      <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#SetWindowFloating">SetWindowFloating</a></code> / <code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#IsWindowFloating">IsWindowFloating</a></code> が新規追加されました (<a href="https://github.com/hajimehoshi/ebiten/issues/880">Issue 880</a>)。</li>
+    </ul>
+    <p>これらの API を使って、デスクトップマスコットアプリケーションが作れます。 <a href="https://github.com/hajimehoshi/ebiten/tree/1.11/examples/mascot/main.go">mascot サンプル</a>を参考にしてください。</p>
+  </div>
+  <div class="grid-item-2">
+    <p class="img"><video controls autoplay src="/images/documents/1.11/mascot.mp4" width="400"></p>
+  </div>
+</div>
+<h4>カーソルキャプチャ</h4>
+<ul>
+  <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#CursorModeType">CursorModeType</a></code> / <code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#CursorMode">CursorMode</a></code> / <code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#SetCursorMode">SetCursorMode</a></code> が新規導入されました (<a href="https://github.com/hajimehoshi/ebiten/issues/1016">Issue 1016</a>)。</li>
+</ul>
+<h4>その他</h4>
+<ul>
+  <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#SetWindowDecorated">SetWindowDecorated</a></code> が <code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#Run">Run</a></code> / <code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#RunGame">RunGame</a></code> の前に呼べるようになりました (<a href="https://github.com/hajimehoshi/ebiten/issues/556">Issue 556</a>)。</li>
+  <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten?tab=doc#Image.ReplacePixels">ReplacePixels</a></code> が部分画像上で呼べるようになりました (<a href="https://github.com/hajimehoshi/ebiten/issues/980">Issue 980</a>)。</li>
+  <li>Go modules が <code>ebitenmobile</code> でサポートされるようになりました (<a href="https://github.com/hajimehoshi/ebiten/issues/1055">Issue 1055</a>)。</li>
+  <li>Android と iOS でキーボードがサポートされました (<a href="https://github.com/hajimehoshi/ebiten/issues/237">Issue 237</a>)。</li>
+  <li>Android でゲームパッドがサポートされました (<a href="https://github.com/hajimehoshi/ebiten/issues/1083">Issue 1083</a>)。</li>
+</ul>
+<h3>パフォーマンス改善</h3>
+<ul>
+  <li>PBO (Pixel Buffer Object) の使用により、画像の作成やピクセルの置換が高速になった (<a href="https://github.com/hajimehoshi/ebiten/issues/988">Issue 988</a>)。</li>
+  <li>その他細かい最適化 (<a href="https://github.com/hajimehoshi/ebiten/issues/976">Issue 976</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/981">Issue 981</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/990">Issue 990</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/1101">Issue 1101</a>).</li>
+</ul>
+<h3>廃止予定 API</h3>
+<ul>
+  <li><code>SetScreenSize</code>: 代わりに <code>Game</code> インターフェイスと <code>RunGame</code> 関数を使用してください。</li>
+  <li><code>ScreenScale</code>: 代わりに <code>WindowSize</code> を使用してください。</li>
+  <li><code>SetScreenScale</code>: 代わりに <code>SetWindowSize</code> を使用してください。</li>
+  <li><code>IsCursorVisible</code>: 代わりに <code>CursorMode</code> を使用してください。</li>
+  <li><code>SetCursorVisible</code>: 代わりに <code>SetCursorMode</code> を使用してください。</li>
+  <li><code>IsRunnableInBackground</code>: 代わりに <code>IsRunnableOnUnfocused</code> を使用してください。</li>
+  <li><code>SetRunnableInBackground</code>: 代わりに <code>SetRunnableOnUnfocused</code> を使用してください。</li>
+</ul>
+<h3>バグ修正</h3>
+<ul>
+  <li>このリリースには、 v1.10.x にあるすべてのバグ修正が含まれます。</li>
+  <li>Android Huawei ALE-L02 において、画像の拡大に失敗していたのを修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/1044">Issue 1044</a>)。</li>
+  <li>iPad 上で画面端が点滅していたのを修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/1019">Issue 1019</a>)。</li>
+</ul>
+<h2>v1.11.1</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/38?closed=1">Issues for v1.11.1</a></p>
+<h3>バグ修正</h3>
+<ul>
+  <li><code>Game</code> インターフェイスの <code>Draw</code> 関数使用時のパフォーマンスを改善 (<a href="https://github.com/hajimehoshi/ebiten/issues/1134">Issue 1134</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/1140">Issue 1140</a>)。</li>
+  <li><code>(*Image).At</code> が不必要に遅くなることがある問題を修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/1137">Issue 1137</a>)。</li>
+  <li><code>ebitenmobile</code> で <code>-target</code> にアーキテクチャを指定したときにコンパイルできなかった問題を修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/1142">Issue 1142</a>)。</li>
+</ul>
+<h2>v1.11.2</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/39?closed=1">Issues for v1.11.2</a></p>
+<h3>バグ修正</h3>
+<ul>
+  <li>ブラウザ上でフリーズする可能性があったのを修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/1161">Issue 1161</a>)。</li>
+  <li><code>Fill</code> で描画された画像がコンテキストロストから正しく復帰しないことがあったのを修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/1170">Issue 1170</a>)。</li>
+</ul>
+<h2>v1.11.3</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/40?closed=1">Issues for v1.11.3</a></p>
+<h3>バグ修正</h3>
+<ul>
+  <li>一番最初のフレームで <code>Draw</code> の前に <code>Update</code> が最低限一回が呼ばれるように保証 (<a href="https://github.com/hajimehoshi/ebiten/issues/1155">Issue 1155</a>)。</li>
+  <li>Android で入力デバイスがデタッチしたときにクラッシュしていたのを修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/1185">Issue 1185</a>)。</li>
+  <li><code>Run</code> / <code>RunGame</code> 前の <code>SetVsyncEnabled(false)</code> が動かなかったのを修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/1197">Issue 1197</a>)。</li>
+</ul>
+<h2>v1.11.4</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/41?closed=1">Issues for v1.11.4</a></p>
+<h3>バグ修正</h3>
+<ul>
+  <li>macOS で起動時にクラッシュしていた問題を軽減 (<a href="https://github.com/hajimehoshi/ebiten/issues/1237">Issue 1237</a>)。</li>
+</ul>
+<h2>v1.11.5</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/42?closed=1">Issues for v1.11.5</a></p>
+<h3>バグ修正</h3>
+<ul>
+  <li>Raspberry Pi 4 で正しく描画がされなかった問題を修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/1208">Issue 1208</a>)。</li>
+  <li>macOS でスリープ後に音が遅れることがあった問題を修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/1259">Issue 1259</a>)。</li>
+</ul>
+<h2>v1.11.6</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/43?closed=1">Issues for v1.11.6</a></p>
+<h3>バグ修正</h3>
+<ul>
+  <li>Android 向けビルド時のエラーを修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/1266">Issue 1266</a>)。</li>
+</ul>
+<h2>v1.11.7</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/44?closed=1">Issues for v1.11.7</a></p>
+<h3>バグ修正</h3>
+<ul>
+  <li>macOS で 1 分スリープ後に音が遅れることがあった問題を修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/1280">Issue 1280</a>)。</li>
+</ul>
+<h2>v1.11.8</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/45?closed=1">Issues for v1.11.8</a></p>
+<h3>バグ修正</h3>
+<ul>
+  <li>Pixel 4 と Pixel 4a 上で起きるフリーズの修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/1322">Issue 1322</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/1332">Issue 1332</a>)。</li>
+  <li><code>ebitenmobile</code> が Go 1.15 で動かなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/1336">Issue 1336</a>).</li>
+</ul>
+<h2>v1.11.9</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/46?closed=1">Issues for v1.11.9</a></p>
+<h3>バグ修正</h3>
+<ul>
+  <li>Windows でフルスクリーン時に Vsync が動かなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/1363">Issue 1363</a>)。</li>
+</ul>

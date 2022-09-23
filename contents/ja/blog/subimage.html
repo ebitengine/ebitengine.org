@@ -1,0 +1,64 @@
+<h1>1.12 に入る破壊的変更: サブ画像の描画</h1>
+<p class="meta">Hajime Hoshi<br><span id="meta-created">2020-06-28</span></p>
+<p>この記事は 2020 年 6 月現在の情報であり、予定を変更する可能性もあります。</p>
+<h2>要約</h2>
+<p>Ebiten は 1.12 (現在の master ブランチ) から破壊的を導入する予定です。 Ebiten は、画像の描画の際、描画元領域のチェックをしないようになり、そのためいくつかのケースでは予期しないピクセルが描画されることがあります。この描画結果の違いは、以下の条件のすべてが満たされた場合に発生しえます:</p>
+<ul>
+  <li>サブ画像 (<code>SubImage</code> 関数で作られた画像) が使われる</li>
+  <li>画像が拡大縮小または回転されて描画される</li>
+  <li>隣接する領域の画像が連続していない</li>
+</ul>
+<p>例えば、テクスチャアトラス上のタイルを拡大縮小や回転をさせて描画する場合、 1.11 とは違った結果になりえます。描画結果が隣接する領域のピクセルを含むかもしれません。一方例えば、 9-patch で描画するような場合は、画像が連続しているので問題にはなりません。</p>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <p>次の画像はサブ画像、および右側に連続しない画像を含む例です。</p>
+    <p>必要ならば、テクスチャアトラスの各領域にパディングを追加する必要があります。</p>
+  </div>
+  <div class="grid-item-2">
+    <p class="img"><img src="/images/blog/subimage/subimage.png" width="360"></p>
+  </div>
+</div>
+<h2>背景</h2>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <p>Ebiten には自動テクスチャアトラスと呼ばれる機能があります。たとえ大量の <code>ebiten.Image</code> を作ったとしても、 Ebiten はそれらを一つのテクスチャアトラス領域上に可能な限り確保しようとします。これによって GPU に送られるグラフィックス命令を減らすことができ、効果的な描画が実現できます。さらに、 Ebiten ユーザーはこのことを気にする必要がないのです。素晴らしい!</p>
+  </div>
+  <div class="grid-item-2">
+    <p class="img"><img src="/images/blog/subimage/textureatlas.png" width="300"></p>
+  </div>
+</div>
+<p>Ebiten がテクスチャアトラスの一部を描画するとき、 Ebiten は隣接する領域のピクセルを露出させないために、あるハック (小細工) をしていました。このハックがないと、特に画像を回転または拡大縮小させて描画したときに、隣接するピクセルが露出してしまいます。これは一般的なゲームプログラミングの問題です。ハックとして、 Ebiten は次の 2 つのことをしていました:</p>
+<ul>
+  <li>テクセル (テクスチャの座標) をちょっとだけずらす</li>
+  <li>シェーダー内で描画元領域をチェックする</li>
+</ul>
+<p>両方ともコードのメンテナンス性の観点から問題でしたが、特に 2 つ目のハックが問題でした。一つの理由はパフォーマンスです。このハックのせいで if 分岐がシェーダーに追加されてしまい、パフォーマンスが落ちていました。もう一つの理由は、 1.12 に向けて導入中のカスタムシェーダーの定義が難しくなることです。カスタムシェーダー内で、画像からピクセルを取るときに簡単な方法で取れるのが望ましいのですが、このハックを実現するために特殊な関数などを用意しなければなりません。</p>
+<h2>ハックの削除</h2>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <p>我々はこれらのハックを削除することにしました。代わりに全ての自動テクスチャアトラス上の画像は 1px のパディング付きで確保されます。描画元領域のチェックがなくとも、外側のピクセルは透明であり、隣接する領域を侵害してしまうことは決してないのです。</p>
+  </div>
+  <div class="grid-item-2">
+    <p class="img"><img src="/images/blog/subimage/textureatlas_with_paddings.png" width="300"></p>
+  </div>
+  <div class="grid-item-2">
+    <p>しかし、 Ebiten はサブ画像も取り扱えます。サブ画像は <code>(*ebiten.Image).SubImage</code> 関数で作られた画像です。これらは既存の画像の一部です。サブ画像はパディング付きで独立して確保することができません。全てのサブ画像をパディング付きの独立した画像として確保する案もありましたが、これはパフォーマンスとメモリの観点から良くありませんでした。もしユーザーが画像上で <code>SubImage</code> を 1px ずつずらした領域で大量に呼んだ場合、それぞれのサブ画像分領域が確保されてしまいます。</p>
+  </div>
+  <div class="grid-item-2">
+    <p class="img"><img src="/images/blog/subimage/subimage_textureatlas.png" width="456"></p>
+  </div>
+</div>
+<p>よって、サブ画像についてはパディングを追加するのは諦めました。結果として、サブ画像の描画は 1.11 と比べると違った結果を引き起こすことがあります。特に、画像を回転または拡大縮小させた場合、隣接する領域のピクセルが描画されることがあります。</p>
+<h2>例</h2>
+<p>拡大と回転したサブ画像によって、隣接領域が見えてしまった描画の例です。右側に本来描画されるべきではない緑色のピクセルが描画されています。この描画は最新の master ブランチ (<a href="https://github.com/hajimehoshi/ebiten/tree/aee5d6d7084732e4d608ec72e9938e04ceddef5c">aee5d6d7</a>) でテストされました。結果は GPU によって異なります。</p>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <pre data-codesrc="/go/blog/subimage/example.go"></pre>
+  </div>
+  <div class="grid-item-2">
+    <p class="img"><img src="/images/blog/subimage/example.png" width="320"></p>
+    <p class="img"><img src="/images/blog/subimage/example_enlarged.png" width="276"></p>
+  </div>
+</div>
+<h2>あなたがすべきこと</h2>
+<p>もし自作のテクスチャアトラスがあり、かつそれらの一部を拡大縮小または回転させて描画させ、かつそれらの画像が連続していない場合、パディングをそれぞれのパートに追加する必要があります。</p>

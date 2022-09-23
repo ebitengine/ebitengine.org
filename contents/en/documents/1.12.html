@@ -1,0 +1,137 @@
+<h1>Ebiten 1.12 Release Notes</h1>
+<h2>v1.12.0</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/34?closed=1">Issues for v1.12.0</a></p>
+<h3>New features</h3>
+<h4>Shader</h3>
+<p>A feature to write a custom shader and a new Go-flavored language Kage are introduced. See the document <a href="/en/documents/shader.html">Shader</a> for the details.</p>
+<p>The below APIs are added for this feature.</p>
+<ul>
+  <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten#DrawRectShaderOptions">func DrawRectShaderOptions</a></code></li>
+  <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten#DrawTrianglesShaderOptions">func DrawTrianglesShaderOptions</a></code></li>
+  <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten#Image.DrawRectShader">func (*Image).DrawRectShader</a></code></li>
+  <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten#Image.DrawTrianglesShader">func (*Image).DrawTrianglesShader</a></code></li>
+  <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten#Shader">type Shader</a></code></li>
+  <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten#NewShader">type NewShader</a></code></li>
+  <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten#Shader.Dispose">func (*Shader).Dispose</a></code></li>
+</ul>
+<h4>Misc.</h3>
+<ul>
+  <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten#Address">AddressUnsafe</a></code> is newly introduced (<a href="https://github.com/hajimehoshi/ebiten/issues/1219">Issue 1219</a>).</li>
+  <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten#ColorM.Invert">(*ColorM).Invert</a></code> is newly introduced (<a href="https://github.com/hajimehoshi/ebiten/issues/548">Issue 548</a>).</li>
+  <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten#CompositeMode">CompositeModeMultiply</a></code> is newly introduced (<a href="https://github.com/hajimehoshi/ebiten/issues/410">Issue 410</a>).</li>
+  <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten#SetInitFocused">SetInitFocused</a></code> is newly introduced (<a href="https://github.com/hajimehoshi/ebiten/issues/769">Issue 769</a>).</li>
+  <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten#SetScreenClearedEveryFrame">SetScreenClearedEveryFrame</a></code> / <code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten#IsScreenClearedEveryFrame">IsScreenClearedEveryFrame</a></code> is newly introduced (<a href="https://github.com/hajimehoshi/ebiten/issues/1132">Issue 1132</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/1315">Issue 1315</a>).</li>
+  <li><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/text#BoundString">text.BoundString</a></code> is newly introduced (<a href="https://github.com/hajimehoshi/ebiten/issues/1151">Issue 1151</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/1272">Issue 1272</a>).</li>
+</ul>
+<h3>Backward Compatibility</h3>
+<p>A breaking change with <code>SubImage</code> rendering is introduced. See the blog article "<a href="/en/blog/subimage.html">Breaking change to 1.12: rendering sub-images</a>" for the details.</p>
+<h3>Deprecated API</h3>
+<ul>
+  <li><code>Run</code>: Use <code>Game</code> interface and <code>RunGame</code> function instead.</li>
+</ul>
+<h3>Bug fix</h3>
+<ul>
+  <li>This release includes all the bug fixes in v1.11.x.</li>
+  <li>The upper side was cropped unexpectedly (<a href="https://github.com/hajimehoshi/ebiten/issues/1163">Issue 1163</a>).</li>
+  <li>Edges at the rendering target were sometimes missing (<a href="https://github.com/hajimehoshi/ebiten/issues/1171">Issue 1171</a>).</li>
+  <li>Crash with a specific gamepad (<a href="https://github.com/hajimehoshi/ebiten/issues/1173">Issue 1173</a>).</li>
+  <li>Crash on Mint Linux on Parallels (<a href="https://github.com/hajimehoshi/ebiten/issues/1310">Issue 1310</a>).</li>
+  <li>Crash on a specific Android device (<a href="https://github.com/hajimehoshi/ebiten/issues/1342">Issue 1342</a>).</li>
+  <li>Wrong scaling on Cinnamon desktop (<a href="https://github.com/hajimehoshi/ebiten/issues/1307">Issue 1307</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/1350">Issue 1350</a>).</li>
+</ul>
+<h3>Performance improvement</h3>
+<ul>
+  <li>Adopted an explicit way to detect the context lost on browsers and Android (<a href="https://github.com/hajimehoshi/ebiten/issues/1175">Issue 1175</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/1176">Issue 1176</a>).</li>
+  <li>Improved memory usage (<a href="https://github.com/hajimehoshi/ebiten/issues/797">Issue 797</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/1220">Issue 1220</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/1221">Issue 1221</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/1222">Issue 1222</a>).</li>
+</ul>
+<h2>v1.12.1</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/48?closed=1">Issues for v1.12.1</a></p>
+<h3>Bug fix</h3>
+<ul>
+  <li>Wrong rendering OpenType glyphs with <code>text.Draw</code> and <code>golang.org/x/image/font/opentype</code> (<a href="https://github.com/hajimehoshi/ebiten/issues/1377">Issue 1377</a>).</li>
+  <li>Wrong rendering texts with <code>text.Draw</code> when the kerning is negative (<a href="https://github.com/hajimehoshi/ebiten/issues/1378">Issue 1378</a>).</li>
+</ul>
+<h2>v1.12.2</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/49?closed=1">Issues for v1.12.2</a></p>
+<h3>Bug fix</h3>
+<ul>
+  <li><code>ebiten.SetVsyncEnabled(false)</code> before the main loop didn't work on macOS (<a href="https://github.com/hajimehoshi/ebiten/issues/1364">Issue 1364</a>).</li>
+  <li>Rare crash at <code>audio.NewContext</code> on macOS and iOS (<a href="https://github.com/hajimehoshi/ebiten/issues/1386">Issue 1386</a>).</li>
+</ul>
+<h2>v1.12.3</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/51?closed=1">Issues for v1.12.3</a></p>
+<h3>Bug fix</h3>
+<ul>
+  <li>Drawing images with extreme scaling caused infinite loop (<a href="https://github.com/hajimehoshi/ebiten/issues/1398">Issue 1398</a>).</li>
+  <li>Crash when Ebiten tries to create a too big images for mipmap (<a href="https://github.com/hajimehoshi/ebiten/issues/1399">Issue 1399</a>).</li>
+</ul>
+<h2>v1.12.4</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/52?closed=1">Issues for v1.12.4</a></p>
+<h3>Bug fix</h3>
+<ul>
+  <li>On the fullscreen mode, the window was unexpectedly minimized when switching the screens (<a href="https://github.com/hajimehoshi/ebiten/issues/1405">Issue 1405</a>).</li>
+  <li>Stuttering sound on Raspberry Pi 400 (<a href="https://github.com/hajimehoshi/ebiten/issues/1424">Issue 1424</a>).</li>
+</ul>
+<h2>v1.12.5</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/53?closed=1">Issues for v1.12.5</a></p>
+<h3>Bug fix</h3>
+<ul>
+  <li>OpenGL was unexpectedly used instead of Metal on macOS Big Sur (<a href="https://github.com/hajimehoshi/ebiten/issues/1429">Issue 1429</a>).</li>
+</ul>
+<h2>v1.12.6</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/54?closed=1">Issues for v1.12.6</a></p>
+<h3>Bug fix</h3>
+<ul>
+  <li>Internal textures might be bigger than the limitation unexpectedly (<a href="https://github.com/hajimehoshi/ebiten/issues/1454">Issue 1454</a>).</li>
+</ul>
+<h2>v1.12.7</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/55?closed=1">Issues for v1.12.7</a></p>
+<h3>Bug fix</h3>
+<ul>
+  <li>Deadlock at playing audio (<a href="https://github.com/hajimehoshi/ebiten/issues/1469">Issue 1469</a>).</li>
+</ul>
+<h2>v1.12.8</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/56?closed=1">Issues for v1.12.8</a></p>
+<h3>Bug fix</h3>
+<ul>
+  <li>Memory leak when the screen scale is less than 1 on WebAssembly (<a href="https://github.com/hajimehoshi/ebiten/issues/1479">Issue 1479</a>).</li>
+  <li>Wrong scaling on Samsung Galaxy S20 (<a href="https://github.com/hajimehoshi/ebiten/issues/1481">Issue 1481</a>).</li>
+  <li>Ebitenmobile didn't work with Go 1.16 (<a href="https://github.com/hajimehoshi/ebiten/issues/1484">Issue 1484</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/1487">Issue 1487</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/1493">Issue 1493</a>).</li>
+</ul>
+<h2>v1.12.9</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/57?closed=1">Issues for v1.12.9</a></p>
+<h3>Bug fix</h3>
+<ul>
+  <li>Possible misuse of reflect.SliceHeader (<a href="https://github.com/hajimehoshi/ebiten/issues/1495">Issue 1495</a>).</li>
+  <li>The current playing position was not shown correctly at <code>examples/audiopanning</code> (<a href="https://github.com/hajimehoshi/ebiten/issues/1502">Issue 1502</a>).</li>
+  <li>On the fullscreen mode, the application was not hidden when switching the other applications (reverting <a href="https://github.com/hajimehoshi/ebiten/issues/1405">Issue 1405</a>) (<a href="https://github.com/hajimehoshi/ebiten/issues/1504">Issue 1504</a>).</li>
+</ul>
+<h2>v1.12.10</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/58?closed=1">Issues for v1.12.10</a></p>
+<h3>Bug fix</h3>
+<ul>
+  <li>Gamepads didn't work on some Android devices (<a href="https://github.com/hajimehoshi/ebiten/issues/1542">Issue 1542</a>).</li>
+  <li>Crashed with <code>CompositeModeMultiply</code> and <code>-ebitendebug</code> (<a href="https://github.com/hajimehoshi/ebiten/issues/1544">Issue 1544</a>).</li>
+  <li>Race condition when calling <code>DrawImage</code> from multiple goroutines on browsers (<a href="https://github.com/hajimehoshi/ebiten/issues/1546">Issue 1546</a>).</li>
+</ul>
+<h2>v1.12.11</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/59?closed=1">Issues for v1.12.11</a></p>
+<h3>Bug fix</h3>
+<ul>
+  <li>Documentation fix for <code>SetScreenClearedEveryFrame</code> (<a href="https://github.com/hajimehoshi/ebiten/issues/1555">Issue 1555</a>).</li>
+</ul>
+<h2>v1.12.12</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/60?closed=1">Issues for v1.12.12</a></p>
+<h3>Bug fix</h3>
+<ul>
+  <li>Failed to build with the latest GopherJS (<a href="https://github.com/hajimehoshi/ebiten/issues/1582">Issue 1582</a>).</li>
+  <li>Calling <code>CursorPosition</code> before the main loop crashed (<a href="https://github.com/hajimehoshi/ebiten/issues/1559">Issue 1559</a>).</li>
+  <li>Freeze when resizing the window size after maximizing the window size (<a href="https://github.com/hajimehoshi/ebiten/issues/1580">Issue 1580</a>).</li>
+  <li>go-getting with <code>...</code> like <code>go get github.com/hajimehoshi/ebiten/...</code> failed (<a href="https://github.com/hajimehoshi/ebiten/issues/1581">Issue 1581</a>).</li>
+  <li>Carsh when toggling the fullscreen mode when the window is in native fullscreen (by pressing the green button) on macOS (<a href="https://github.com/hajimehoshi/ebiten/issues/1578">Issue 1578</a>).</li>
+  <li>examples/audiopanning crashed on browsers (<a href="https://github.com/hajimehoshi/ebiten/issues/1598">Issue 1598</a>).</li>
+  <li>In examples/windowsize, the window automatically moved on Linux (<a href="https://github.com/hajimehoshi/ebiten/issues/1605">Issue 1605</a>).</li>
+  <li>In examples/windowsize, the window vibrated when resizing it on Linux (<a href="https://github.com/hajimehoshi/ebiten/issues/1617">Issue 1617</a>).</li>
+  <li>Getting the device scale on start-up might fail on Windows (<a href="https://github.com/hajimehoshi/ebiten/issues/1612">Issue 1612</a>).</li>
+  <li>Freeze when resize the window very quickly on Linux (<a href="https://github.com/hajimehoshi/ebiten/issues/1618">Issue 1618</a>).</li>
+</ul>

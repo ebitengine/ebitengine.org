@@ -1,0 +1,336 @@
+<style>
+  .avatar img {
+      border-radius: 50%;
+  }
+</style>
+<h1>2020 年の Ebiten</h1>
+<p class="meta">Hajime Hoshi<br><span id="meta-created">2020-12-15</span></p>
+<p>自分が Ebiten を開発し始めてから 7 年になりました。この記事は、 2020 年の Ebiten の回顧録です。</p>
+<h2>スポンサー</h2>
+<p>2019 年 12 月から 2020 年 11 月の間、以下の方々に<a href="https://github.com/sponsors/hajimehoshi">スポンサー</a>していただきました。心より感謝いたします。</p>
+<p>(スポンサー総額の大きい順、敬称略)</p>
+<div class="grid-container">
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/silbinarywolf"><img src="https://github.com/silbinarywolf.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/silbinarywolf">Jae Bentvelzen</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/zacharyburkett"><img src="https://github.com/zacharyburkett.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/zacharyburkett">Zachary Burkett</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/Inkeliz"><img src="https://github.com/Inkeliz.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/Inkeliz">Inkeliz</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/jawr"><img src="https://github.com/jawr.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/jawr">jawr</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/kaepora"><img src="https://github.com/kaepora.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/kaepora">Nadim Kobeissi</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/cdemers"><img src="https://github.com/cdemers.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/cdemers">Charle Demers</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/Jack-Ji"><img src="https://github.com/Jack-Ji.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/Jack-Ji">jack</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/blanchonvincent"><img src="https://github.com/blanchonvincent.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/blanchonvincent">Blanchon Vincent</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/auderer"><img src="https://github.com/auderer.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/auderer">Michael Auderer</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/raa0121"><img src="https://github.com/raa0121.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/raa0121">raa0121</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/conifer-dev"><img src="https://github.com/conifer-dev.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/conifer-dev">Conifer</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/griffithsh"><img src="https://github.com/griffithsh.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/griffithsh">Huw Griffiths</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-4">
+    <ul>
+      <li><a href="https://github.com/head77x">Brandon Chung</a></li>
+      <li><a href="https://github.com/zucenko">zucenko</a></li>
+      <li><a href="https://github.com/mortenson">Samuel Mortenson</a></li>
+      <li><a href="https://github.com/rubiojr">Sergio Rubio</a></li>
+      <li><a href="https://github.com/jithinraj">Jithin Raj</a></li>
+      <li><a href="https://github.com/bykovme">Alex Bykov</a></li>
+      <li><a href="https://github.com/zJeremiah">Jeremiah</a></li>
+      <li><a href="https://github.com/dictav">Shintaro Abe</a></li>
+      <li>And some private sponsors</li>
+    </ul>
+  </div>
+</div>
+<h2>コントリビューター</h2>
+<p>2019 年 12 月から 2020 年 11 月の間、以下の方々にコントリビュートしていただきました。心より感謝いたします。</p>
+<p>(コミット数順、敬称略)</p>
+<div class="grid-container">
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/tomlister"><img src="https://github.com/tomlister.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/tomlister">Tom Lister</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/hiroebe"><img src="https://github.com/hiroebe.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/hiroebe">hiroebe</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/corfe83"><img src="https://github.com/corfe83.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/corfe83">corfe83</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/zacharyburkett"><img src="https://github.com/zacharyburkett.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/zacharyburkett">Zachary Burkett</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/gabstv"><img src="https://github.com/gabstv.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/gabstv">Gabriel Ochsenhofer</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/loig"><img src="https://github.com/loig.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/loig">loig</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/nanoslayer"><img src="https://github.com/nanoslayer.png?size=192" width="192"></a></p>
+      <figcaption><a href="https://github.com/nanoslayer">nanoslayer</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-4">
+    <p>その他多数のコントリビューターからコントリビュートしていただきました。</p>
+  </div>
+</div>
+<h2>出来事</h2>
+<h3>まとめ</h3>
+<ul>
+  <li>Ebiten 自体の一番大きい変化は、 <a href="/ja/documents/shader.html">Go 風味シェーディング言語</a>の導入です。今後もっと実アプリケーションで使われるように慣ればと思います。</li>
+  <li>次に大きい変化は、メジャーバージョンが v2 にアップデートされたことです。初の試みでしたが、うまく行ったように思われます。 v3 が出るのはおおよそ 5 年後くらいでしょう。</li>
+  <li>家庭用ゲーム機の対応を行っていました。実際に成果物が出るのは 2021 年でしょう。</li>
+  <li><a href="/ja/blog/2019.html">去年</a>と比べて、 Ebiten を使ったアプリケーションが徐々に増えてきました。大変ありがたいことです。この記事でもいくつかピックアップして紹介しています。</li>
+</ul>
+<h3>2019 年 12 月</h3>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <ul>
+      <li><a href="https://gdg.community.dev/gdg-shikoku/">Google Developer Group Shikoku</a> 主催で、「<a href="https://gdg.community.dev/events/details/google-gdg-shikoku-presents-xiang-chuan-goyan-yu-waiwaihui-gemuzuo-rou-1/">香川 Go 言語 わいわい会 (GAME を作ろう)</a>」という Ebiten の勉強会が香川県で開かれました。</li>
+      <li>「<a href="https://store.steampowered.com/app/1163470/Give_Up_The_Dupe/">Give Up The Dupe</a>」が <a href="https://twitter.com/SilbinaryWolf">Jae Bentvelzen (SilbinaryWolf)</a> 氏によってリリースされました。これは自分の知る限り、一番最初の Ebiten 製 Steam ゲームです。</li>
+    </ul>
+  </div>
+  <div class="grid-item-2">
+    <figure>
+      <p class="img"><img src="/images/blog/2020/giveupthedupe.png" width="456"></p>
+      <figcaption><a href="https://store.steampowered.com/app/1163470/Give_Up_The_Dupe/">Give up the Dupe, SilbinaryWolf, 2019</a></figcaption>
+    </figure>
+  </div>
+</div>
+<h3>1 月</h3>
+<ul>
+  <li><a href="https://github.com/golang/go/issues/27234#issuecomment-577481562">Gomobile の Go modules 対応が完了しました</a>。 Gomobile は Ebiten にとって極めて重要なプロダクトであり、 Go modules の対応は Ebiten v2 のために必要でした。</li>
+</ul>
+<h3>2 月</h3>
+<ul>
+  <li>Go ツールチェーンを WebAssembly として動かす実験を行っていました。成果物は <a href="https://github.com/hajimehoshi/asobiba">Asobiba</a> リポジトリにあります。</li>
+</ul>
+<h3>3 月</h3>
+<ul>
+  <li><a href="https://github.com/hajimehoshi/go2dotnet">go2dotnet</a> の開発を開始。これは、 Go を C# に変換するツールで、 Ebiten のゲームを <a href="https://www.monogame.net/">MonoGame</a> で動かすことができ、家庭用ゲーム機で動かすことを目論んだものでした。実際 <a href="https://twitter.com/hajimehoshi/status/1252614478010540034">Ebiten のゲームを MonoGame 上で動かすことは出来た</a>のですが、生成される C# が巨大すぎて家庭用ゲーム機への C++ 変換がうまくいかなかったので<a href="https://github.com/hajimehoshi/ebiten/issues/1148">断念</a>しました。その代わり、 go2dotnet は後に開発する <a href="https://github.com/hajimehoshi/go2cpp">go2cpp</a> の礎となりました。</li>
+</ul>
+<h3>4 月</h3>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <ul>
+      <li><a href="/ja/documents/1.11.html">Ebiten 1.11</a> をリリース。主な機能は <code>Game</code> インターフェイスと <code>RunGame</code> 関数です。また、デスクトップマスコットが作れるようになりました。</li>
+    </ul>
+  </div>
+  <div class="grid-item-2">
+    <p class="img"><video controls autoplay src="/images/documents/1.11/mascot.mp4" width="456"></p>
+  </div>
+</div>
+<h3>5 月</h3>
+<ul>
+  <li><a href="https://github.com/hajimehoshi/go2cpp">go2cpp</a> の開発を開始。このツールは Go を C++ に変換します。目的は Ebiten のゲームを家庭用ゲーム機で動かすことです。</li>
+</ul>
+<h3>6 月</h3>
+<ul>
+  <li>Ebiten の高速化のために、<a href="/ja/blog/subimage.html">破壊的変更</a>を導入しました。</li>
+</ul>
+<h3>7 月</h3>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <ul>
+      <li><a href="https://odencat.com">Odencat</a> の Ebiten 製ゲーム「<a href="https://snowman.odencat.com">スノーマンストーリー</a>」が、<a href="https://developers-jp.googleblog.com/2020/07/google-play-indie-games-festival-2020-winners.html">Google Play Indie Games Festival 2020</a> にてトップ 10 を受賞しました。おめでとうございます!
+        <ul>
+          <li>Odencat は <a href="https://twitter.com/daigo">Daigo</a> によって設立されたゲーム会社で、 Ebiten 製モバイルゲームをいくつかリリースしています。</li>
+        </ul>
+      </li>
+    </ul>
+    <figure>
+      <p class="img"><img src="/images/blog/2020/snowman.png" width="456"></p>
+      <figcaption><a href="https://snowman.odencat.com">Snowman Story, Odencat Inc., 2020</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-2">
+    <blockquote class="twitter-tweet"><p lang="ja" dir="ltr">「スノーマン・ストーリー」TOP10に選んでいただけたようです。ありがとうございます🥲<br>他の受賞者と特別賞の方もおめでとうございます！！<a href="https://twitter.com/hashtag/IndieGamesFestival?src=hash&amp;ref_src=twsrc%5Etfw">#IndieGamesFestival</a> <a href="https://t.co/mNfP3M27xW">https://t.co/mNfP3M27xW</a></p>&mdash; Ryota (@ryo4071) <a href="https://twitter.com/ryo4071/status/1286553153270214656?ref_src=twsrc%5Etfw">July 24, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+<h3>8 月</h3>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <ul>
+      <li>いくつか興味深いゲームがリリースされました。
+        <ul>
+          <li><a href="https://nadim.computer/">Nadim Kobeissi</a> 氏の <a href="https://piccolo.click/">Piccolo</a> がリリースされました。美しい UI を持つオセロゲームで、 <a href="https://piccolo.click/web/">WebAssembly 版</a>があります。 AI がめちゃくちゃ強くて、自分の場合デフォルトのレベルでは一度も勝てませんでした。</li>
+          <li><a href="https://github.com/corfe83">corfe83</a> 氏の <a href="https://www.reddit.com/r/IdleArmada/">Idle Armada</a> がリリースされました。これはおそらく Ebiten 史上初の有料 Android アプリケーションです。</li>
+        </ul>
+      </li>
+    </ul>
+    <figure>
+      <p class="img"><img src="/images/blog/2020/idlearmada.png" width="456"></p>
+      <figcaption><a href="https://play.google.com/store/apps/details?id=com.musicalbox.idle.armada">Idle Armada, corfe83, 2020</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-2">
+    <figure>
+      <p class="img"><img src="/images/blog/2020/piccolo.png" width="456"></p>
+      <figcaption><a href="https://piccolo.click/web">Piccolo, Nadim Kobeissi, 2020</a></figcaption>
+    </figure>
+  </div>
+</div>
+<h3>9 月</h3>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <ul>
+      <li>Odencat の <a href="https://mousebusters.odencat.com">ねずみバスターズ</a> がリリースされました。</li>
+    </ul>
+    <figure>
+      <p class="img"><img src="/images/blog/2020/mousebusters.png" width="456"></p>
+      <figcaption><a href="https://mousebusters.odencat.com">Mousebusters, Odencat Inc., 2020</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-2">
+    <figure>
+      <p class="img"><img src="/images/blog/2020/mousebusters2.png" width="456"></p>
+      <figcaption><a href="https://mousebusters.odencat.com">Mousebusters, Odencat Inc., 2020</a></figcaption>
+    </figure>
+  </div>
+</div>
+<h3>10 月</h3>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <ul>
+      <li><a href="/ja/documents/1.12.html">Ebiten 1.12</a> をリリース。<a href="/ja/documents/shader.html">Go 風味のシェーダ言語</a>が利用できるようになりました。</li>
+      <li><a href="/ja/documents/2.0.html">Ebiten 2.0</a> をリリース。初めてのメジャーバージョンアップデートです。 <a href="/ja/documents/to_v2.html">API が整理されました</a>。</li>
+    </ul>
+    <p class="img"><video controls autoplay src="/images/documents/shader/lighting.mp4" width="456"></p>
+  </div>
+  <div class="grid-item-2">
+    <pre><code>package main
+
+// Uniform variables.
+var Time float
+var Cursor vec2
+var ScreenSize vec2
+
+// Fragment is the entry point of the fragment shader.
+// Fragment returns the color value for the current position.
+func Fragment(position vec4, texCoord vec2, color vec4) vec4 {
+	// You can define variables with a short variable declaration like Go.
+	lightpos := vec3(Cursor, 50)
+	lightdir := normalize(lightpos - position.xyz)
+	normal := normalize(imageSrc1UnsafeAt(texCoord) - 0.5)
+	ambient := 0.25
+	diffuse := 0.75 * max(0.0, dot(normal.xyz, lightdir))
+
+	// You can treat multiple source images by
+	// imageSrc[N]At or imageSrc[N]UnsafeAt.
+	return imageSrc0UnsafeAt(texCoord) * (ambient + diffuse)
+}</code></pre>
+  </div>
+  <div class="grid-item-2">
+    <ul>
+      <li><a href="https://golab.io">GoLab 2020</a> にて、 <a href="https://github.com/tommyblue">Tommaso Visconti</a> 氏のワークショップ「<a href="https://golab.io/agenda/session/342994">Game development with Go</a>」が行われました。</li>
+    </ul>
+  </div>
+  <div class="grid-item-2">
+    <p class="img"><iframe width="456" height="257" src="https://www.youtube.com/embed/6r6ZH4cA41M" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+  </div>
+</div>  
+</ul>
+<h3>11 月</h3>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <ul>
+      <li>GitHub 主催のゲームジャム <a href="https://itch.io/jam/game-off-2020">Game Off 2020</a> にて、いくつか Ebiten 製ゲームが公開されました。
+        <ul>
+          <li><a href="https://loig.itch.io/moonshot">Moonshot</a> by <a href="https://loig.itch.io">loig</a></li>
+          <li><a href="https://sinisterstuf.itch.io/lunar-defence">Lunar Defence</a> by <a href="https://sinisterstuf.itch.io">sinisterstuf</a></li>
+        </ul>
+      </li>
+    </ul>
+    <figure>
+      <p class="img"><img src="/images/blog/2020/moonshot.png" width="456"></p>
+      <figcaption><a href="https://loig.itch.io/moonshot">Moonshot, Loig, 2020</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-2">
+    <figure>
+      <p class="img"><img src="/images/blog/2020/lunardefence.png" width="456"></p>
+      <figcaption><a href="https://sinisterstuf.itch.io/lunar-defence">Lunar Defence, sinisterstuf, 2020</a></figcaption>
+    </figure>
+  </div>
+</div>
+<h3>12 月</h3>
+<ul>
+  <li>現在、家庭用ゲーム機、特に Nintendo Switch のサポートに向けて作業中です。お楽しみに!</li>
+</ul>
+<h2>2021 年以降の Ebiten</h2>
+<ul>
+  <li>最もプライオリティの高いタスクは家庭用ゲーム機、特に Nintendo Switch のサポートです (<a href="https://github.com/hajimehoshi/ebiten/issues/744">Issue 744</a>)。 <a href="https://github.com/hajimehoshi/go2cpp">go2cpp</a> を使って実現可能であると信じています。 NDA の問題があり、成果物は公開できないのですが、いつか Nintendo Switch 向けの Ebiten ゲームをリリースしたいと考えています。</li>
+  <li>その他興味があるのは UI のサポートです。ネイティブでテキスト入力ができるようになると便利であると考えています (<a href="https://github.com/hajimehoshi/ebiten/issues/1029">Issue 1029</a>)。</li>
+</ul>
