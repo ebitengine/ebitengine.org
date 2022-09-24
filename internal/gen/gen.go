@@ -147,7 +147,7 @@ func Run(url, description string) error {
 		defer w.Close()
 
 		title := "Ebitengine - A dead simple 2D game engine for Go"
-		if path != filepath.Join("contents", "index.html") {
+		if path != filepath.Join("contents", "index.html") && path != filepath.Join("contents", "ja", "index.html") {
 			t, err := p.title()
 			if err != nil {
 				return err
