@@ -43,10 +43,6 @@ func newPage(content []byte, path string) (*page, error) {
 	return c, nil
 }
 
-func (p *page) name() string {
-	return filepath.Base(p.path)
-}
-
 func (p *page) title() (string, error) {
 	dirs := strings.Split(filepath.Dir(p.path), string(filepath.Separator))
 	if len(dirs) == 1 || (len(dirs) == 2 && filepath.Base(p.path) == "index.html") {
