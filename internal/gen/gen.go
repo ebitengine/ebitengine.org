@@ -18,7 +18,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"html/template"
 	"io/ioutil"
 	"os"
@@ -146,15 +145,9 @@ func Run(url, description string) error {
 		}
 		defer w.Close()
 
-		title := "Ebitengine - A dead simple 2D game engine for Go"
-		if path != filepath.Join("contents", "index.html") && path != filepath.Join("contents", "ja", "index.html") {
-			t, err := p.title()
-			if err != nil {
-				return err
-			}
-			if t != "" {
-				title = fmt.Sprintf("%s - Ebitengine", t)
-			}
+		title, err := p.title()
+		if err != nil {
+			return err
 		}
 
 		canonical := ""

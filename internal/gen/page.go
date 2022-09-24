@@ -48,11 +48,16 @@ func (p *page) name() string {
 }
 
 func (p *page) title() (string, error) {
+	dirs := strings.Split(filepath.Dir(p.path), string(filepath.Separator))
+	if len(dirs) == 1 || (len(dirs) == 2 && filepath.Base(p.path) == "index.html") {
+		return "Ebitengine - A dead simple 2D game engine for Go", nil
+	}
+
 	h1, err := findFirstElementByName(p.node, "h1")
 	if err != nil {
 		return "", err
 	}
-	return h1.FirstChild.Data, nil
+	return h1.FirstChild.Data + " - Ebitengine", nil
 }
 
 func (p *page) share() (string, error) {
