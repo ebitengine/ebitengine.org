@@ -53,7 +53,7 @@ func (p *page) title() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return h1.FirstChild.Data + " - Ebitengine", nil
+	return nodeText(h1) + " - Ebitengine", nil
 }
 
 func (p *page) share() (string, error) {
@@ -158,4 +158,16 @@ func findElementByID(node *html.Node, id string) (*html.Node, error) {
 		return nil, err
 	}
 	return found, nil
+}
+
+func nodeText(node *html.Node) string {
+	if node.Type == html.TextNode {
+		return node.Data
+	}
+
+	var text string
+	for e := node.FirstChild; e != nil; e = e.NextSibling {
+		text += nodeText(e)
+	}
+	return text
 }
