@@ -12,7 +12,7 @@
   <p>Ebitengine を動かすためには X Window system が必要です。 GNOME3 のようなウィンドウマネージャをインストールする必要があります。<a href="https://www.freebsd.org/doc/handbook/x11-wm.html">公式マニュアル</a>を参照してください。 <code>pkg install xorg</code> を実行する必要があることに注意してください。</p>
 </div>
 
-<h2>Go</h2>
+<h2>Go のインストール</h2>
 <p><a href="https://golang.org/">Go</a> をインストールしてください。 Ebitengine を動かすためには Go 1.15 以降が必要です。</p>
 
 <div data-tags="windows">
@@ -20,7 +20,7 @@
 </div>
 
 <div data-tags="!windows">
-  <h2>C コンパイラ</h2>
+  <h2>C コンパイラのインストール</h2>
   <p>Ebitengine は Go だけではなく C も使っているため、 C コンパイラが必要になります。</p>
   <div data-tags="darwin">
     <p>最新の macOS ならば、ターミナル上で <code>clang</code> と入力すれば、 clang がまだインストールされていないのであれば、ダイアログが表示されます。指示に従ってインストールしてください。</p>
@@ -39,7 +39,7 @@
 </div>
 
 <div data-tags="!windows,!darwin">
-  <h2>依存ライブラリ</h2>
+  <h2>依存ライブラリのインストール</h2>
   <div data-tags="linux">
     <h3>Debian / Ubuntu</h3>
     <pre><code>sudo apt install libc6-dev libglu1-mesa-dev libgl1-mesa-dev libxcursor-dev libxi-dev libxinerama-dev libxrandr-dev libxxf86vm-dev libasound2-dev pkg-config</code></pre>
@@ -57,23 +57,32 @@
   </div>
 </div>
 
-<h2>Ebitengine</h2>
+<h2>環境の確認</h2>
+<p>正しい環境を持っているかどうかは、サンプルを実行して確かめることができます:</p>
+<pre><code>go run -tags=example github.com/hajimehoshi/ebiten/v2/examples/rotate@latest</code></pre>
+<p><code>-tags=example</code> は Ebitengine のサンプルを実行するために必要です。 Ebitengine サンプルのパッケージがビルドタグを必要とするためです。</p>
+<p>回転する Gopher の絵がウィンドウ上に表示されたならば、おめでとうございます! Ebitengine を動かすための正しい環境が整いました。</p>
+<p class="img thumbnail"><img src="/images/rotate.png" width="320" height="240" alt="Rotate example"></p>
+
+<h2>Ebitengine を使ったプログラムの実行</h2>
 <p>Ebitengine は通常の Go ライブラリとして使用できます。プログラムが Ebitengine を使用していれば、 Go コマンドが自動的に Ebitengine をインストールします。</p>
 <p>最初に、ローカルモジュールを作ります。</p>
 <pre><code># Create a directory for your game.
 mkdir yourgame
 cd yourgame
 
-# Initialize go.mod by `go mod`.
+# `go mod init` で go.mod を初期化する.
 go mod init github.com/yourname/yourgame</code></pre>
 <p><code>github.com/yourname/yourgame</code> のような URL をモジュール名に使用します。実際のところ、自分のプログラムを公開するつもりがないのであれば、 <code>example.com/m</code> などどんなモジュール名でも問題ありません。モジュール名は後でいつでも変えられます。</p>
-<p>次に、 Ebitengine のサンプルを実行します。</p>
-<pre><code>go get github.com/hajimehoshi/ebiten/v2
-go run -tags=example github.com/hajimehoshi/ebiten/v2/examples/rotate</code></pre>
-<p><code>go get</code> は Ebitengine のコードを取得します。 <code>go run</code> は Go ファイルをコンパイルし、即座に実行します。最初のコード取得とコンパイルは少々時間がかかるかもしれないため、しばらくお待ち下さい。必要ならば <code>-x</code> をつけることで、コンパイル処理中に何が行われているのかを見ることができます。</p>
-<p><code>-tags=example</code> は Ebitengine のサンプルを実行するために必要です。 Ebitengine サンプルのパッケージがビルドタグを必要とするためです。</p>
-<p>回転する Gopher の絵がウィンドウ上に表示されたならば、おめでとうございます! Ebitengine のインストールに成功しました。</p>
-<p class="img thumbnail"><img src="/images/rotate.png" width="320" height="240" alt="Rotate example"></p>
+<p>次のような内容で <code>main.go</code> ファイルを追加します:</p>
+<pre data-codesrc="/go/helloworld/main.go"></pre>
+<p><code>go mod tidy</code> を実行して、依存ライブラリを <code>go.mod</code> に追加します:</p>
+<pre><code>go mod tidy</code></pre>
+<p>最後に、プログラムを実行するために <code>go run</code> コマンドを実行します:</p>
+<pre><code>go run .</code></pre>
+<p>メッセージを含んだウィンドウが見えるはずです:</p>
+<p class="img thumbnail"><img src="/images/helloworld.png" width="320" height="240" alt="Hello, World!"></p>
+
 <script>
   function switchOS(os) {
       const newOS = switchOSImpl(os);

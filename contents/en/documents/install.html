@@ -12,7 +12,7 @@
   <p>Ebitengine requires X Window system and you need to install a window manager like GNOME3. See <a href="https://www.freebsd.org/doc/handbook/x11-wm.html">the official manual</a>. Note that you also need to do <code>pkg install xorg</code>.</p>
 </div>
 
-<h2>Go</h2>
+<h2>Installing Go</h2>
 <p>Install <a href="https://golang.org/">Go</a> on your machine. Ebitengine requires Go 1.15 or later.</p>
 
 <div data-tags="windows">
@@ -20,7 +20,7 @@
 </div>
 
 <div data-tags="!windows">
-  <h2>C compiler</h2>
+  <h2>Installing a C compiler</h2>
   <p>A C compiler is required as Ebitengine uses not only Go but also C.</p>
   <div data-tags="darwin">
     <p>On the latest macOS, just type <code>clang</code> on your terminal and a dialog would appear if you don't have clang compiler. Follow the instruction to install it.</p>
@@ -39,7 +39,7 @@
 </div>
 
 <div data-tags="!windows,!darwin">
-  <h2>Dependencies</h2>
+  <h2>Installing dependencies</h2>
   <div data-tags="linux">
     <h3>Debian / Ubuntu</h3>
     <pre><code>sudo apt install libc6-dev libglu1-mesa-dev libgl1-mesa-dev libxcursor-dev libxi-dev libxinerama-dev libxrandr-dev libxxf86vm-dev libasound2-dev pkg-config</code></pre>
@@ -57,24 +57,32 @@
   </div>
 </div>
 
-<h2>Ebitengine</h2>
+<h2>Confirming your environment</h2>
+<p>You can check whether you have a correct environment by executing an example:</p>
+<pre><code>go run -tags=example github.com/hajimehoshi/ebiten/v2/examples/rotate@latest</code></pre>
+<p>Note that <code>-tags=example</code> is needed to execute the examples as the Ebitengine example packages require the build tag.</p>
+<p>If you see this window with a rotating Gophers image, congratulations! You have a correct environment to use Ebitengine!</p>
+<p class="img thumbnail"><img src="/images/rotate.png" width="320" height="240" alt="Rotate example"></p>
+
+<h2>Running a program with Ebitengine</h2>
 <p>Ebitengine can be used as a usual Go library. Go command automatically installs Ebitengine when your program uses Ebitengine.</p>
 <p>First, create your local module.</p>
 <pre><code># Create a directory for your game.
 mkdir yourgame
 cd yourgame
 
-# Initialize go.mod by `go mod`.
+# Initialize go.mod by `go mod init`.
 go mod init github.com/yourname/yourgame</code></pre>
 <p>Use URL for your module name like <code>github.com/yourname/yourgame</code>. Actually, any module name like <code>example.com/m</code> is fine as long as you don't plan to share this publicly. You can change the module name anytime later.</p>
-<p>Then, run the command to execute an Ebitengine example.</p>
-<pre><code>go get github.com/hajimehoshi/ebiten/v2
-go run -tags=example github.com/hajimehoshi/ebiten/v2/examples/rotate</code></pre>
-<p><code>go get</code> retrieves the code of Ebitengine. <code>go run</code> compiles Go files and runs it immediately after the compilation. As the first retrieving the code and compilation might take a little long time, please wait for a while. Note that you can see what is happening on the compilation process with <code>-x</code> option if you want.</p>
-<p>Note that <code>-tags=example</code> is needed to execute the examples as the Ebitengine example packages require the build tag.</p>
-<p>If you see this window with a rotating Gophers image, congratulations!</p>
-<p>You have sucessfully installed Ebitengine!  </p>
-<p class="img thumbnail"><img src="/images/rotate.png" width="320" height="240" alt="Rotate example"></p>
+<p>Add <code>main.go</code> with this content:</p>
+<pre data-codesrc="/go/helloworld/main.go"></pre>
+<p>Run <code>go mod tidy</code> to add dependencies to your <code>go.mod</code>:</p>
+<pre><code>go mod tidy</code></pre>
+<p>Finally, run <code>go run</code> to execute your program.</p>
+<pre><code>go run .</code></pre>
+<p>You will be able to see a window with a message:</p>
+<p class="img thumbnail"><img src="/images/helloworld.png" width="320" height="240" alt="Hello, World!"></p>
+
 <script>
   function switchOS(os) {
       const newOS = switchOSImpl(os);
