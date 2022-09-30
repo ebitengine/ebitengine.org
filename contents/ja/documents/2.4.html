@@ -117,3 +117,10 @@
 <ul>
   <li>Android で、 <code>DrawImage</code> が呼ばれた後に、一部分の領域に対して <code>WritePixels</code> が呼ばれるとアプリケーションがクラッシュした問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/2346">#2346</a>)。</li>
 </ul>
+<h2>v2.4.6</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/95?closed=1">Issues for v2.4.6</a></p>
+<h3>バグ修正</h3>
+<ul>
+  <li>Android で、アプリケーションを切り替えた時に、特定の条件下で、描画された画像が予期せず消えてしまった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/2354">#2354</a>)。</li>
+  <li>スクリーン上での<code>(*ebiten.Image).Set</code> で、他に描画コマンドがない場合に正しく動かなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/2362">#2362</a>)。</li>
+</ul>

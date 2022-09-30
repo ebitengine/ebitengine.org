@@ -126,3 +126,10 @@
 <ul>
   <li>An application crashed when <code>DrawImage</code> was called and then <code>WritePixels</code> for a partial region was called on Android (<a href="https://github.com/hajimehoshi/ebiten/issues/2346">#2346</a>).</li>
 </ul>
+<h2>v2.4.6</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/95?closed=1">Issues for v2.4.6</a></p>
+<h3>Bug fixes</h3>
+<ul>
+  <li>A rendered image unexpectedly disappeared under certain conditions when switching applications on Android (<a href="https://github.com/hajimehoshi/ebiten/issues/2354">#2354</a>).</li>
+  <li><code>(*ebiten.Image).Set</code> on the screen without any other draw commands didn't work correctly (<a href="https://github.com/hajimehoshi/ebiten/issues/2362">#2362</a>).</li>
+</ul>
