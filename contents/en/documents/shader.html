@@ -193,20 +193,14 @@ v2.xyz = v2.xxx        // Get vec3(1, 1, 1), and set it to all the components to
   <tr><th><code>imageDstRegionOnTexture() (vec2, vec2)</code></th><td>Returns the destination image's origin position and the size on the texture in texels (v2.1.0)</td></tr>
 </table>
 <h3>Textures and images</h3>
-<div class="grid-container">
-  <div class="grid-item-2">
-    <p>Ebitengine's image (<code>ebiten.Image</code>) is actually a part of an internal texture. Then, position calculations in shaders are a little complex.</p>
-    <p>A pixel is a unit for one color dot. On the other hand, texel is a unit covering the whole area with values in between 0 and 1. The meaning of texels depends on a texture, then you cannot mix texels with different textures.</p>
-    <p>To convert pixels and texels each other, you can use these formulas.</p>
-    <p class="math">\begin{aligned}
-(\text{texels}) &= \frac{(\text{pixels})}{(\text{the texture's size in pixels})} \\
-(\text{pixels}) &= (\text{texels}) \cdot (\text{the texture's size in pixels}) \\
-\end{aligned}</p>
-  </div>
-  <div class="grid-item-2">
-    <p class="img"><img src="/images/documents/shader/textureandimage.png" width="456"></p>
-  </div>
-</div>
+<p>Ebitengine's image (<code>ebiten.Image</code>) is actually a part of an internal texture. Then, position calculations in shaders are a little complex.</p>
+<p>A pixel is a unit for one color dot. On the other hand, texel is a unit covering the whole area with values in between 0 and 1. The meaning of texels depends on a texture, then you cannot mix texels with different textures.</p>
+<p>To convert pixels and texels each other, you can use these formulas.</p>
+<p class="math">\begin{aligned}
+  (\text{texels}) &= \frac{(\text{pixels})}{(\text{the texture's size in pixels})} \\
+  (\text{pixels}) &= (\text{texels}) \cdot (\text{the texture's size in pixels}) \\
+  \end{aligned}</p>
+<p class="img"><img src="/images/documents/shader/textureandimage.png" width="456"></p>
 <h2>Editor Plugins</h2>
 <p>There are plugins for some editors by volunteers to edit Kage programs.</p>
 <ul>

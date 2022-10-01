@@ -193,20 +193,14 @@ v2.xyz = v2.xxx        // Get vec3(1, 1, 1), and set it to all the components to
   <tr><th><code>imageDstRegionOnTexture() (vec2, vec2)</code></th><td>描画先画像の、テクスチャ上の原点位置と大きさをテクセル単位で返す。 (v2.1.0)</td></tr>
 </table>
 <h3>テクスチャと画像</h3>
-<div class="grid-container">
-  <div class="grid-item-2">
-    <p>Ebitengine の画像 (<code>ebiten.Image</code>) は実際には内部のテクスチャ上の一部です。そのためシェーダ上での座標計算が少々複雑になります。</p>
-    <p>ピクセルは 1 画素を 1 とする単位です。一方テクセルは 0 から 1 の範囲が全体を表す単位です。テクセルの意味はテクスチャに依存するため、異なるテクスチャのテクセルを混ぜることは出来ません。</p>
-    <p>ピクセルとテクセルを相互に変換するには次の式を使います。</p>
-    <p class="math">\begin{aligned}
-(\text{texels}) &= \frac{(\text{pixels})}{(\text{the texture's size in pixels})} \\
-(\text{pixels}) &= (\text{texels}) \cdot (\text{the texture's size in pixels}) \\
-\end{aligned}</p>
-  </div>
-  <div class="grid-item-2">
-    <p class="img"><img src="/images/documents/shader/textureandimage.png" width="456"></p>
-  </div>
-</div>
+<p>Ebitengine の画像 (<code>ebiten.Image</code>) は実際には内部のテクスチャ上の一部です。そのためシェーダ上での座標計算が少々複雑になります。</p>
+<p>ピクセルは 1 画素を 1 とする単位です。一方テクセルは 0 から 1 の範囲が全体を表す単位です。テクセルの意味はテクスチャに依存するため、異なるテクスチャのテクセルを混ぜることは出来ません。</p>
+<p>ピクセルとテクセルを相互に変換するには次の式を使います。</p>
+<p class="math">\begin{aligned}
+  (\text{texels}) &= \frac{(\text{pixels})}{(\text{the texture's size in pixels})} \\
+  (\text{pixels}) &= (\text{texels}) \cdot (\text{the texture's size in pixels}) \\
+  \end{aligned}</p>
+<p class="img"><img src="/images/documents/shader/textureandimage.png" width="456"></p>
 <h2>エディタのプラグイン</h2>
 <p>Kage プログラムを編集するための、有志によるエディタプラグインがあります。</p>
 <ul>
