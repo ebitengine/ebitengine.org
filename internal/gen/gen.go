@@ -190,19 +190,14 @@ func Run(url, description string) error {
 
 		var altPages []AltPage
 		for _, l := range langDirs {
-			if l == lang {
-				altPages = append(altPages, AltPage{
-					Available: false,
-					Lang:      lang,
-					Title:     langName(lang),
-				})
-				continue
-			}
-
 			var altRel string
 			if rel == "index.html" {
-				// The top page for non-English
-				altRel = filepath.Join(l, rel)
+				if l == "en" {
+					altRel = "index.html"
+				} else {
+					// The top page for non-English
+					altRel = filepath.Join(l, rel)
+				}
 			} else {
 				dir, file := filepath.Split(rel)
 				if dir == lang+string(filepath.Separator) && file == "index.html" && l == "en" {
@@ -226,11 +221,11 @@ func Run(url, description string) error {
 			}
 
 			altPages = append(altPages, AltPage{
-				Available: true,
-				Lang:      l,
-				Title:     langName(l),
-				RelURL:    relURL,
-				AbsURL:    url + relURL,
+				SameLang: l == lang,
+				Lang:     l,
+				Title:    langName(l),
+				RelURL:   relURL,
+				AbsURL:   url + relURL,
 			})
 		}
 
@@ -275,11 +270,11 @@ func Run(url, description string) error {
 }
 
 type AltPage struct {
-	Available bool
-	Lang      string
-	Title     string
-	RelURL    string
-	AbsURL    string
+	SameLang bool
+	Lang     string
+	Title    string
+	RelURL   string
+	AbsURL   string
 }
 
 func langName(lang string) string {
