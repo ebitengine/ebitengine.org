@@ -195,7 +195,6 @@ func Run(url, description string) error {
 					Available: false,
 					Lang:      lang,
 					Title:     langName(lang),
-					URL:       "",
 				})
 				continue
 			}
@@ -221,16 +220,17 @@ func Run(url, description string) error {
 				continue
 			}
 
-			url := "/" + filepath.ToSlash(altRel)
-			if strings.HasSuffix(url, "/index.html") {
-				url = url[:len(url)-len("index.html")]
+			relURL := "/" + filepath.ToSlash(altRel)
+			if strings.HasSuffix(relURL, "/index.html") {
+				relURL = relURL[:len(relURL)-len("index.html")]
 			}
 
 			altPages = append(altPages, AltPage{
 				Available: true,
 				Lang:      l,
 				Title:     langName(l),
-				URL:       url,
+				RelURL:    relURL,
+				AbsURL:    url + relURL,
 			})
 		}
 
@@ -278,7 +278,8 @@ type AltPage struct {
 	Available bool
 	Lang      string
 	Title     string
-	URL       string
+	RelURL    string
+	AbsURL    string
 }
 
 func langName(lang string) string {
