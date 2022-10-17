@@ -31,7 +31,7 @@
     <nav>
       <h1><a href="{{ .Top }}">Ebitengine™</a></h1>
       <ul id="language">{{ range .AltPages }}
-        {{ if .SameLang }}<li class="active">{{.Title}}</li>{{ else }}<li><a href="{{.RelURL}}">{{.Title}}</a></li>{{ end }}
+        {{ if .SameLang }}<li class="active">{{.Title}}</li>{{ else }}<li><a href="{{.RelURL}}" hreflang="{{.Lang}}">{{.Title}}</a></li>{{ end }}
       {{ end }}</ul>
       <ul>
         <li><a href="https://ebiten-zh.vercel.app/">中文</a></li>
