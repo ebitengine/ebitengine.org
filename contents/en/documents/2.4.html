@@ -145,3 +145,10 @@
 <ul>
   <li>Creating an unmanged image in a different goroutine might result in glitches (<a href="https://github.com/hajimehoshi/ebiten/issues/2390">#2390</a>).</li>
 </ul>
+<h2>v2.4.9</h2>
+<h3>Bug fixes</h3>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/98?closed=1">Issues for v2.4.9</a></p>
+<ul>
+  <li><code>ebiten.SetVsyncEnabled</code> caused a hang for iOS (<a href="https://github.com/hajimehoshi/ebiten/issues/2407">#2407</a>).</li>
+  <li>Updated an indirect dependency <code>golang.org/x/text/language</code> that had an security issue (<a href="https://pkg.go.dev/vuln/GO-2022-1059">GO-2022-1059</a>) (<a href="https://github.com/hajimehoshi/ebiten/issues/2411">#2411</a>).</li>
+</ul>

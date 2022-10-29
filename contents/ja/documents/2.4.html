@@ -136,3 +136,10 @@
 <ul>
   <li>違う Goroutine 上でアンマネージドな画像を作るとノイズが生じていた問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/2390">#2390</a>)。</li>
 </ul>
+<h2>v2.4.9</h2>
+<h3>バグ修正</h3>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/98?closed=1">Issues for v2.4.9</a></p>
+<ul>
+  <li>iOS で <code>ebiten.SetVsyncEnabled</code> を呼ぶとハングする問題を修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/2407">#2407</a>)。</li>
+  <li>間接的な依存ライブラリ <code>golang.org/x/text/language</code> にセキュリティ問題 (<a href="https://pkg.go.dev/vuln/GO-2022-1059">GO-2022-1059</a>) があったためアップデート (<a href="https://github.com/hajimehoshi/ebiten/issues/2411">#2411</a>)。</li>
+</ul>
