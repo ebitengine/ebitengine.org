@@ -172,6 +172,7 @@ function updateTOC() {
     }
 
     let headers = document.querySelectorAll(query.join(', '));
+    const ids = new Map();
     for (const header of headers) {
         if (!header.offsetWidth) {
             header.id = '';
@@ -182,7 +183,15 @@ function updateTOC() {
         // The value must be unique amongst all the IDs in the element’s home subtree and must contain at least one
         // character. The value must not contain any space characters.
         const id = header.textContent.replace(/\s/mg, '_');
-        header.id = id;
+        let count = 0;
+        let idWithNum = id;
+        if (ids.has(id)) {
+            count = ids.get(id);
+            idWithNum += '__' + count;
+        }
+        count++;
+        ids.set(id, count);
+        header.id = idWithNum;
     }
     headers = Array.prototype.filter.call(headers, e => {
         return e.offsetParent !== null;
