@@ -18,10 +18,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"html/template"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 )
@@ -74,6 +77,11 @@ func Run(url, description string) error {
 		}
 	}
 
+	lb, err := latestBranch()
+	if err != nil {
+		return err
+	}
+
 	if err := filepath.Walk("contents", func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -114,6 +122,7 @@ func Run(url, description string) error {
 				return err
 			}
 			j["Base"] = filepath.Base(path[:len(path)-len(filepath.Ext(path))])
+			j["LatestBranch"] = lb
 
 			b := &bytes.Buffer{}
 			if err := t.Execute(b, j); err != nil {
@@ -285,4 +294,17 @@ func langName(lang string) string {
 		return "日本語"
 	}
 	return ""
+}
+
+func latestBranch() (string, error) {
+	cmd := exec.Command("go", "list", "-m", "-f", "{{.Version}}", "github.com/hajimehoshi/ebiten/v2@latest")
+	out, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+	m := regexp.MustCompile(`^v(\d+\.\d+)`).FindSubmatch(out)
+	if m == nil {
+		return "", fmt.Errorf("gen: invalid version: %s", strings.TrimSpace(string(out)))
+	}
+	return string(m[1]), nil
 }
