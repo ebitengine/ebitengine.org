@@ -39,7 +39,7 @@ var (
 )
 
 func examples() ([]string, error) {
-	f, err := os.Open(filepath.Join("contents", "examples"))
+	f, err := os.Open(filepath.Join("contents", "en", "examples"))
 	if err != nil {
 		return nil, err
 	}
