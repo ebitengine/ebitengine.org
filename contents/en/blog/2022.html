@@ -1,0 +1,593 @@
+<style>
+  .avatar img {
+      border-radius: 50%;
+  }
+</style>
+<h1>Ebitengine in 2022</h1>
+<p class="meta">Hajime Hoshi<br><span id="meta-created">2022-12-06</span></p>
+<p>It's been 9 years since I started to develop Ebitengine. This article is a retrospective of Ebitengine in 2022.</p>
+<h2>Sponsors</h2>
+<p>These people <a href="https://github.com/sponsors/hajimehoshi">sponsored</a> me in between December 2021 and November 2022. I can't thank you enough!</p>
+<p>(In the order of total sponsoring amounts)</p>
+<div class="grid-container">
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://symbolic.software"><img src="/images/symbolic_software.jpg" width="168"></a></p>
+      <figcaption><a href="https://symbolic.software">Symbolic Software</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://odencat.com"><img src="/images/odencat.png" width="168"></a></p>
+      <figcaption><a href="https://odencat.com">Odencat Inc.</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/silbinarywolf"><img src="https://github.com/silbinarywolf.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/silbinarywolf">Jae Bentvelzen</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/pokemium"><img src="https://github.com/pokemium.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/pokemium">Akatsuki</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/sedyh"><img src="https://github.com/sedyh.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/sedyh">Artem Sedykh</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/cdemers"><img src="https://github.com/cdemers.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/cdemers">Charle Demers</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/Kirbstomper"><img src="https://github.com/Kirbstomper.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/Kirbstomper">Christopher Smith</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/lamados"><img src="https://github.com/lamados.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/lamados">Ella Kleine</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/hunterkepley"><img src="https://github.com/hunterkepley.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/hunterkepley">Hunter Kepley</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/zJeremiah"><img src="https://github.com/zJeremiah.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/zJeremiah">Jeremiah</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/co0p"><img src="https://github.com/co0p.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/co0p">Julian Godesa</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/michaelmcallister"><img src="https://github.com/michaelmcallister.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/michaelmcallister">Michael McAllister</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/mortenson"><img src="https://github.com/mortenson.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/mortenson">Samuel Mortenson</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/windo"><img src="https://github.com/windo.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/windo">Siim Põder</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/sinisterstuf"><img src="https://github.com/sinisterstuf.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/sinisterstuf">Siôn le Roux</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/SolarLune"><img src="https://github.com/SolarLune.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/SolarLune">SolarLune</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/raa0121"><img src="https://github.com/raa0121.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/raa0121">raa0121</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/DWethmar"><img src="https://github.com/DWethmar.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/DWethmar">Dennis Wethmar</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/TheMightyGit"><img src="https://github.com/TheMightyGit.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/TheMightyGit">Johnny</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/JamieCrisman"><img src="https://github.com/JamieCrisman.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/JamieCrisman">Jamie</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/vladh"><img src="https://github.com/vladh.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/vladh">Vlad-Ștefan Harbuz</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/mrwormhole"><img src="https://github.com/mrwormhole.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/mrwormhole">Talha Altınel</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/Critters"><img src="https://github.com/Critters.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/Critters">Critters</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/Sidewinder1138"><img src="https://github.com/Sidewinder1138.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/Sidewinder1138">Christopher Anderson</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/rubiojr"><img src="https://github.com/rubiojr.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/rubiojr">Sergio Rubio</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/inkeliz"><img src="https://github.com/inkeliz.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/inkeliz">inkeliz</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/elgopher"><img src="https://github.com/elgopher.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/elgopher">Jacek Olszak</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/papr8ka"><img src="https://github.com/papr8ka.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/papr8ka">Paprika</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <ul>
+      <li><a href="https://github.com/drpaneas">Panagiotis Georgiadis</a></li>
+      <li><a href="https://github.com/shrmpy">Shrimp Research</a></li>
+      <li><a href="https://github.com/nico-bb">Nicolas</a></li>
+      <li><a href="https://github.com/griffithsh">Huw Griffiths</a></li>
+      <li><a href="https://github.com/erexo">Kacper Drobny</a></li>
+      <li><a href="https://github.com/kengonakajima">Kengo Nakajima</a></li>
+    </ul>
+  </div>
+  <div class="grid-item-1">
+    <ul>
+      <li><a href="https://github.com/liamg">Liam Galvin</a></li>
+      <li><a href="https://github.com/nikolaydubina">Nikolay Dubina</a></li>
+      <li><a href="https://github.com/stt106">Tiantang Sun</a></li>
+      <li><a href="https://github.com/tomlister">Tom Lister</a></li>
+      <li><a href="https://github.com/yohamta">Yota Hamada</a></li>
+      <li><a href="https://github.com/brudnak">andrew brudnak</a></li>
+    </ul>
+  </div>
+  <div class="grid-item-1">
+    <ul>
+      <li><a href="https://github.com/neguse">neguse</a></li>
+      <li><a href="https://github.com/mikenye">Mike</a></li>
+      <li><a href="https://github.com/m110">Miłosz Smółka</a></li>
+      <li><a href="https://github.com/OpenSauce">Leigh</a></li>
+      <li><a href="https://github.com/christopher-weiss">Christopher Weiss</a></li>
+      <li><a href="https://github.com/kent-hamaguchi">Kent</a></li>
+    </ul>
+  </div>
+  <div class="grid-item-1">
+    <ul>
+      <li><a href="https://github.com/Jack-Ji">jack</a></li>
+      <li><a href="https://github.com/Stasenko-Konstantin">Стасенко Константин</a></li>
+      <li>And some private sponsors</li>
+    </ul>
+  </div>
+</div>
+<h2>Contributors</h2>
+<p>These people contributed to Ebitengine and its related projects in between December 2021 and November 2022. I appreciate all the contributions!</p>
+<p>(In the order of total commits)</p>
+<h3>Ebitengine</h3>
+<div class="grid-container">
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/divVerent"><img src="https://github.com/divVerent.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/divVerent">divVerent</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/TotallyGamerJet"><img src="https://github.com/TotallyGamerJet.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/TotallyGamerJet">TotallyGamerJet</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/mymmrac"><img src="https://github.com/mymmrac.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/mymmrac">Artem Yadelskyi</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/superloach"><img src="https://github.com/superloach.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/superloach">Terra Brown</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/Skenvy"><img src="https://github.com/Skenvy.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/Skenvy">Nathan Levett</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/Zyko0"><img src="https://github.com/Zyko0.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/Zyko0">Bertrand Jung</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/erexo"><img src="https://github.com/erexo.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/erexo">Kacper Drobny</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/mattn"><img src="https://github.com/mattn.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/mattn">mattn</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/RusAD32"><img src="https://github.com/RusAD32.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/RusAD32">Vseslav Kochenov</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/jacobsalmela"><img src="https://github.com/jacobsalmela.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/jacobsalmela">Jacob Salmela</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <ul>
+      <li><a href="https://github.com/xyproto">Alexander F. Rødseth</a></li>
+      <li><a href="https://github.com/raa0121">raa0121</a></li>
+      <li><a href="https://github.com/chenbobby">Bobby Chen</a></li>
+      <li><a href="https://github.com/changkun">Changkun Ou</a></li>
+      <li><a href="https://github.com/eliasdaler">Elias Daler</a></li>
+      <li><a href="https://github.com/fpiwowarczyk">Filip Piwowarczyk</a></li>
+    </ul>
+  </div>
+  <div class="grid-item-1">
+    <ul>
+      <li><a href="https://github.com/herczogzoltan">Herczog Zoltán</a></li>
+      <li><a href="https://github.com/JVMerkle">Julian Merkle</a></li>
+      <li><a href="https://github.com/miniscruff">Ronnie</a></li>
+      <li><a href="https://github.com/tomlister">Tom Lister</a></li>
+      <li><a href="https://github.com/vivekmurali">Vivek Murali</a></li>
+      <li><a href="https://github.com/ebiiim">ebiiim</a></li>
+    </ul>
+  </div>
+</div>
+<h3>Purego, Oto, and Hitsumabushi</h3>
+<div class="grid-container">
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/TotallyGamerJet"><img src="https://github.com/TotallyGamerJet.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/TotallyGamerJet">TotallyGamerJet</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/samhocevar"><img src="https://github.com/samhocevar.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/samhocevar">Sam Hocevar</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/bloeys"><img src="https://github.com/bloeys.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/bloeys">Omar Mahdi</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <ul>
+      <li><a href="https://github.com/whereswaldon">Chris Waldon</a></li>
+      <li><a href="https://github.com/gucio321">M.Sz</a></li>
+      <li><a href="https://github.com/divVerent">divVerent</a></li>
+    </ul>
+  </div>
+</div>
+<h2>Events</h2>
+<h3>December, 2021</h3>
+<ul>
+  <li>I started a new OSS project <a href="https://github.com/hajimehoshi/hitsumabushi">Hitsumabushi</a> especially for consoles like Nintendo Switch™. Hitsumabushi provides APIs to generate JSON for go-build's <code>-overlay</code> option. Hitsumabushi aims to make Go programs work on almost everywhere by overwriting system calls with C function calls. Thanks to this, I succeeded to compile a Go program to a native Nintendo Switch binary. See the previous blog article <a href="/en/blog/native_compiling_for_nintendo_switch.html">"Compiling a Go program into a native binary for Nintendo Switch™"</a> for more details.</li>
+  <li>A workshop "<a href="https://gdgshikoku.connpass.com/event/233967/">香川Go言語 わいわい会 (GAMEを作ろう)#3 (Kagawa Go-language Waiwai-kai "Let's make a game" #3)</a>" was held in Kagawa prefecture, Japan.</li>
+  <li>I wrote a blog article "<a href="https://medium.com/@hajimehoshi/game-engines-as-an-art-form-f66c835c0a92">Game Engines as an Art Form — My 8+ Years of Developing and Maintaining My Own Engine</a>" to explain the background story of Ebitengine.</li>
+</ul>
+<h3>April</h3>
+<ul>
+  <li><a href="/en/documents/2.3.html">Ebitengine v2.3.0</a> was released. The main features are DirectX for Windows, native compiling for Nintendo Switch, and so on.</li>
+</ul>
+<h3>May</h3>
+<ul>
+  <li><a href="ebitengine.html">I renamed Ebiten to Ebitengine.</a></li>
+</ul>
+<h3>June</h3>
+<ul>
+  <li><a href="https://odencat.com/">Odencat</a> released <a href="https://odencat.com/fishingparadiso/">Fishing Paradiso</a> for Nintendo Switch.</li>
+</ul>
+<figure>
+  <p class="img thumbnail"><a href="https://odencat.com/fishingparadiso/"><img src="/images/blog/2022/fishingparadiso_banner.png" width="360"></a></p>
+  <figcaption>Copyright 2022 Odencat</figcaption>
+</figure>
+<ul>
+  <li>An indie game <a href="https://store.steampowered.com/app/559210/Rakuen/">Rakuen</a>'s developer <a href="https://twitter.com/supershigi/status/1533286994939260928">announced</a> to port it to Nintendo Switch with Ebitengine.</li>
+  <li>We held <a href="https://itch.io/jam/ebiten-game-jam">Ebitengine Game Jam</a>. The theme was "Magnet".</li>
+</ul>
+<figure>
+  <p class="img"><a href="https://itch.io/jam/ebiten-game-jam"><img src="/images/blog/jam2022/jam2022.png" width="360"></a></p>
+  <figcaption>Copyright 2022 Siôn le Roux</figcaption>
+</figure>
+<h3>July</h3>
+<ul>
+  <li>I registered the trademark "Ebitengine" and its logo mark in Japan.
+    <ul>
+      <li><a href="https://www.j-platpat.inpit.go.jp/c1800/TR/JP-2022-059369/3821FF7DE53F915B350535A975C339F6B2FDC862E91E24D110A33A6F1A6C9288/40/ja">No. 6591300</a> for the text "Ebitengine"</li>
+      <li><a href="https://www.j-platpat.inpit.go.jp/c1800/TR/JP-2022-059370/86B30AC4352AAB0CD9AF6A3ED1BF7C9BD16C3C55160CDCCD268D4083D88AAA8A/40/ja">No. 6591301</a> for the logo</li>
+    </ul>
+  </li>
+</ul>
+<h3>August</h3>
+<ul>
+  <li><a href="/en/documents/2.4.html">Ebitengine v2.4.0</a> was released. The main features are truly pure Go for Windows, and so on.</li>
+</ul>
+<h3>September</h3>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <ul>
+      <li><a href="https://symbolic.software/">Symbolic Software</a> released <a href="https://drkobushi.com/">Dr. Kobushi's Labyrinthine Laboratory</a> for Steam, and they exhibited the game at Tokyo Game Show 2022.</li>
+    </ul>
+    <figure>
+      <p class="img"><a href="https://drkobushi.com/"><img src="/images/blog/2022/drkobushi_flyer.jpg" width="360"></a></p>
+      <figcaption>Copyright 2022 Symbolic Software</figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-2">
+    <blockquote class="twitter-tweet"><p lang="en" dir="ltr">With <a href="https://twitter.com/kaepora?ref_src=twsrc%5Etfw">@kaepora</a> at Tokyo Game Show<br><br>Thank you for using <a href="https://twitter.com/hashtag/Ebitengine?src=hash&amp;ref_src=twsrc%5Etfw">#Ebitengine</a>! <a href="https://t.co/7tvBIfY9dM">pic.twitter.com/7tvBIfY9dM</a></p>&mdash; Hajime Hoshi (@hajimehoshi) <a href="https://twitter.com/hajimehoshi/status/1570654174685310976?ref_src=twsrc%5Etfw">September 16, 2022</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+<ul>
+  <li>Daigo Sato gave a presentation "<a href="https://www.slideshare.net/daigosato/realworld-game-development-with-ebitengine-how-to-make-the-bestselling-go-game">Real-world game development with Ebitengine - How to make the best-selling Go game</a>" at <a href="https://www.meetup.com/golang-users-berlin/">Berlin Golang Meetup</a>.</li>
+</ul>
+<figure>
+<div style="display: grid; place-items: center;">
+  <iframe src="//www.slideshare.net/slideshow/embed_code/key/ohkBpl5LtjKORU" width="360" height="300" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe>
+</div>
+<h3>November</h3>
+<ul>
+  <li><a href="https://symbolic.software/">Symbolic Software</a> released <a href="https://drkobushi.com/">Dr. Kobushi's Labyrinthine Laboratory</a> for Nintendo Switch.</li>
+</ul>
+<h2>Works made with Ebitengine</h2>
+<p>The copyright of these screenshots and the other images belong to their authors.</p>
+<h3>Games for Nintendo Switch</h3>
+<h4>Fishing Paradiso</h4>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <p><a href="https://odencat.com/fishingparadiso/">Website</a> / Publisher: Odencat Inc.</p>
+    <p><q>Embark on a relaxing tropical adventure in this cozy fishing RPG! Explore wondrous locations and befriend a charming cast of characters on your quest to become a master angler and discover the true meaning of paradise!</q></p>
+  </div>
+  <div class="grid-item-2">
+    <p class="img thumbnail"><a href="https://odencat.com/fishingparadiso/"><img src="/images/blog/2022/fishingparadiso.png" width="360" alt="Fishing Paradiso"></a></p>
+  </div>
+</div>
+<iframe width="744" height="418" src="https://www.youtube.com/embed/cWBeKMOG5xw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<h4>Dr. Kobushi's Labyrinthine Laboratory</h4>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <p><a href="https://drkobushi.com/">Website</a> / Publisher: Symbolic Software</p>
+    <p><q>Dr. Kobushi's Labyrinthine Laboratory® is a puzzle game that has been described as “a combination between Pac-Man and chess”. Guide the adventurous Ayla as she attempts to rescue her dog, Falafel, from the confines of a mysterious towering laboratory deep within a solitary forest. Dr. Kobushi's Labyrinthine Laboratory combines puzzle and strategy elements with an engaging storyline full of memorable characters and biting humor.</q></p>
+  </div>
+  <div class="grid-item-2">
+    <p class="img thumbnail"><a href="https://drkobushi.com/"><img src="/images/blog/2022/drkobushi.png" width="360" alt="Dr. Kobushi's Labyrinthine Laboratory"></a></p>
+  </div>
+</div>
+<iframe width="744" height="418" src="https://www.youtube.com/embed/urkO3zWBDuc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<h3>Games from the Ebitengine Game Jam</h3>
+<p>We held the <a href="https://itch.io/jam/ebiten-game-jam">Ebitengine Game Jame</a> this June. I picked the top 4 games from <a href="https://itch.io/jam/ebiten-game-jam/results">the final results</a> here. For more games, see <a href="https://itch.io/jam/ebiten-game-jam/entries">the entries of this jam</a>.</p>
+<div class="grid-container">
+  <div class="grid-item-1">
+    <h4>Bindless</h4>
+    <p>Author: tinne26</p>
+    <p class="img thumbnail"><a href="https://tinne26.itch.io/bindless"><img src="/images/blog/2022/bindless.png" width="168" alt="Bindless"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Magnetic Robot EBITENGER</h4>
+    <p>Author: noppikinatta</p>
+    <p class="img thumbnail"><a href="https://noppikinatta.itch.io/magnetic-robot-ebitenger"><img src="/images/blog/2022/ebitenger.png" width="168" alt="Magnetic Robot EBITENGER"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Domagna</h4>
+    <p>Author: Zyk0</p>
+    <p class="img thumbnail"><a href="https://zyk0.itch.io/domagna"><img src="/images/blog/2022/domagna.png" width="168" alt="Domagna"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Attractive Defence</h4>
+    <p>Author: elamre</p>
+    <p class="img thumbnail"><a href="https://elamre.itch.io/attractive-defence"><img src="/images/blog/2022/attractivedefence.png" width="168" alt="Attractive Defence"></a></p>
+  </div>
+</div>
+<h3>Other Games and Applications</h3>
+<p>I picked some representative ones from games and applications made with Ebitengine and relased this year. We're afraid not all works this year could be listed since many works were released. I appreciate all the works!</p>
+<div class="grid-container">
+  <div class="grid-item-1">
+    <h4>crten - Cathode-Ray Tube ENgine</h4>
+    <p>Author: Elias Daler</p>
+    <p class="img thumbnail"><a href="https://eliasdaler.itch.io/crten"><img src="/images/blog/2022/crten.png" width="168" alt="crten - Cathode-Ray Tube ENgine"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Cute Mold</h4>
+    <p>Author: erytau</p>
+    <p class="img thumbnail"><a href="https://erytau.itch.io/cute-mold"><img src="/images/blog/2022/cutemold.png" width="168" alt="Cute Mold"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Decipherism</h4>
+    <p>Author: Iskander</p>
+    <p class="img thumbnail"><a href="https://quasilyte.itch.io/decipherism"><img src="/images/blog/2022/decipherism.png" width="168" alt="Decipherism"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Ebiten Breakout</h4>
+    <p>Author: Elias Daler</p>
+    <p class="img thumbnail"><a href="https://eliasdaler.itch.io/ebiten-breakout"><img src="/images/blog/2022/breakout.png" width="168" alt="Ebiten Breakout"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Fish Fight Back</h4>
+    <p>Author: Trevor Slocum</p>
+    <p class="img thumbnail"><a href="https://rocketnine.itch.io/fishfightback"><img src="/images/blog/2022/fishfightback.png" width="168" alt="Fish Fight Back"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Flash Element TD</h4>
+    <p>Author: Enbiggen</p>
+    <p class="img thumbnail"><a href="https://enbiggen.itch.io/flash-element-td"><img src="/images/blog/2022/flashelementtd.png" width="168" alt="Flash Element TD"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Go little Bat</h4>
+    <p>Author: Coolinar</p>
+    <p class="img thumbnail"><a href="https://coolinar.itch.io/go-little-bat"><img src="/images/blog/2022/golittlebat.png" width="168" alt="Go little Bat"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>gobia</h4>
+    <p>Author: Kacper Drobny</p>
+    <p class="img avatar"><a href="https://github.com/erexo/gobia"><img src="https://github.com/erexo.png?size=168" width="168"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Gosu</h4>
+    <p>Author: Muang</p>
+    <p class="img avatar"><a href="https://github.com/hndada/gosu"><img src="https://github.com/hndada.png?size=168" width="168"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>HexEmpireMap</h4>
+    <p>Author: Samuel Yuan</p>
+    <p class="img thumbnail"><a href="https://github.com/samuelyuan/HexEmpireMap"><img src="/images/blog/2022/hexempiremap.png" width="168" alt="HexEmpireMap"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Interpreter</h4>
+    <p>Author: qube / <a href="https://betterprogramming.pub/translate-any-retro-game-on-the-fly-with-google-cloud-ai-and-go-c0692ab40547">Article</a></p>
+    <p class="img avatar"><a href="https://github.com/bquenin/interpreter"><img src="https://github.com/bquenin.png?size=168" width="168"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Mine Sweeper Ready Set Duck</h4>
+    <p>Author: Aanval</p>
+    <p class="img thumbnail"><a href="https://aanval.itch.io/mine-sweeper"><img src="/images/blog/2022/minesweeper.png" width="168" alt="Mine Sweeper Ready Set Duck"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Old Maid 3D</h4>
+    <p>Author: Ichiban Kunio</p>
+    <p class="img thumbnail"><a href="https://ichibankunio.github.io/oldmaid3d/oldmaid3d.html"><img src="/images/blog/2022/oldmaid.png" width="168" alt="Old Maid 3D"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Oprelo</h4>
+    <p>Author: Zyk0</p>
+    <p class="img thumbnail"><a href="https://zyk0.itch.io/oprelo"><img src="/images/blog/2022/oprelo.png" width="168" alt="Oprelo"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Pluto’s Revenge</h4>
+    <p>Author: Sean O'Neill</p>
+    <p class="img thumbnail"><a href="https://lovely-games.co.uk/games/play?id=pluto"><img src="/images/blog/2022/pluto.png" width="168" alt="Pluto’s Revenge"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Protozoa</h4>
+    <p>Author: Andrew Albers</p>
+    <p class="img thumbnail"><a href="https://github.com/Zebbeni/protozoa"><img src="/images/blog/2022/protozoa.png" width="168" alt="Protozoa"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Ship shape</h4>
+    <p>Author: Jules Graybill</p>
+    <p class="img thumbnail"><a href="https://jcgraybill.github.io/ship-shape/"><img src="/images/blog/2022/shipshape.png" width="168" alt="Ship shape"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Sketchy</h4>
+    <p>Author: Vernon Miller</p>
+    <p class="img thumbnail"><a href="https://github.com/aldernero/sketchy"><img src="/images/blog/2022/sketchy.png" width="168" alt="Sketchy"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Snake</h4>
+    <p>Author: Anıl Konaç</p>
+    <p class="img thumbnail"><a href="https://anilkonac.itch.io/ssnake"><img src="/images/blog/2022/snake.png" width="168" alt="Snake"></a></p>
+  </div>
+  <div class="grid-item-1">
+    <h4>Thirsty</h4>
+    <p>Author: Loïg</p>
+    <p class="img thumbnail"><a href="https://loig.itch.io/thirsty"><img src="/images/blog/2022/thirsty.png" width="168" alt="Thirsty"></a></p>
+  </div>
+</div>
+<h3>Libraries</h3>
+<ul>
+  <li><a href="https://github.com/yohamta/donburi">Donburi</a> by Yota Hamada - <q>Donburi is just another Entity Component System library for Ebitengine inspired by <a href="https://github.com/amethyst/legion">legion</a>.</q></li>
+  <li><a href="https://github.com/tinne26/etxt">etxt</a> by tinne26 - <q>etxt is a package for font management and text rendering in Golang designed to be used with the Ebitengine game engine.</q></li>
+  <li><a href="https://github.com/yohamta/ganim8">ganim8</a> by Yota Hamada - <q>Sprite Animation library for Ebitengine inspired by <a href="https://github.com/kikito/anim8">anim8</a>.</q></li>
+  <li><a href="https://github.com/sedyh/mizu">Mizu</a> by Artem Sedykh - Mizu is Entity Component System framework for Ebitengine.</li>
+  <li><a href="https://github.com/CrazyInfin8/mpg-go">MPG-Go</a> by Crazyinfin8 - <q>Mpg-go is a pure Go (no CGo) MPG decoder and player.</q></li>
+  <li><a href="https://github.com/elgopher/pi">pi</a> by Jacek Olszak - The retro game development engine for Go, inspired by <a href="https://www.lexaloffle.com/pico-8.php">Pico-8</a> and powered by Ebitengine. </li>
+</ul>
+<h2>Videos</h2>
+<h3>Let's make a WORDLE clone! Go and Ebiten / Ebitengine Tutorial</h3>
+<p>Author: Avery</p>
+<iframe width="744" height="418" src="https://www.youtube.com/embed/lZAB5ZEfc1Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<h3>Extreme mandelbrot zoom</h3>
+<p>Author: Carl Otto</p>
+<iframe src="https://player.vimeo.com/video/703934594?h=5ad98c2d9e" width="744" height="418" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+<h2>Articles</h2>
+<ul>
+  <li><a href="https://ably.com/blog/ablyeye-how-we-visualized-an-ably-sdk-with-go-and-ebiten">Ableye: How we visualized an Ably SDK with Go and Ebiten</a> by Ably</li>
+  <li><a href="https://golangprojectstructure.com/creating-cool-games-with-ebiten-in-go/">Creating Cool Games With Ebiten</a> by James Smith</li>
+  <li><a href="https://jacobsalmela.com/2022/01/21/ebiten-2d-game-development-live-stream/">Ebiten 2D Game Development Live Stream - Procedural and Randomly Generated</a> by Jacob Salmela</li>
+  <li><a href="https://medium.com/@maximgradan/playing-videos-with-golang-83e67447b111">Playing videos with Golang</a> by Maxim Gradan</li>
+  <li><a href="https://pencroff.com/post/proj-2048/">Proj 2048</a> by Sergey Danilov</li>
+  <li><a href="https://www.fatoldyeti.com/categories/roguelike-tutorial/">Roguelike tutorial</a> by Richard Ashkettle</li>
+</ul>
+<h2>Ebitengine in 2023 and after</h2>
+<p>The next version v2.5 will have a better vector graphics APIs. Ebitengine has become quite matured as a 2D game engine. The next items are for non-game applications like GUI, or for more platforms.</p>
+<ul>
+  <li>Inputting with IME (<a href="https://github.com/hajimehoshi/ebiten/issues/1029">#1029</a>)</li>
+  <li>Handling input events (<a href="https://github.com/hajimehoshi/ebiten/issues/1704">#1704</a>)</li>
+  <li>Supporting more consoles</li>
+</ul>
+<p>I am very happy to keep maintaining Ebitengine. See you next year!</p>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+      setTOCLevel(3);
+  });
+</script>
