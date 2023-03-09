@@ -33,7 +33,7 @@
 <h3>Customizing the screen shader</h3>
 <p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2046">#2046</a>)</p>
 <p>A new interface <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#FinalScreenDrawer"><code>ebiten.FinalScreenDrawer</code></a> was introduced.</p>
-<p>If a game implementing <code>ebiten.Game</code> also implements <code>ebiten.FinalScreenDrawer</code>, its method <code>DrawFinalScreen</code> is called after its <code>Draw</code> is called and you can customize the final screen rendering there. If a game implementing <code>ebiten.Game</code> does NOT implement <code>ebiten.FinalScreenDrawer</code>, the default screen shader, which is similar to the nearest shader, is used.</p>
+<p>If a game implementing <code>ebiten.Game</code> also implements <code>ebiten.FinalScreenDrawer</code>, its method <code>DrawFinalScreen</code> is called after its <code>Draw</code> is called and you can customize the final screen rendering there. If a game implementing <code>ebiten.Game</code> does NOT implement <code>ebiten.FinalScreenDrawer</code>, the default screen shader, which is similar to the nearest filter, is used.</p>
 <p>The given arguments of <code>FinalDraw</code> are the final screen image as the destination, the offscreen image as the source, and a geometry matrix to enlarge (or shrink) the offscreen to fit with the final screen. The offscreen image is the same as the argument of the game's <code>Draw</code>.</p>
 <h3><code>ebiten.ColorScale</code> and <code>colorm</code></h3>
 <p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2171">#2171</a>)</p>
@@ -67,6 +67,7 @@
   <li>Rendering onto sub-images works more efficiently (<a href="https://github.com/hajimehoshi/ebiten/issues/2232">#2232</a>).</li>
   <li>Memory usage was reduced (<a href="https://github.com/hajimehoshi/ebiten/issues/2274">#2274</a>).</li>
   <li>Non-squreare internal texture atlasese are allowed (<a href="https://github.com/hajimehoshi/ebiten/issues/2327">#2327</a>).</li>
+  <li>The number of internal textures were reduced (<a href="https://github.com/hajimehoshi/ebiten/issues/2581">#2581</a>).</li>
 </ul>
 <h3>Deprecated APIs</h3>
 <p>Some APIs were deprecated. The deprecated APIs are still available during the version 2, but it is recommended to replace the new APIs.</p>
@@ -77,12 +78,12 @@
   <tr><td><code>type ebiten.FPSModeType</code></td><td>n/a</td></tr>
   <tr><td><code>const ebiten.CompositeMode*</code></td><td><code>const ebiten.Blend*</code></td></tr>
   <tr><td><code>const ebiten.FPSMode*</code></td><td>n/a</td></tr>
-  <tr><td><code>func (*ebiten.Image) Size</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.Bounds"><code>func (*ebiten.Image) Bounds</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2351">#2351</a>)</td></tr>
+  <tr><td><code>func (*ebiten.Image) Size</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.Bounds"><code>func (*ebiten.Image) Bounds</code></a></td></tr>
   <tr><td><code>func ebiten.IsScreenFilterEnabled</code></td><td>n/a</td></tr>
   <tr><td><code>func ebiten.IsScreenTransparent</code></td><td>n/a</td></tr>
-  <tr><td><code>func ebiten.FPSMode</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#IsVsyncEnabled"><code>func ebiten.IsVsyncEnabled</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2342">#2342</a>)</td></tr>
+  <tr><td><code>func ebiten.FPSMode</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#IsVsyncEnabled"><code>func ebiten.IsVsyncEnabled</code></a></td></tr>
   <tr><td><code>func ebiten.ScheduleFrame</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetScreenClearedEveryFrame"><code>ebiten.SetScreenClearedEveryFrame(false)</code></a></td></tr>
-  <tr><td><code>func ebiten.SetFPSMode</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetVsyncEnabled"><code>func ebiten.SetVsyncEnabled</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2342">#2342</a>)</td></tr>
+  <tr><td><code>func ebiten.SetFPSMode</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetVsyncEnabled"><code>func ebiten.SetVsyncEnabled</code></a></td></tr>
   <tr><td><code>func ebiten.SetInitFocused</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameWithOptions"><code>func ebiten.RunGameWithOptions</code></a></td></tr>
   <tr><td><code>func ebiten.SetScreenFilterEnabled</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#FinalScreenDrawer"><code>interface ebiten.FinalScreenDrawer</code></a></td></tr>
   <tr><td><code>func ebiten.SetScreenTransparent</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameWithOptions"><code>func ebiten.RunGameWithOptions</code></a></td></tr>
