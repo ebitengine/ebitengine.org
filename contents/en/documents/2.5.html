@@ -22,13 +22,14 @@
 <p>Also, a new member <code>AntiAlias</code> was added to <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawTrianglesOptions"><code>ebiten.DrawTrianglesOptions</code></a> and <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawTrianglesShaderOptions"><code>ebiten.DrawTrianglesShaderOptions</code></a>. <code>AntiAlias</code> is useful to render vector graphics with smooth edges.</p>
 <h3>Blend</h3>
 <p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1450">#1450</a>)</p>
-<p><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Blend"><code>ebiten.Blend</code></a> was added. <code>Blend</code> aims to replace <code>CompositeMode</code>. With <code>Blend</code>, you can have finer control than <code>CompositeMode</code> by specifying blend factors and operations for source/destination RGB/alpha values. You can also use preset <code>Blend</code> constants like <code>BlendSourceOver</code>.</p>
+<p>A new type <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Blend"><code>ebiten.Blend</code></a> was introduced. <code>Blend</code> aims to replace <code>ebiten.CompositeMode</code>. With <code>Blend</code>, you can have finer control than <code>CompositeMode</code> by specifying blend factors and operations for source/destination RGB/alpha values. You can also use preset <code>Blend</code> constants like <code>BlendSourceOver</code>.</p>
 <h3><code>RunGameWithOptions</code></h3>
 <p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2378">#2378</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/1518">#1518</a>)</p>
-<p><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameWithOptions"><code>RunGameWithOptions</code></a> is a new function to run a game with options. You can specify options by <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameOptions"><code>RunGameOptions</code></a>.</p>
+<p>A new function <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameWithOptions"><code>ebiten.RunGameWithOptions</code></a> and a new struct <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameOptions"><code>ebiten.RunGameOptions</code></a> were introduced. <code>RunGameWithOptions</code> is a new function to run a game with options. You can specify options by <code>RunGameOptions</code>.</p>
 <ul>
   <li><code>GraphicsLibrary</code> specifies a graphics library Ebitengine will use.</li>
-  <li><code>SkipTaskbar</code> indicates whether an application icon is shown on a task bar or not on Windows. This is useful to create a desktop mascot application.</li>
+  <li><code>SkipTaskbar</code> indicates whether an application icon is hidden on a task bar or not on Windows. This is useful to create a desktop mascot application.</li>
+  <li>etc.</li>
 </ul>
 <h3>Customizing the screen shader</h3>
 <p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2046">#2046</a>)</p>
@@ -37,7 +38,7 @@
 <p>The given arguments of <code>FinalDraw</code> are the final screen image as the destination, the offscreen image as the source, and a geometry matrix to enlarge (or shrink) the offscreen to fit with the final screen. The offscreen image is the same as the argument of the game's <code>Draw</code>.</p>
 <h3><code>ebiten.ColorScale</code> and <code>colorm</code></h3>
 <p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2171">#2171</a>)</p>
-<p>A new struct <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale"><code>ebiten.ColorScale</code></a> and a new package <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/colorm"><code>colorm</code></a> was introduced. These APIs aim to replace existing APIs for color matrices. This makes your code more explicit about execution costs i.e. a number of draw calls.</p>
+<p>A new struct <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale"><code>ebiten.ColorScale</code></a> and a new package <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/colorm"><code>colorm</code></a> were introduced. These APIs aim to replace existing APIs for color matrices. This makes your code more explicit about execution costs i.e. a number of draw calls.</p>
 <p>For just scalings, you can use a new struct <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale"><code>ebiten.ColorScale</code></a>. For more complex usages of a color matrix, you can use APIs in the package <code>colorm</code>.</p>
 <p>A new member <code>ColorScale</code> was also added to <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawImageOptions"><code>ebiten.DrawImageOptions</code></a> and <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawRectShaderOptions"><code>ebiten.DrawRectShaderOptions</code></a>.</p>
 <h3>GPU Optimization with <code>SetScreenClearedEveryFrame(false)</code></h3>
@@ -47,8 +48,6 @@
 <h3>Other new APIs</h3>
 <ul>
   <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MouseButton0"><code>ebiten.MouseButton0</code></a> - <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MouseButton4"><code>ebiten.MouseButton4</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2445">#2445</a>)</li>
-  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawTrianglesOptions"><code>ebiten.DrawTrianglesOptions.AntiAlias</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2385">#2385</a>)</li>
-  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawTrianglesShaderOptions"><code>ebiten.DrawTrianglesShaderOptions.AntiAlias</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2385">#2385</a>)</li>
   <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#KeyName"><code>ebiten.KeyName</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/1904">#1904</a>)</li>
   <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Termination"><code>ebiten.Termination</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2266">#2266</a>)</li>
 </ul>
@@ -60,7 +59,7 @@
 </ul>
 <h3>OpenGL ES</h3>
 <p>(<a href="https://github.com/hajimehoshi/ebiten/issues/292">#292</a>)</p>
-<p>OpenGL ES is now automatically chosen when available. In order to specify OpenGL ES explicitly, set an environment variable <code>EBITENGINE_OPENGL</code> with <code>es</code></p>
+<p>OpenGL ES is now automatically chosen when available. In order to specify OpenGL ES explicitly, set an environment variable <code>EBITENGINE_OPENGL</code> with <code>es</code>.</p>
 <h3>Performance improvement</h3>
 <p>Ebitengine v2.5 has performance improvements including these items:</p>
 <ul>
@@ -85,7 +84,7 @@
   <tr><td><code>func ebiten.ScheduleFrame</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetScreenClearedEveryFrame"><code>ebiten.SetScreenClearedEveryFrame(false)</code></a></td></tr>
   <tr><td><code>func ebiten.SetFPSMode</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetVsyncEnabled"><code>func ebiten.SetVsyncEnabled</code></a></td></tr>
   <tr><td><code>func ebiten.SetInitFocused</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameWithOptions"><code>func ebiten.RunGameWithOptions</code></a></td></tr>
-  <tr><td><code>func ebiten.SetScreenFilterEnabled</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#FinalScreenDrawer"><code>interface ebiten.FinalScreenDrawer</code></a></td></tr>
+  <tr><td><code>func ebiten.SetScreenFilterEnabled</code></td><td>interface <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#FinalScreenDrawer"><code>ebiten.FinalScreenDrawer</code></a></td></tr>
   <tr><td><code>func ebiten.SetScreenTransparent</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameWithOptions"><code>func ebiten.RunGameWithOptions</code></a></td></tr>
   <tr><td><code>func ebitenutil.DrawLine</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#StrokeLine"><code>func vector.StrokeLine</code></a></td></tr>
   <tr><td><code>func ebitenutil.DrawCircle</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#DrawFilledCircle"><code>func vector.DrawFilledCircle</code></a></td></tr>
