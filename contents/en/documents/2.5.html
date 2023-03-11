@@ -22,7 +22,7 @@
 </ul>
 <p>Also, a new member <code>AntiAlias</code> was added to <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawTrianglesOptions"><code>ebiten.DrawTrianglesOptions</code></a> and <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawTrianglesShaderOptions"><code>ebiten.DrawTrianglesShaderOptions</code></a>. <code>AntiAlias</code> is useful to render vector graphics with smooth edges.</p>
 <h3>Blend</h3>
-<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1450">#1450</a>)</p>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1450">#1450</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/2382">#2382</a>)</p>
 <p>A new type <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Blend"><code>ebiten.Blend</code></a> was introduced. <code>Blend</code> aims to replace <code>ebiten.CompositeMode</code>. With <code>Blend</code>, you can have finer control than <code>CompositeMode</code> by specifying blend factors and operations for source/destination RGB/alpha values. You can also use preset <code>Blend</code> constants like <code>BlendSourceOver</code>.</p>
 <h3><code>RunGameWithOptions</code></h3>
 <p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2378">#2378</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/1518">#1518</a>)</p>
@@ -42,15 +42,30 @@
 <p>A new struct <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale"><code>ebiten.ColorScale</code></a> and a new package <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/colorm"><code>colorm</code></a> were introduced. These APIs aim to replace existing APIs for color matrices. This makes your code more explicit about execution costs i.e. a number of draw calls.</p>
 <p>For just scalings, you can use a new struct <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale"><code>ebiten.ColorScale</code></a>. For more complex usages of a color matrix, you can use APIs in the package <code>colorm</code>.</p>
 <p>A new member <code>ColorScale</code> was also added to <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawImageOptions"><code>ebiten.DrawImageOptions</code></a> and <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawRectShaderOptions"><code>ebiten.DrawRectShaderOptions</code></a>.</p>
+<h3>Drag and drop files</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1868">#1868</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/2552">#2552</a>)</p>
+<p>A new function <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DroppedFiles"><code>ebiten.DroppedFiles</code></a> was added. <code>DroppedFiles</code> returns a pseudo file system including the dropped files and directories, and you can access the dropped file contents via the file system. For an actual usage, see the example <code>examples/dropfile</code>.</p>
+<h3>A float-number version of <code>Layout</code></h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2285">#2285</a>)</p>
+<p>A new interface <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#LayoutFer"><code>ebiten.LayoutFer</code></a> was added. <code>LayoutFer</code> has <code>LayoutF</code> method which is a float-number version of <code>Game</code>'s <code>Layout</code>. If a game implementing <code>ebiten.Game</code> also implements <code>LayoutFer</code>, its <code>LayoutF</code> is invoked instead of its <code>Layout</code>. You can implement more precise layout caliculation with <code>LayoutF</code> than <code>Layout</code>.</p>
 <h3>GPU Optimization with <code>SetScreenClearedEveryFrame(false)</code></h3>
 <p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2342">#2342</a>)</p>
 <p>When the screen is not cleared every frame by calling <code>SetScreenClearedEveryFrame(false)</code> and your <code>Draw</code> doesn't change anything, Ebitengine saves GPU usages.</p>
 <p>By this optimization, we no longer need <code>FPSModeVsyncOffMinimum</code>, which could save GPU power but was problematic for the performance e.g. when moving a mouse cursor quickly. In Ebitengine v2.5.0, the type <code>FPSModeType</code> and the APIs using it were deprecated. Instead, <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetVsyncEnabled"><code>ebiten.SetVsyncEnabled</code></a> and <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#IsVsyncEnabled"><code>ebiten.IsVsyncEnabled</code></a> were undeprecated.</p>
 <h3>Other new APIs</h3>
 <ul>
-  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MouseButton0"><code>ebiten.MouseButton0</code></a> - <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MouseButton4"><code>ebiten.MouseButton4</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2445">#2445</a>)</li>
-  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#KeyName"><code>ebiten.KeyName</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/1904">#1904</a>)</li>
-  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Termination"><code>ebiten.Termination</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2266">#2266</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScaleFormat"><code>type ebiten.ColorScaleFormat</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2365">#2365</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#KeyName"><code>func ebiten.KeyName</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/1904">#1904</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MouseButton0"><code>const ebiten.MouseButton0</code></a> - <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MouseButton4"><code>const ebiten.MouseButton4</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2445">#2445</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Termination"><code>const ebiten.Termination</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2266">#2266</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#AppendJustPressedKeys"><code>func inpututil.AppendJustPressedKeys</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2381">#2381</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#AppendJustReleasedKeys"><code>func inpututil.AppendJustReleasedKeys</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2381">#2381</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#AppendJustPressedGamepadButtons"><code>func inpututil.AppendJustPressedGamepadButtons</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2381">#2381</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#AppendJustPressedStandardGamepadButtons"><code>func inpututil.AppendJustPressedStandardGamepadButtons</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2381">#2381</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#AppendJustReleasedGamepadButtons"><code>func inpututil.AppendJustReleasedGamepadButtons</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2381">#2381</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#AppendJustReleasedStandardGamepadButtons"><code>func inpututil.AppendJustReleasedStandardGamepadButtons</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2381">#2381</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#AppendPressedGamepadButtons"><code>func inpututil.AppendPressedGamepadButtons</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2381">#2381</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#AppendPressedStandardGamepadButtons"><code>func inpututil.AppendPressedStandardGamepadButtons</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2381">#2381</a>)</li>
 </ul>
 <h3>Kage (shader)</h3>
 <ul>
@@ -97,4 +112,9 @@
 <ul>
   <li>Go 1.17 and older versions are no longer supported (<a href="https://github.com/hajimehoshi/ebiten/issues/2323">#2323</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/2421">#2421</a>)</li>
   <li>Old Edge browser is no longer supported (<a href="https://github.com/hajimehoshi/ebiten/issues/1059">#1059</a>)</li>
+</ul>
+<h3>Miscellaneous</h3>
+<ul>
+  <li>The build tag <code>example</code> is no longer required for the examples (<a href="https://github.com/hajimehoshi/ebiten/issues/1462">#1462</a>).</li>
+  <li>The package <code>text</code> now considers hinting. <code>text</code> tries to create glyphs with considering sub-pixel shifts, in the case when a font face doesn't use hinting (<a href="https://github.com/hajimehoshi/ebiten/issues/2469">#2469</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/2528">#2528</a>).</li>
 </ul>
