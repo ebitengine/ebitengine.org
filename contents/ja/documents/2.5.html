@@ -1,0 +1,128 @@
+<h1>Ebitengine 2.5 リリースノート</h1>
+<h2>v2.5.0</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/82?closed=1">Issues for v2.5.0</a></p>
+<p><em>Ebitengine v2.5.0 はまだリリースされていません。この文章はドラフトです。</em></p>
+<h3>Xbox のサポート</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2084">#2084</a>)</p>
+<p>Ebitengine は Xbox をサポートするようになりました! <a href="https://odencat.com">Odencat</a> が新しい Ebitengine 製ゲーム「<a href="https://odencat.com/bakemono/">メグとばけもの</a>」を 2023 年 3 月 2 日にリリースしました。このゲームは Xbox One および Xbox Series X|S を含む複数のプラットフォームをサポートしています。</p>
+<p>他のユーザーにも Ebitengine for Xbox が利用可能にするために、現在準備中です。お楽しみに!</p>
+<h3>ベクターグラフィックス</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1843">#1843</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2387">#2387</a>)</p>
+<figure>
+  <p class="img"><img src="/images/documents/2.5/lines.png" alt="Lines"></p>
+  <figcaption>サンプル「lines」</figcaption>
+</figure>
+<p>線や様々な図形を描画する API が <code>vector</code> パッケージに追加されました:</p>
+<ul>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#Direction"><code>type Direction</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#LineCap"><code>type LineCap</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#LineJoin"><code>type LineJoin</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#DrawFilledCircle"><code>func vector.DrawFilledCircle</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#DrawFilledRect"><code>func vector.DrawFilledRect</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#StrokeCircle"><code>func vector.StrokeCircle</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#StrokeLine"><code>func vector.StrokeLine</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#StrokeRect"><code>func vector.StrokeRect</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#Path.AppendVerticesAndIndicesForStroke"><code>func (*vector.Path) AppendVerticesAndIndicesForStroke</code></a></li>
+</ul>
+<p>また、新しいメンバー <code>AntiAlias</code> が <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawTrianglesOptions"><code>ebiten.DrawTrianglesOptions</code></a> と <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawTrianglesShaderOptions"><code>ebiten.DrawTrianglesShaderOptions</code></a> に追加されました。 <code>AntiAlias</code> はなめらかなエッジでベクターグラフィックスを描画したいときに便利です。</p>
+<h3>ブレンド</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1450">#1450</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2382">#2382</a>)</p>
+<figure>
+  <p class="img"><img src="/images/documents/2.5/blend.png" alt="blend"></p>
+  <figcaption>サンプル「blend」</figcaption>
+</figure>
+<p>新しい型 <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Blend"><code>ebiten.Blend</code></a> が追加されました。 <code>Blend</code> は <code>ebiten.CompositeMode</code> の置き換えを目的としています。 <code>Blend</code> を使うと、描画元・描画先および RGB・α値に対するブレンドファクターと演算方法が指定でき、 <code>CompositeMode</code> よりも細かいコントロールが可能になります。 <code>BlendSourceOver</code> のようなプリセット <code>Blend</code> 定数も利用可能です。</p>
+<h3><code>RunGameWithOptions</code></h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2378">#2378</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/1518">#1518</a>)</p>
+<p>新しい関数 <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameWithOptions"><code>ebiten.RunGameWithOptions</code></a> と新しい構造体 <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameOptions"><code>ebiten.RunGameOptions</code></a> が追加されました。 <code>RunGameWithOptions</code> はゲームをオプションつきで実行する新しい関数です。 <code>RunGameOptions</code> で次のようなオプションを指定できます。</p>
+<ul>
+  <li><code>GraphicsLibrary</code> は Ebitengine が使うグラフィックライブラリを指定します。</li>
+  <li><code>SkipTaskbar</code> はアプリケーションアイコンが Windows のタスクバーから消えるかどうかを指定します。これはデスクトップマスコットアプリケーションを作るのに便利です。</li>
+  <li>他</li>
+</ul>
+<h3>スクリーンシェーダーのカスタマイズ</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2046">#2046</a>)</p>
+<p>新しいインターフェイス <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#FinalScreenDrawer"><code>ebiten.FinalScreenDrawer</code></a> が追加されました。</p>
+<p><code>ebiten.Game</code> を実装しているゲームが <code>ebiten.FinalScreenDrawer</code> も実装している場合、その <code>DrawFinalScreen</code> メソッドがその <code>Draw</code> 呼び出しの後に呼び出され、最終スクリーンの描画方法をそこでカスタマイズできます。 <code>ebiten.Game</code> を実装しているゲームが <code>ebiten.FinalScreenDrawer</code> を実装していない場合は、デフォルトの、ニアレストネイバー法フィルターに似たスクリーンシェーダが使われます。</p>
+<p><code>DrawFinalScreen</code> 関数の引数は、描画先としての最終スクリーン、描画元としてのオフスクリーン画像、最終スクリーンにオフスクリーンをフィットさせるために拡大または縮小するための幾何行列です。オフスクリーン画像はゲームの <code>Draw</code> 関数の引数と同じです。</p>
+<h3><code>ebiten.ColorScale</code> と <code>colorm</code></h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2171">#2171</a>)</p>
+<p>新しい構造体 <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale"><code>ebiten.ColorScale</code></a> と新しいパッケージ <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/colorm"><code>colorm</code></a> が追加されました。これらの API は既存の色行列を使う API の置き換えを目的としています。ドローコール数などの実行コストに関して、コードがより明示的になります。</p>
+<p>単なるスケーリングの場合、新しい構造体 <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale"><code>ebiten.ColorScale</code></a> が使えます。より複雑な色行列の場合、 <code>colorm</code> パッケージの API が使えます。</p>
+<p>新しいメンバー <code>ColorScale</code> も <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawImageOptions"><code>ebiten.DrawImageOptions</code></a> と <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawRectShaderOptions"><code>ebiten.DrawRectShaderOptions</code></a> に追加されました。</p>
+<h3>ファイルのドラッグ &amp; ドロップ</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1868">#1868</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2552">#2552</a>)</p>
+<p>新しい関数 <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DroppedFiles"><code>ebiten.DroppedFiles</code></a> が追加されました。 <code>DroppedFiles</code> は、ドロップされたファイルとディレクトリを含む疑似ファイルシステムを返します。そのファイルシステムでドロップされたファイルにアクセスできます。実際の使い方については、サンプル <code>examples/dropfile</code> を参照してください。</p>
+<h3>浮動小数点版 <code>Layout</code></h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2285">#2285</a>)</p>
+<p>新しいインターフェイス <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#LayoutFer"><code>ebiten.LayoutFer</code></a> が追加されました。 <code>LayoutFer</code> は <code>LayoutF</code> メソッドを持ちます。これは <code>Game</code> の <code>Layout</code> の浮動小数点版です。もし <code>ebiten.Game</code> を実装するゲームが <code>LayoutFer</code> も実装している場合、その <code>LayoutF</code> がその <code>Layout</code> の代わりに呼び出されます。 <code>Layout</code> よりも正確なレイアウト計算を <code>LayoutF</code> で実装できます。</p>
+<h3><code>SetScreenClearedEveryFrame(false)</code> による GPU 最適化</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2342">#2342</a>)</p>
+<p><code>SetScreenClearedEveryFrame(false)</code> の呼び出しによってスクリーンが毎フレームクリアされなくなり、また <code>Draw</code> がスクリーンを変更しなかった場合、 Ebitengine は GPU の使用を抑えます。</p>
+<p>この最適化により、 <code>FPSModeVsyncOffMinimum</code> は不要となります。これは GPU 使用を抑えるのには有効でしたが、マウスカーソルを素早く動かしたときのパフォーマンスなどに問題がありました。 Ebitengine 2.5 では、型 <code>FPSModeType</code> とそれを使う API は非推奨になりました。代わりに、 <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetVsyncEnabled"><code>ebiten.SetVsyncEnabled</code></a> と <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#IsVsyncEnabled"><code>ebiten.IsVsyncEnabled</code></a> は非推奨ではなくなりました。</p>
+<h3>その他の新しい API</h3>
+<ul>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScaleFormat"><code>type ebiten.ColorScaleFormat</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2365">#2365</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#KeyName"><code>func ebiten.KeyName</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/1904">#1904</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MouseButton0"><code>const ebiten.MouseButton0</code></a> - <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MouseButton4"><code>const ebiten.MouseButton4</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2445">#2445</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Termination"><code>const ebiten.Termination</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2266">#2266</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#AppendJustPressedKeys"><code>func inpututil.AppendJustPressedKeys</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2381">#2381</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#AppendJustReleasedKeys"><code>func inpututil.AppendJustReleasedKeys</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2381">#2381</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#AppendJustPressedGamepadButtons"><code>func inpututil.AppendJustPressedGamepadButtons</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2381">#2381</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#AppendJustPressedStandardGamepadButtons"><code>func inpututil.AppendJustPressedStandardGamepadButtons</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2381">#2381</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#AppendJustReleasedGamepadButtons"><code>func inpututil.AppendJustReleasedGamepadButtons</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2381">#2381</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#AppendJustReleasedStandardGamepadButtons"><code>func inpututil.AppendJustReleasedStandardGamepadButtons</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2381">#2381</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#AppendPressedGamepadButtons"><code>func inpututil.AppendPressedGamepadButtons</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2381">#2381</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#AppendPressedStandardGamepadButtons"><code>func inpututil.AppendPressedStandardGamepadButtons</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2381">#2381</a>)</li>
+</ul>
+<h3>Kage (シェーダー)</h3>
+<ul>
+  <li>新しい型が追加されました: <code>ivec2</code>、 <code>ivec3</code>、 <code>ivec4</code> (<a href="https://github.com/hajimehoshi/ebiten/issues/1911">#1911</a>)</li>
+  <li><code>int</code> の値がユニフォーム変数として許容されるようになりました (<a href="https://github.com/hajimehoshi/ebiten/issues/2305">#2305</a>)</li>
+  <li>配列がユニフォーム変数として許容されるようになりました (<a href="https://github.com/hajimehoshi/ebiten/issues/2448">#2448</a>)</li>
+</ul>
+<h3>OpenGL ES</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/292">#292</a>)</p>
+<p>OpenGL ES が、利用可能なときは自動的に選ばれるようになりました。明示的に OpenGL ES を指定する場合は、環境変数 <code>EBITENGINE_OPENGL</code> を <code>es</code> に指定してください。</p>
+<h3>パフォーマンス改善</h3>
+<p>Ebitengine 2.5 では次のようなパフォーマンス改善が行われています:</p>
+<ul>
+  <li>部分画像に対する描画がより効率的になりました (<a href="https://github.com/hajimehoshi/ebiten/issues/2232">#2232</a>)。</li>
+  <li>メモリ使用量が減りました (<a href="https://github.com/hajimehoshi/ebiten/issues/2274">#2274</a>)。</li>
+  <li>正方形ではない内部テクスチャが許容されるようになりました (<a href="https://github.com/hajimehoshi/ebiten/issues/2327">#2327</a>)。</li>
+  <li>内部テクスチャの数が減りました (<a href="https://github.com/hajimehoshi/ebiten/issues/2581">#2581</a>)。</li>
+</ul>
+<h3>非推奨 API</h3>
+<p>いくつかの API が非推奨になりました。非推奨 API はバージョン 2 である限りは利用可能ですが、新しい API に置き換えることが推奨されます。</p>
+<table>
+  <tr><th>2.4 以前</th><th>2.5 以後</th></tr>
+  <tr><td><code>type ebiten.ColorM</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale"><code>type ebiten.ColorScale</code></a> or the package <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/colorm"><code>colorm</code></a></td></tr>
+  <tr><td><code>type ebiten.CompositeMode</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Blend"><code>type ebiten.Blend</code></a></td></tr>
+  <tr><td><code>type ebiten.FPSModeType</code></td><td>n/a</td></tr>
+  <tr><td><code>const ebiten.CompositeMode*</code></td><td><code>const ebiten.Blend*</code></td></tr>
+  <tr><td><code>const ebiten.FPSMode*</code></td><td>n/a</td></tr>
+  <tr><td><code>func (*ebiten.Image) Size</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.Bounds"><code>func (*ebiten.Image) Bounds</code></a></td></tr>
+  <tr><td><code>func ebiten.IsScreenFilterEnabled</code></td><td>n/a</td></tr>
+  <tr><td><code>func ebiten.IsScreenTransparent</code></td><td>n/a</td></tr>
+  <tr><td><code>func ebiten.FPSMode</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#IsVsyncEnabled"><code>func ebiten.IsVsyncEnabled</code></a></td></tr>
+  <tr><td><code>func ebiten.ScheduleFrame</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetScreenClearedEveryFrame"><code>ebiten.SetScreenClearedEveryFrame(false)</code></a></td></tr>
+  <tr><td><code>func ebiten.SetFPSMode</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetVsyncEnabled"><code>func ebiten.SetVsyncEnabled</code></a></td></tr>
+  <tr><td><code>func ebiten.SetInitFocused</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameWithOptions"><code>func ebiten.RunGameWithOptions</code></a></td></tr>
+  <tr><td><code>func ebiten.SetScreenFilterEnabled</code></td><td>interface <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#FinalScreenDrawer"><code>ebiten.FinalScreenDrawer</code></a></td></tr>
+  <tr><td><code>func ebiten.SetScreenTransparent</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameWithOptions"><code>func ebiten.RunGameWithOptions</code></a></td></tr>
+  <tr><td><code>func ebitenutil.DrawLine</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#StrokeLine"><code>func vector.StrokeLine</code></a></td></tr>
+  <tr><td><code>func ebitenutil.DrawCircle</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#DrawFilledCircle"><code>func vector.DrawFilledCircle</code></a></td></tr>
+  <tr><td><code>func ebitenutil.DrawRect</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#DrawFilledRect"><code>func vector.DrawFilledRect</code></a></td></tr>
+</table>
+<h3>バグ修正</h3>
+<p>このリリースはバージョン 2.4 にあった全てのバグ修正を含みます。</p>
+<h3>破壊的変更</h3>
+<ul>
+  <li>Go 1.17 以前のバージョンはサポートされません (<a href="https://github.com/hajimehoshi/ebiten/issues/2323">#2323</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2421">#2421</a>)。</li>
+  <li>古い Edge ブラウザーはサポートされません (<a href="https://github.com/hajimehoshi/ebiten/issues/1059">#1059</a>)。</li>
+</ul>
+<h3>その他</h3>
+<ul>
+  <li>サンプルのためのビルドタグ <code>example</code> は不要になりました (<a href="https://github.com/hajimehoshi/ebiten/issues/1462">#1462</a>)。</li>
+  <li>パッケージ <code>text</code> がヒンティングを考慮する用になりました。 <code>text</code> は、フォントがヒンティングを使用しない場合のために、サブピクセルのずれを考慮したグリフを作るようになりました (<a href="https://github.com/hajimehoshi/ebiten/issues/2469">#2469</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2528">#2528</a>)。</li>
+</ul>
