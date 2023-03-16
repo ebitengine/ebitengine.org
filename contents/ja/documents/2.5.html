@@ -52,7 +52,7 @@
 <p>新しいメンバー <code>ColorScale</code> も <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawImageOptions"><code>ebiten.DrawImageOptions</code></a> と <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawRectShaderOptions"><code>ebiten.DrawRectShaderOptions</code></a> に追加されました。</p>
 <h3>ファイルのドラッグ &amp; ドロップ</h3>
 <p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1868">#1868</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2552">#2552</a>)</p>
-<p>新しい関数 <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DroppedFiles"><code>ebiten.DroppedFiles</code></a> が追加されました。 <code>DroppedFiles</code> は、ドロップされたファイルとディレクトリを含む疑似ファイルシステムを返します。そのファイルシステムでドロップされたファイルにアクセスできます。実際の使い方については、サンプル <code>examples/dropfile</code> を参照してください。</p>
+<p>新しい関数 <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DroppedFiles"><code>ebiten.DroppedFiles</code></a> が追加されました。 <code>DroppedFiles</code> は、ドロップされたファイルとディレクトリを含む疑似ファイルシステムを返します。そのファイルシステムでドロップされたファイルの内容にアクセスできます。実際の使い方については、サンプル <code>examples/dropfile</code> を参照してください。</p>
 <h3>浮動小数点版 <code>Layout</code></h3>
 <p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2285">#2285</a>)</p>
 <p>新しいインターフェイス <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#LayoutFer"><code>ebiten.LayoutFer</code></a> が追加されました。 <code>LayoutFer</code> は <code>LayoutF</code> メソッドを持ちます。これは <code>Game</code> の <code>Layout</code> の浮動小数点版です。もし <code>ebiten.Game</code> を実装するゲームが <code>LayoutFer</code> も実装している場合、その <code>LayoutF</code> がその <code>Layout</code> の代わりに呼び出されます。 <code>Layout</code> よりも正確なレイアウト計算を <code>LayoutF</code> で実装できます。</p>
