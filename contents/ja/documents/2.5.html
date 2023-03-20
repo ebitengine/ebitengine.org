@@ -50,6 +50,7 @@
 <p>新しい構造体 <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale"><code>ebiten.ColorScale</code></a> と新しいパッケージ <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/colorm"><code>colorm</code></a> が追加されました。これらの API は既存の色行列を使う API の置き換えを目的としています。ドローコール数などの実行コストに関して、コードがより明示的になります。</p>
 <p>単なるスケーリングの場合、新しい構造体 <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale"><code>ebiten.ColorScale</code></a> が使えます。より複雑な色行列の場合、 <code>colorm</code> パッケージの API が使えます。</p>
 <p>新しいメンバー <code>ColorScale</code> も <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawImageOptions"><code>ebiten.DrawImageOptions</code></a> と <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawRectShaderOptions"><code>ebiten.DrawRectShaderOptions</code></a> に追加されました。</p>
+<p>注意すべきなのは、 <code>ColorScale</code> は乗算済みアルファカラーに対して適用されるに対し、 <code>colorm.ColorM</code> はストレートアルファカラーに対して適用される点です。よって、 <code>ColorM.Scale(r, g, b, a)</code> に等しいのは <code>ColorScale.Scale(r*a, g*a, b*a, a)</code> になります。</p>
 <h3>ファイルのドラッグ &amp; ドロップ</h3>
 <p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1868">#1868</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2552">#2552</a>)</p>
 <p>新しい関数 <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DroppedFiles"><code>ebiten.DroppedFiles</code></a> が追加されました。 <code>DroppedFiles</code> は、ドロップされたファイルとディレクトリを含む疑似ファイルシステムを返します。そのファイルシステムでドロップされたファイルの内容にアクセスできます。実際の使い方については、サンプル <code>examples/dropfile</code> を参照してください。</p>
