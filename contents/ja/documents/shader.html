@@ -4,7 +4,7 @@
 <p>シェーダは GPU 上で実行されるプログラムです。カスタムシェーダは Ebitengine ユーザーが記述できるシェーダです。シェーダを使うことで、複雑な描画が GPU 上で効率的にできるようになります。</p>
 <p>Ebitengine はシェーダのうちフラグメントシェーダと呼ばれるものが記述できます。フラグメントシェーダはピクセルごとに実行されるシェーダです。大雑把に言うと、ピクセルごとに色を計算する関数です。この色の計算が、 GPU 上で並列に走ります。</p>
 <p>シェーダを使うことでライティング、ブラーなどの様々な効果が実現できます。サンプルについては <code>examples/shader</code> を参照してください。</p>
-<pre><code>go run -tags=example github.com/hajimehoshi/ebiten/v2/examples/shader@latest</code></pre>
+<pre><code>go run github.com/hajimehoshi/ebiten/v2/examples/shader@latest</code></pre>
 <p>Ebitengine はシェーディング言語として Kage という独自言語を採用しています。これは Go 互換の文法を持ちますが、細部が Go とは異なります。 Kage は高いポータビリティを持ちます。 Ebitengine は環境によって OpenGL や Metal などをグラフィックスライブラリとして使いますが、 Kage はどの環境でも同様に動くように、動的にコンパイルされます。</p>
 <h2>例</h2>
 <pre><code>package main

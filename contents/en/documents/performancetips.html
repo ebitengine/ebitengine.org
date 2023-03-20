@@ -18,7 +18,7 @@
 <p>examples/sprites is a good example to draw > 10000 sprites with one (or a few) draw command(s).</p>
 <h2>Know the actual drawing commands with <code>ebitenginedebug</code> build tag</h2>
 <p>To see actual drawing commands, you can use <code>ebitenginedebug</code> build tag (or <code>ebitendebug</code> for Ebitengine v2.3 or older). For example, if you execute <code>blocks</code> example, you will see the below logs:</p>
-<pre><code>go run -tags=example,ebitenginedebug github.com/hajimehoshi/ebiten/v2/examples/blocks@latest</code></pre>
+<pre><code>go run -tags=ebitenginedebug github.com/hajimehoshi/ebiten/v2/examples/blocks@latest</code></pre>
 <pre><code>...
 --
 draw-triangles: dst: 7 <- src: 1, colorm: &lt;nil&gt;, mode copy, filter: nearest, address: clamp_to_zero

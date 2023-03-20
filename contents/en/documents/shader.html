@@ -4,7 +4,7 @@
 <p>A shader is a program executed on GPU. A custom shader is a shader an Ebitengine user can write. With shaders, you can execute a complex rendering on GPU efficiently.</p>
 <p>In Ebitengine, you can write a 'fragment shader'. A fragment shader is a shader executed on each pixel. Roughly speaking, this is a function to calculate a color for each pixel. This color calculation is executed on GPU in parallel.</p>
 <p>With shaders, you can execute various effects like lighting or blur. For an example, see <code>examples/shader</code>.</p>
-<pre><code>go run -tags=example github.com/hajimehoshi/ebiten/v2/examples/shader@latest</code></pre>
+<pre><code>go run github.com/hajimehoshi/ebiten/v2/examples/shader@latest</code></pre>
 <p>Ebitengine adopts an original shading language 'Kage'. This has a compatible syntax with Go, but the details are different. Kage has high portability. Ebitengine uses graphics libraries like OpenGL or Metal and this depends on environments, but Kage is compiled on the fly so that this works equally everywhere.</p>
 <h2>Example</h2>
 <pre><code>package main
