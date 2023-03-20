@@ -105,12 +105,7 @@ func main() {
 <p><code>DrawImage</code> works more efficiently as batches when the successive calls of <code>DrawImages</code> satisfies the below conditions:</p>
 <ul>
   <li>All render targets are same (<code>A</code> in <code>A.DrawImage(B, op)</code>)</li>
-  <li>Either all ColorM element values are same or all the ColorM have only diagonal ('scale') elements
-    <ul>
-      <li>If only <code>(*ColorM).Scale</code> is applied to a ColorM, the ColorM has only diagonal elements. The other ColorM functions might modify the other elements.</li>
-    </ul>
-  </li>
-  <li>All CompositeMode values are same</li>
+  <li>All Blend values are same</li>
   <li>All Filter values are same</li>
 </ul>
 <p>For more details, see <a href="performancetips.html">Performance Tips</a>.</p>
@@ -120,13 +115,13 @@ func main() {
     // The default (zero) value is identify, which draws the image at (0, 0).
     GeoM GeoM
 
-    // ColorM is a color matrix to draw.
-    // The default (zero) value is identity, which doesn't change any color.
-    ColorM ColorM
+    // ColorScale is a scale of color.
+    // The default (zero) value is identity, which is (1, 1, 1, 1).
+    ColorScale ColorScale
 
-    // CompositeMode is a composite mode to draw.
+    // Blend is a blending way of the source color and the destination color.
     // The default (zero) value is regular alpha blending.
-    CompositeMode CompositeMode
+    Blend Blend
 
     // Filter is a type of texture filter.
     // The default (zero) value is FilterNearest.
@@ -158,22 +153,18 @@ func main() {
 <h4><code>(*ebiten.GeoM).Rotate</code></h4>
 <pre><code>func (g *GeoM) Rotate(theta float64)</code></pre>
 <p><code>Rotate</code> rotates the matrix by <code>theta</code>. The unit is radian.</p>
-<h3><code>ebiten.ColorM</code></h3>
-<pre><code>type ColorM struct {
+<h3><code>ebiten.ColorScale</code></h3>
+<pre><code>type ColorScale struct {
     // contains filtered or unexported fields
 }</code></pre>
-<p><code>ColorM</code> represents a matrix to transform coloring when rendering an image.</p>
-<p><code>ColorM</code> is applied to the straight alpha color while an Image's pixels' format is alpha premultiplied. Before applying a matrix, a color is un-multiplied, and after applying the matrix, the color is multiplied again.</p>
+<p><code>ColorScale</code> represents a scale of RGBA color. <code>ColorScale</code> is intended to be applied to a premultiplied-alpha color value.</p>
 <p>The initial value is identity.</p>
-<h4><code>(*ebiten.ColorM).Scale</code></h4>
-<pre><code>func (c *ColorM) Scale(r, g, b, a float64)</code></pre>
-<p><code>Scale</code> scales the matrix by (<code>r</code>, <code>g</code>, <code>b</code>, <code>a</code>).</p>
-<h4><code>(*ebiten.ColorM).Translate</code></h4>
-<pre><code>func (c *ColorM) Translate(r, g, b, a float64)</code></pre>
-<p><code>Translate</code> translates the matrix by (<code>r</code>, <code>g</code>, <code>b</code>, <code>a</code>).</p>
-<h4><code>(*ebiten.ColorM).ChangeHSV</code></h4>
-<pre><code>func (c *ColorM) ChangeHSV(hueTheta float64, saturationScale float64, valueScale float64)</code></pre>
-<p><code>ChangeHSV</code> changes HSV (Hue-Saturation-Value) values. <code>hueTheta</code> is a radian value to rotate hue. <code>saturationScale</code> is a value to scale saturation. <code>valueScale</code> is a value to scale value (a.k.a. brightness).</p>
+<h4><code>(*ebiten.ColorScale).Scale</code></h4>
+<pre><code>func (c *ColorScale) Scale(r, g, b, a float32)</code></pre>
+<p><code>Scale</code> multiplies the given values to the current scale.</p>
+<h4><code>(*ebiten.ColorScale).ScaleAlpha</code></h4>
+<pre><code>func (c *ColorScale) ScaleAlpha(a float32)</code></pre>
+<p><code>Scale</code> multiplies the given alpha value to the current scale.</p>
 <h2>Input</h2>
 <h3><code>ebiten.IsKeyPressed</code></h3>
 <pre><code>func IsKeyPressed(key Key) bool</code></pre>

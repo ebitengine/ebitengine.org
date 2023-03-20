@@ -5,12 +5,7 @@
 <ul>
   <li>All the functions are <code>DrawImage</code> or <code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.DrawTriangles">DrawTriangles</a></code></li>
   <li>All the render targets are same (<code>A</code> in <code>A.DrawImage(B, op)</code>)</li>
-  <li>Either all ColorM element values are same or all the ColorM have only diagonal ('scale') elements
-    <ul>
-      <li>If only <code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorM.Scale">(*ColorM).Scale</a></code> is applied to a ColorM, the ColorM has only diagonal elements. The other ColorM functions might modify the other elements.</li>
-    </ul>
-  </li>
-  <li>All the composite modes are same</li>
+  <li>All the blends are same</li>
   <li>All the filter values are same</li>
   <li>All the address values are same (only for <code>DrawTriangles</code>)</li>
 </ul>
