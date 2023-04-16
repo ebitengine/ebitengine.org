@@ -185,8 +185,8 @@ v2.xyz = v2.xxx        // Get vec3(1, 1, 1), and set it to all the components to
 <h3>組み込み関数 (画像)</h3>
 <table>
   <tr><th>関数</th><th>説明</span></th></tr>
-  <tr><th><code>imageSrc<i>N</i>At(pos vec2) vec4</code></th><td>描画画像 <i>N</i> の、与えられたテクセル単位の位置 <code>pos</code> の色を <code>vec4</code> で返す。 <i>N</i> は 0 から 3 の値を取る。</td></tr>
-  <tr><th><code>imageSrc<i>N</i>UnsafeAt(pos vec2) vec4</code></th><td>描画画像 <i>N</i> の、与えられたテクセル単位の位置 <code>pos</code> の色を <code>vec4</code> で返す。 <i>N</i> は 0 から 3 の値を取る。セーフバージョン (<code>imageSrc<i>N</i>At</code>) との違いは、画像の境界外の位置を指定したときの戻り値である。セーフバージョンはこの場合 <code>vec4(0)</code> を返すが、アンセーフバージョンは未定義である。アンセーフバージョンは高速に動作する。もし位置が画像の境界内にあることが確実ならば、パフォーマンスのためにアンセーフバージョンを使ってもよい。</td></tr>
+  <tr><th><code>imageSrc<i>N</i>At(pos vec2) vec4</code></th><td>描画画像 <code><i>N</i></code> の、与えられたテクセル単位の位置 <code>pos</code> の色を <code>vec4</code> で返す。 <code><i>N</i></code> は 0 から 3 の値を取る。 <code>pos</code> は、 <code><i>N</i></code> の値に関わらず、常に 0 番目のテクスチャの位置である。 <code><i>N</i></code> ≧ 1 については、 Kage が自動的に <code><i>N</i></code> 番目のテクスチャの適切な位置に変換する。</td></tr>
+  <tr><th><code>imageSrc<i>N</i>UnsafeAt(pos vec2) vec4</code></th><td>描画画像 <code><i>N</i></code> の、与えられたテクセル単位の位置 <code>pos</code> の色を <code>vec4</code> で返す。 <code><i>N</i></code> は 0 から 3 の値を取る。 <code>pos</code> は、 <code><i>N</i></code> の値に関わらず、常に 0 番目のテクスチャの位置である。 <code><i>N</i></code> ≧ 1 については、 Kage が自動的に <code><i>N</i></code> 番目のテクスチャの適切な位置に変換する。<br>セーフバージョン (<code>imageSrc<i>N</i>At</code>) との違いは、画像の境界外の位置を指定したときの戻り値である。セーフバージョンはこの場合 <code>vec4(0)</code> を返すが、アンセーフバージョンは未定義である。アンセーフバージョンは高速に動作する。もし位置が画像の境界内にあることが確実ならば、パフォーマンスのためにアンセーフバージョンを使ってもよい。</td></tr>
   <tr><th><code>imageSrcTextureSize() vec2</code></th><td>描画元画像のテクスチャの大きさをピクセル単位で返す。</td></tr>
   <tr><th><code>imageDstTextureSize() vec2</code></th><td>描画先画像のテクスチャの大きさをピクセル単位で返す。</td></tr>
   <tr><th><code>imageSrcRegionOnTexture() (vec2, vec2)</code></th><td>描画元画像の、テクスチャ上の原点位置と大きさをテクセル単位で返す。</td></tr>
