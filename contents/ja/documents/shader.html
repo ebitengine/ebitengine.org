@@ -95,11 +95,13 @@ func Fragment(position vec4, texCoord vec2, color vec4) vec4 {
   <li><code>bool</code></li>
   <li><code>int</code></li>
   <li><code>float</code></li>
-  <li><code>vec2</code>, <code>vec3</code>, <code>vec4</code> (ベクター型)</li>
+  <li><code>vec2</code>, <code>vec3</code>, <code>vec4</code> (<code>float</code> のベクター型)</li>
+  <li><code>ivec2</code>, <code>ivec3</code>, <code>ivec4</code> (<code>int</code> のベクター型)</li>
   <li><code>mat2</code>, <code>mat3</code>, <code>mat4</code> (行列型)</li>
 </ul>
 <p><code>float</code> は浮動小数点型です。 Go の <code>float32</code> や <code>float64</code> とは異なり精度の保証がありません。</p>
 <p><code>vec2</code>、 <code>vec3</code>、 <code>vec4</code> はベクターと呼ばれ、それぞれ 2、 3、 4 つの値の組を表す型です。各要素は <code>float</code> です。 Swizzling と呼ばれる操作を行えます。</p>
+<p><code>ivec2</code>、 <code>ivec3</code>、 <code>ivec4</code> も同様にベクターであり、各要素は <code>int</code> です。</p>
 <p><code>mat2</code>、 <code>mat3</code>、 <code>mat4</code> はそれぞれ 2、 3、 4 次の正方行列を表す型です。各要素は <code>float</code> です。</p>
 <p>Kage は他に配列型をサポートします。構造体はまだサポートされていません。</p>
 <h3>組み込み型の初期化関数</h3>
