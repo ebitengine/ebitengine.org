@@ -34,8 +34,8 @@ import (
 )
 
 var (
-	flagEbitenPath = flag.String("ebitenpath", "", "path to ebiten repository")
-	flagUpload     = flag.Bool("upload", false, "upload binary files to the server")
+	flagEbitenginePath = flag.String("ebitenginepath", "", "path to ebiten repository")
+	flagUpload         = flag.Bool("upload", false, "upload binary files to the server")
 )
 
 func examples() ([]string, error) {
@@ -181,7 +181,7 @@ func run() error {
 				fmt.Println("go", strings.Join(args, " "))
 				cmd := exec.Command("go", args...)
 				cmd.Env = append(os.Environ(), "GOOS=js", "GOARCH=wasm")
-				cmd.Dir = *flagEbitenPath
+				cmd.Dir = *flagEbitenginePath
 				cmd.Stderr = os.Stderr
 
 				if err := cmd.Run(); err != nil {
@@ -264,8 +264,8 @@ func run() error {
 
 func main() {
 	flag.Parse()
-	if *flagEbitenPath == "" {
-		fmt.Fprintln(os.Stderr, "Specify -ebitenpath")
+	if *flagEbitenginePath == "" {
+		fmt.Fprintln(os.Stderr, "Specify -ebitenginepath")
 		os.Exit(1)
 	}
 
