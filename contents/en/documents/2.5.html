@@ -169,3 +169,11 @@
 <ul>
   <li>Fixed performance issues caused by overflow on 32-bit machines (<a href="https://github.com/hajimehoshi/ebiten/issues/2728">#2728</a>).</li>
 </ul>
+<h2>v2.5.8</h2>
+<h3>Bug fixes</h3>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/115?closed=1">Issues for v2.5.8</a></p>
+<ul>
+  <li>Fixed an issue where the application may not launch when the <code>DYLD_FALLBACK_FRAMEWORK_PATH</code> environment variable is set on macOS (<a href="https://github.com/hajimehoshi/ebiten/issues/2732">#2732</a>).</li>
+  <li>Fixed an issue where the contents of the options argument could be incorrectly modified in <code>(*ebiten.Image).DrawImage</code> and <code>(*ebiten.Image).DrawRectShader</code> (<a href="https://github.com/hajimehoshi/ebiten/issues/2733">#2733</a>).</li>
+  <li>Fixed an issue where calling <code>(*audio.Player).Play</code> in an independent goroutine could result in a deadlock (<a href="https://github.com/hajimehoshi/ebiten/issues/2737">#2737</a>).</li>
+</ul>

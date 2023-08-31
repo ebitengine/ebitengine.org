@@ -169,3 +169,11 @@
 <ul>
   <li>32bit マシンでの、オーバーフローによるパフォーマンス問題を修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/2728">#2728</a>)。</li>
 </ul>
+<h2>v2.5.8</h2>
+<h3>バグ修正</h3>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/115?closed=1">Issues for v2.5.8</a></p>
+<ul>
+  <li>macOS で <code>DYLD_FALLBACK_FRAMEWORK_PATH</code> 環境変数が設定されているときに起動しないことがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/2732">#2732</a>)。</li>
+  <li><code>(*ebiten.Image).DrawImage</code> および <code>(*ebiten.Image).DrawRectShader</code> で <code>options</code> 引数の内容をを誤って変更することがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/2733">#2733</a>)。</li>
+  <li><code>(*audio.Player).Play</code> を独立した goroutine で呼んだときにデッドロックすることがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/2737">#2737</a>)。</li>
+</ul>
