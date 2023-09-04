@@ -177,3 +177,9 @@
   <li>Fixed an issue where the contents of the options argument could be incorrectly modified in <code>(*ebiten.Image).DrawImage</code> and <code>(*ebiten.Image).DrawRectShader</code> (<a href="https://github.com/hajimehoshi/ebiten/issues/2733">#2733</a>).</li>
   <li>Fixed an issue where calling <code>(*audio.Player).Play</code> in an independent goroutine could result in a deadlock (<a href="https://github.com/hajimehoshi/ebiten/issues/2737">#2737</a>).</li>
 </ul>
+<h2>v2.5.9</h2>
+<h3>Bug fixes</h3>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/116?closed=1">Issues for v2.5.9</a></p>
+<ul>
+  <li>Fixed an issue where calling <code>ebiten.SetCursorMode</code> or similar functions from a separate goroutine before calling <code>ebiten.RunGame</code> could cause a crash (<a href="https://github.com/hajimehoshi/ebiten/issues/2742">#2742</a>).</li>
+</ul>

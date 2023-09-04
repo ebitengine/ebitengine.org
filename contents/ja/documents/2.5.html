@@ -177,3 +177,9 @@
   <li><code>(*ebiten.Image).DrawImage</code> および <code>(*ebiten.Image).DrawRectShader</code> で <code>options</code> 引数の内容をを誤って変更することがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/2733">#2733</a>)。</li>
   <li><code>(*audio.Player).Play</code> を独立した goroutine で呼んだときにデッドロックすることがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/2737">#2737</a>)。</li>
 </ul>
+<h2>v2.5.9</h2>
+<h3>バグ修正</h3>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/116?closed=1">Issues for v2.5.9</a></p>
+<ul>
+  <li><code>ebiten.RunGame</code> を呼ぶ前に <code>ebiten.SetCursorMode</code> などを別 goroutine から呼び出したときにクラッシュすることがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/2742">#2742</a>)。</li>
+</ul>
