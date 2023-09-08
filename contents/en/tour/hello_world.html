@@ -2,8 +2,14 @@
 <p>As the first Ebitengine game, let's show the message 'Hello, World!'.</p>
 <p>Before executing the program, you need to install Ebitengine. See <a href="/en/documents/install.html">the instruction to install Ebitengine</a>.</p>
 <h2>Code</h2>
+<p>This tour assumes that you are in a working directory with <code>go.mod</code>. If not, please try these commands to create a directory and a <code>go.mod</code> file.</p>
+<pre><code>mkdir yourgame
+cd yourgame
+go mod init foo # or github.com/yourname/yourgame or something</code></pre>
 <p>Create a file <code>main.go</code> like this:</p>
 <pre data-codesrc="/go/helloworld/main.go"></pre>
+<p>If you have just initialized the <code>go.mod</code> file by <code>go mod init</code>, please run this command to resolve dependencies.</p>
+<pre><code>go mod tidy</code></pre>
 <p>Then, execute this Go program by <code>go run</code>:</p>
 <pre><code>go run main.go</code></pre>
 <div class="grid-container">
