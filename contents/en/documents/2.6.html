@@ -1,0 +1,92 @@
+<h1>Ebitengine 2.6 Release Notes</h1>
+<p><em>v2.6.0 is not released yet.</em> This document is a draft.</p>
+<h2>v2.6.0</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/87?closed=1">Issues for v2.6.0</a></p>
+<h3>Monitors</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1835">#1835</a>)</p>
+<p>APIs for monitors were added. You can specify a monitor to show your window.</p>
+<ul>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MonitorType"><code>type MonitorType</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MonitorType.Name"><code>func (*MonitorType) Name() string</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Monitor"><code>func Monitor() *MonitorType</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetMonitor"><code>func SetMonitor(*MonitorType)</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#AppendMonitors"><code>func AppendMonitors([]*MonitorType) []*MonitorType</code></a></li>
+</ul>
+<h3>Mouse cursor passthrough</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2511">#2511</a>)</p>
+<p>APIs to enable mouse cursor passthrough were added. When passthrough is enabled, a window behind the Ebitengine window becomes responsive to clicks.</p>
+<ul>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#IsWindowMousePassthrough"><code>func IsWindowMousePassthrough() bool</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetWindowMousePassthrough"><code>func SetWindowMousePassthrough(enabled bool)</code></a></li>
+</ul>
+<h3>New mouse cursor shapes</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2476">#2476</a>)</p>
+<p>New mouse cursor shapes were added. See <code>examples/cursor</code> for an example.</p>
+<ul>
+  <li><code>CursorShapeNESWResize</code></li>
+  <li><code>CursorShapeNWSEResize</code></li>
+  <li><code>CursorShapeMove</code></li>
+  <li><code>CursorShapeNotAllowed</code></li>
+</ul>
+<h3>Pixel mode in Kage</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1431">#1431</a>)</p>
+<p>The pixel mode was added to Kage. The following comments work as compiler directives:</p>
+<ul>
+  <li><code>//kage:unit texels</code> (The texel mode, default)</li>
+  <li><code>//kage:unit pixels</code> (The pixel mode)</li>
+</ul>
+<p>In the pixel mode, Kage shader will treat pixels for all the units. Also, the second argument of <code>Fragment</code> will be in pixels, not texels. And, the following functions will treat pixels, not texels:</p>
+<ul>
+  <li><code>func imageSrc<i>N</i>At(pos vec2) vec4</code></li>
+  <li><code>func imageSrc<i>N</i>UnsafeAt(pos vec2) vec4</code></li>
+  <li><code>func imageDstRegionOnTexture() (vec2, vec2)</code></li>
+  <li><code>func imageSrcRegionOnTexture() (vec2, vec2)</code></li>
+</ul>
+<p>For backward compatibility, the default is the texel mode. For new Kage programs, it is strongly recommended to use the pixel mode.</p>
+<h3>Kage and source images of different sizes</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1870">#1870</a>)</p>
+<p>You now can pass source images of different sizes when you use a Kage shader for rendering. This is available only when the shader is in the pixel mode and <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawTrianglesShader"><code>DrawTrianglesShader</code></a> is used.</p>
+<h3>New APIs for Kage</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1870">#1870</a>)</p>
+<p>Now Kage can treat source images of different sizes, new APIs were added for Kage. The functions' returning values are in texels or in pixels, and this depends on the specified mode.</p>
+<ul>
+  <li><code>func imageDstOrigin() vec2</code>: returns the upper-left position of the destination texture.</li>
+  <li><code>func imageDstSize() vec2</code>: returns the size of the destination texture.</li>
+  <li><code>func imageSrc<i>N</i>Origin() vec2</code>: returns the upper-left position of the Nth source texture.</li>
+  <li><code>func imageSrc<i>N</i>Size() vec2</code>: returns the size of the Nth source texture.</li>
+</ul>
+<h3>DirectX 11 driver</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2613">#2613</a>)</p>
+<p>A DirectX 11 driver was implemented. This is used as the default instead of the existing DirectX 12 driver. The DirectX 11 driver is relatively stable and resolved crashes due to the DirectX 12 driver (<a href="https://github.com/hajimehoshi/ebiten/issues/2198">#2198</a>). Also, this resolved the issues, such as not being able to capture with OBS, were resolved (<a href="https://github.com/hajimehoshi/ebiten/issues/2148">#2148</a>).</p>
+<p>You can also use the DirectX 12 driver by specifying <code>version=12</code> at the environment variable <code>EBITENGNIE_DIRECTX</code>.</p>
+<h3>Text input with IME (experimental)</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1029">#1029</a>)</p>
+<p>An experimental package <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/textinput"><code>exp/textinput</code></a> to input texts with IME was added. This works only on macOS and browsers so far. As an example, you can see <code>examples/textinput</code>. As this is still an experiment, APIs may change in the future.</p>
+<h3>Breaking changes</h3>
+<ul>
+  <li>The build tag <code>wayland</code> was removed (<a href="https://github.com/hajimehoshi/ebiten/issues/2759">#2759</a>).</li>
+  <li>OpenGL 3.2 or newer is now required when you use OpenGL on desktops.</li>
+  <li>OpenGL ES 3 or newer is now required when you use OpenGL ES on desktops or mobiles.</li>
+  <li>WebGL 2 is now required for browsers.</li>
+</ul>
+<h3>Bug fixes</h3>
+<p>This release includes all the bug fixes that were in version 2.5.</p>
+<h3>Deprecated API</h3>
+<p>The following APIs were deprecated:</p>
+<ul>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MaxIndicesCount"><code>ebiten.MaxIndicesCount</code></a>: This constant is no longer used.</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.Current"><code>(*audio.Player).Current</code></a>: Use <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.Position"><code>Position</code></a> instead.</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.Seek"><code>(*audio.Player).Seek</code></a>: Use <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.SetPosition"><code>SetPosition</code></a> instead.</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text#BoundString"><code>text.BoundString</code></a>: Use <a href="https://pkg.go.dev/golang.org/x/image/font#BoundString"><code>golang.org/x/image/font.BoundString</code></a> instead, or use <a href="https://pkg.go.dev/golang.org/x/image/font#Metrics"><code>golang.org/x/image/font.Metrics</code></a> (<code>Ascent</code> and <code>Descent</code>) and <a href="https://pkg.go.dev/golang.org/x/image/font#MeasureString"><code>golang.org/x/image/font.MeasureString</code></a> instead.</li>
+  <li><code>imageDstRegionOnTexture</code> (Kage): Use <code>imageDstOrigin</code> or <code>imageDstSize</code> instead.</li>
+  <li><code>imageDstTextureSize</code> (Kage): Use the pixel mode instead.</li>
+  <li><code>imageSrcRegionOnTexture</code> (Kage): Use <code>imageSrc0Origin</code> or <code>imageSrc0Size</code> instead.</li>
+  <li><code>imageSrcTextureSize</code> (Kage): Use the pixel mode instead.</li>
+</ul>
+<h3>Misc.</h3>
+<ul>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale.ScaleWithColorScale"><code>(*ColorScale).ScaleWithColorScale(ColorScale)</code></a> was added (<a href="https://github.com/hajimehoshi/ebiten/issues/2687">#2687</a>).</li>
+  <li>Keyboards are now supported for iOS (<a href="https://github.com/hajimehoshi/ebiten/issues/1090">#1090</a>).</li>
+  <li>The type checks for Kage shaders became stricter (<a href="https://github.com/hajimehoshi/ebiten/issues/2256">#2256</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/2712">#2712</a>).</li>
+  <li>A build tag <code>ebitenginegldebug</code> was added. When this build tag is specified, all the called OpenGL functions are dumped as log (<a href="https://github.com/hajimehoshi/ebiten/issues/2650">#2650</a>).</li>
+</ul>

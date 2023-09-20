@@ -1,0 +1,92 @@
+<h1>Ebitengine 2.6 リリースノート</h1>
+<p><em>v2.6.0 はまだリリースされていません。</em>この文章はドラフトです。</p>
+<h2>v2.6.0</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/87?closed=1">Issues for v2.6.0</a></p>
+<h3>モニター</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1835">#1835</a>)</p>
+<p>モニター関係の API が追加されました。ウィンドウを表示するモニターを指定したりすることができるようになります。</p>
+<ul>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MonitorType"><code>type MonitorType</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MonitorType.Name"><code>func (*MonitorType) Name() string</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Monitor"><code>func Monitor() *MonitorType</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetMonitor"><code>func SetMonitor(*MonitorType)</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#AppendMonitors"><code>func AppendMonitors([]*MonitorType) []*MonitorType</code></a></li>
+</ul>
+<h3>マウスカーソルのパススルー</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2511">#2511</a>)</p>
+<p>マウスカーソルをパススルーにするための API が追加されました。パススルーが有効になっているとき、 Ebitengine のウィンドウの背後にあるウィンドウが、クリックに対して反応するようになります。</p>
+<ul>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#IsWindowMousePassthrough"><code>func IsWindowMousePassthrough() bool</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetWindowMousePassthrough"><code>func SetWindowMousePassthrough(enabled bool)</code></a></li>
+</ul>
+<h3>新しいマウスカーソル形状</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2476">#2476</a>)</p>
+<p>新しいマウスカーソルの形状が追加されました。サンプルとして <code>examples/cursor</code> があります。</p>
+<ul>
+  <li><code>CursorShapeNESWResize</code></li>
+  <li><code>CursorShapeNWSEResize</code></li>
+  <li><code>CursorShapeMove</code></li>
+  <li><code>CursorShapeNotAllowed</code></li>
+</ul>
+<h3>Kage のピクセルモード</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1431">#1431</a>)</p>
+<p>Kage にピクセルモードが追加されました。次のコメントがコンパイラディレクティブとして機能します。</p>
+<ul>
+  <li><code>//kage:unit texels</code> (テクセルモード、デフォルト)</li>
+  <li><code>//kage:unit pixels</code> (ピクセルモード)</li>
+</ul>
+<p>ピクセルモードの場合、 Kage シェーダで取り扱う単位が全てピクセルになります。ピクセルモードでは、<code>Fragment</code> の第 2 引数がテクセルではなくピクセルになります。また、次の関数がテクセルではなくピクセルを取り扱うようになります:</p>
+<ul>
+  <li><code>func imageSrc<i>N</i>At(pos vec2) vec4</code></li>
+  <li><code>func imageSrc<i>N</i>UnsafeAt(pos vec2) vec4</code></li>
+  <li><code>func imageDstRegionOnTexture() (vec2, vec2)</code></li>
+  <li><code>func imageSrcRegionOnTexture() (vec2, vec2)</code></li>
+</ul>
+<p>後方互換性のためにデフォルトではテクセルモードになっています。新しい Kage プログラムではピクセルモードを使用することを強く推奨します。</p>
+<h3>Kage と大きさの異なる描画元画像</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1870">#1870</a>)</p>
+<p>Kage シェーダを使った描画に、大きさの異なる描画元画像を渡せるようになりました。シェーダがピクセルモードで、かつ <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawTrianglesShader"><code>DrawTrianglesShader</code></a> のときにのみ有効です。</p>
+<h3>Kage の新しい API</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1870">#1870</a>)</p>
+<p>Kage が大きさの異なる描画元画像を取り扱えるようになったことに伴い、 Kage シェーダに新しい API が追加されました。関数の戻り値はテクセルまたはピクセルで、指定されたモードによります。</p>
+<ul>
+  <li><code>func imageDstOrigin() vec2</code>: 描画先テクスチャの左上座標を返す。</li>
+  <li><code>func imageDstSize() vec2</code>: 描画先テクスチャの大きさを返す。</li>
+  <li><code>func imageSrc<i>N</i>Origin() vec2</code>: N 番目の描画元テクスチャの左上座標を返す。</li>
+  <li><code>func imageSrc<i>N</i>Size() vec2</code>: N 番目の描画元テクスチャの大きさを返す。</li>
+</ul>
+<h3>DirectX 11 ドライバ</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2613">#2613</a>)</p>
+<p>DirectX 11 ドライバが実装されました。今までの DirectX 12 ドライバに代わってデフォルトで使用されます。 DirectX 11 ドライバは比較的安定しており、これにより DirectX 12 ドライバ由来のクラッシュがなくなりました (<a href="https://github.com/hajimehoshi/ebiten/issues/2198">#2198</a>)。また OBS などでキャプチャできなかった問題などが解決しました (<a href="https://github.com/hajimehoshi/ebiten/issues/2148">#2148</a>)。</p>
+<p><code>EBITENGNIE_DIRECTX</code> 環境変数に <code>version=12</code> を指定することで、 DirectX 12 ドライバを使用することもできます。</p>
+<h3>IME によるテキスト入力 (試験版)</h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/1029">#1029</a>)</p>
+<p>IME によるテキスト入力を行うための実験的パッケージ <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/textinput"><code>exp/textinput</code></a> が追加されました。現在のところ macOS とブラウザでのみ動きます。サンプルとして <code>examples/textinput</code> があります。まだ試験版なので、 API が今後変わるおそれがあります。</p>
+<h3>非互換な変更</h3>
+<ul>
+  <li>ビルドタグ <code>wayland</code> は廃止されました (<a href="https://github.com/hajimehoshi/ebiten/issues/2759">#2759</a>)。</li>
+  <li>デスクトップで OpenGL を使う場合、バージョン 3.2 以上が必須になりました。</li>
+  <li>デスクトップまたはモバイルで OpenGL ES を使う場合、バージョン 3 以上が必須になりました。</li>
+  <li>ブラウザで WebGL 2 が必須になりました。</li>
+</ul>
+<h3>バグ修正</h3>
+<p>このリリースはバージョン 2.5 にあった全てのバグ修正を含みます。</p>
+<h3>非推奨 API</h3>
+<p>次の API が非推奨になりました:</p>
+<ul>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MaxIndicesCount"><code>ebiten.MaxIndicesCount</code></a>: この定数は使用されません。</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.Current"><code>(*audio.Player).Current</code></a>: 代わりに <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.Position"><code>Position</code></a> を使用してください。</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.Seek"><code>(*audio.Player).Seek</code></a>: 代わりに <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.SetPosition"><code>SetPosition</code></a> を使用してください。</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text#BoundString"><code>text.BoundString</code></a>: 代わりに <a href="https://pkg.go.dev/golang.org/x/image/font#BoundString"><code>golang.org/x/image/font.BoundString</code></a> を使用するか、または <a href="https://pkg.go.dev/golang.org/x/image/font#Metrics"><code>golang.org/x/image/font.Metrics</code></a> (<code>Ascent</code> と <code>Descent</code>) と <a href="https://pkg.go.dev/golang.org/x/image/font#MeasureString"><code>golang.org/x/image/font.MeasureString</code></a> を使用してください。</li>
+  <li><code>imageDstRegionOnTexture</code> (Kage): 代わりに <code>imageDstOrigin</code> または <code>imageDstSize</code> を使用してください。</li>
+  <li><code>imageDstTextureSize</code> (Kage): 代わりにピクセルモードを使用してください。</li>
+  <li><code>imageSrcRegionOnTexture</code> (Kage): 代わりに <code>imageSrc0Origin</code> または <code>imageSrc0Size</code> を使用してください。</li>
+  <li><code>imageSrcTextureSize</code> (Kage): 代わりにピクセルモードを使用してください。</li>
+</ul>
+<h3>その他</h3>
+<ul>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale.ScaleWithColorScale"><code>(*ColorScale).ScaleWithColorScale(ColorScale)</code></a> が追加されました (<a href="https://github.com/hajimehoshi/ebiten/issues/2687">#2687</a>)。</li>
+  <li>iOS でキーボードがサポートされました (<a href="https://github.com/hajimehoshi/ebiten/issues/1090">#1090</a>)。</li>
+  <li>Kage シェーダの型検査が厳密になりました (<a href="https://github.com/hajimehoshi/ebiten/issues/2256">#2256</a>、<a href="https://github.com/hajimehoshi/ebiten/issues/2712">#2712</a>)。</li>
+  <li>ビルドタグ <code>ebitenginegldebug</code> が追加されました。このビルドタグが指定されたとき、呼び出された OpenGL 関数をすべてログとしてダンプします (<a href="https://github.com/hajimehoshi/ebiten/issues/2650">#2650</a>)。</li>
+</ul>
