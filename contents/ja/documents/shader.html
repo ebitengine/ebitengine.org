@@ -16,17 +16,17 @@ var ScreenSize vec2
 
 // Fragment is the entry point of the fragment shader.
 // Fragment returns the color value for the current position.
-func Fragment(position vec4, texCoord vec2, color vec4) vec4 {
+func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4 {
 	// You can define variables with a short variable declaration like Go.
 	lightpos := vec3(Cursor, 50)
-	lightdir := normalize(lightpos - position.xyz)
-	normal := normalize(imageSrc1UnsafeAt(texCoord) - 0.5)
+	lightdir := normalize(lightpos - dstPos.xyz)
+	normal := normalize(imageSrc1UnsafeAt(srcPos) - 0.5)
 	ambient := 0.25
 	diffuse := 0.75 * max(0.0, dot(normal.xyz, lightdir))
 
 	// You can treat multiple source images by
 	// imageSrc[N]At or imageSrc[N]UnsafeAt.
-	return imageSrc0UnsafeAt(texCoord) * (ambient + diffuse)
+	return imageSrc0UnsafeAt(srcPos) * (ambient + diffuse)
 }</code></pre>
 <p class="img"><video controls autoplay src="/images/documents/shader/lighting.mp4" width="456"></p>
 <h2>Ebitengine API</h2>
@@ -81,11 +81,11 @@ func Fragment(position vec4, texCoord vec2, color vec4) vec4 {
 </ul>
 <h3>エントリーポイント</h3>
 <p>Kage が現在定義できるのはフラグメントシェーダのみです。以下のシグニチャを持つ <code>Fragment</code> 関数がエントリーポイントになります。</p>
-<pre><code>func Fragment(position vec4, texCoord vec2, color vec4) vec4</code></pre>
+<pre><code>func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4</code></pre>
 <table>
   <tr><th>名前</th><th>型</th><th>説明</th></tr>
-  <tr><td><code>position</code></td><td><code>vec4</code><td>描画先の座標。単位はピクセル。第 3、第 4 要素は常にそれぞれ 0、 1。</td></tr>
-  <tr><td><code>texCoord</code></td><td><code>vec2</code><td>描画元テクスチャの座標。単位はテクセル。</td></tr>
+  <tr><td><code>dstPos</code></td><td><code>vec4</code><td>描画先の座標。単位はピクセル。第 3、第 4 要素は常にそれぞれ 0、 1。</td></tr>
+  <tr><td><code>srcPos</code></td><td><code>vec2</code><td>描画元テクスチャの座標。単位はテクセル。</td></tr>
   <tr><td><code>color</code></td><td><code>vec4</code><td>頂点から与えられる補助的な色情報。各要素は 0 から 1 の値。 <code>DrawTrianglesShader</code> 関数使用時にのみ意味を持つ。</td></tr>
   <tr><td>(戻り値)</td><td><code>vec4</code><td>現在の座標の色。各要素は 0 から 1 の値。</td></tr>
 </table>
