@@ -183,3 +183,10 @@
 <ul>
   <li>Fixed an issue where calling <code>ebiten.SetCursorMode</code> or similar functions from a separate goroutine before calling <code>ebiten.RunGame</code> could cause a crash (<a href="https://github.com/hajimehoshi/ebiten/issues/2742">#2742</a>).</li>
 </ul>
+<h2>v2.5.10</h2>
+<h3>Bug fixes</h3>
+<ul>
+  <li>Fixed an issue where accessing the <code>view</code> property of <code>EbitenViewController</code> in iOS applications could cause freezing (<a href="https://github.com/hajimehoshi/ebiten/issues/2768">#2768</a>).</li>
+  <li>Fixed an issue where iOS applications could not be built in Xcode 15 (<a href="https://github.com/hajimehoshi/ebiten/issues/2772">#2772</a>).</li>
+  <li>Fixed a crash when playing sound in iOS 17 (<a href="https://github.com/hajimehoshi/ebiten/issues/2773">#2773</a>).</li>
+</ul>
