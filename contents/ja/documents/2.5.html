@@ -96,19 +96,19 @@
 <p>いくつかの API が非推奨になりました。非推奨 API はバージョン 2 である限りは利用可能ですが、新しい API に置き換えることが推奨されます。</p>
 <table>
   <tr><th>2.4 以前</th><th>2.5 以後</th></tr>
-  <tr><td><code>type ebiten.ColorM</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale"><code>type ebiten.ColorScale</code></a> or the package <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/colorm"><code>colorm</code></a></td></tr>
+  <tr><td><code>type ebiten.ColorM</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale"><code>type ebiten.ColorScale</code></a> または <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/colorm"><code>colorm</code></a> パッケージ</td></tr>
   <tr><td><code>type ebiten.CompositeMode</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Blend"><code>type ebiten.Blend</code></a></td></tr>
-  <tr><td><code>type ebiten.FPSModeType</code></td><td>n/a</td></tr>
+  <tr><td><code>type ebiten.FPSModeType</code></td><td>(該当なし)</td></tr>
   <tr><td><code>const ebiten.CompositeMode*</code></td><td><code>const ebiten.Blend*</code></td></tr>
-  <tr><td><code>const ebiten.FPSMode*</code></td><td>n/a</td></tr>
+  <tr><td><code>const ebiten.FPSMode*</code></td><td>(該当なし)</td></tr>
   <tr><td><code>func (*ebiten.Image) Size</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.Bounds"><code>func (*ebiten.Image) Bounds</code></a></td></tr>
-  <tr><td><code>func ebiten.IsScreenFilterEnabled</code></td><td>n/a</td></tr>
-  <tr><td><code>func ebiten.IsScreenTransparent</code></td><td>n/a</td></tr>
+  <tr><td><code>func ebiten.IsScreenFilterEnabled</code></td><td>(該当なし)</td></tr>
+  <tr><td><code>func ebiten.IsScreenTransparent</code></td><td>(該当なし)</td></tr>
   <tr><td><code>func ebiten.FPSMode</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#IsVsyncEnabled"><code>func ebiten.IsVsyncEnabled</code></a></td></tr>
   <tr><td><code>func ebiten.ScheduleFrame</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetScreenClearedEveryFrame"><code>ebiten.SetScreenClearedEveryFrame(false)</code></a></td></tr>
   <tr><td><code>func ebiten.SetFPSMode</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetVsyncEnabled"><code>func ebiten.SetVsyncEnabled</code></a></td></tr>
   <tr><td><code>func ebiten.SetInitFocused</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameWithOptions"><code>func ebiten.RunGameWithOptions</code></a></td></tr>
-  <tr><td><code>func ebiten.SetScreenFilterEnabled</code></td><td>interface <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#FinalScreenDrawer"><code>ebiten.FinalScreenDrawer</code></a></td></tr>
+  <tr><td><code>func ebiten.SetScreenFilterEnabled</code></td><td>インターフェイス <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#FinalScreenDrawer"><code>ebiten.FinalScreenDrawer</code></a></td></tr>
   <tr><td><code>func ebiten.SetScreenTransparent</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameWithOptions"><code>func ebiten.RunGameWithOptions</code></a></td></tr>
   <tr><td><code>func ebitenutil.DrawLine</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#StrokeLine"><code>func vector.StrokeLine</code></a> (アンチエイリアス無効)</td></tr>
   <tr><td><code>func ebitenutil.DrawCircle</code></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#DrawFilledCircle"><code>func vector.DrawFilledCircle</code></a> (アンチエイリアス無効)</td></tr>

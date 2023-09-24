@@ -73,16 +73,17 @@
 <p>このリリースはバージョン 2.5 にあった全てのバグ修正を含みます。</p>
 <h3>非推奨 API</h3>
 <p>次の API が非推奨になりました:</p>
-<ul>
-  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MaxIndicesCount"><code>ebiten.MaxIndicesCount</code></a>: この定数は使用されません。</li>
-  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.Current"><code>(*audio.Player).Current</code></a>: 代わりに <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.Position"><code>Position</code></a> を使用してください。</li>
-  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.Seek"><code>(*audio.Player).Seek</code></a>: 代わりに <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.SetPosition"><code>SetPosition</code></a> を使用してください。</li>
-  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text#BoundString"><code>text.BoundString</code></a>: 代わりに <a href="https://pkg.go.dev/golang.org/x/image/font#BoundString"><code>golang.org/x/image/font.BoundString</code></a> を使用するか、または <a href="https://pkg.go.dev/golang.org/x/image/font#Metrics"><code>golang.org/x/image/font.Metrics</code></a> (<code>Ascent</code> と <code>Descent</code>) と <a href="https://pkg.go.dev/golang.org/x/image/font#MeasureString"><code>golang.org/x/image/font.MeasureString</code></a> を使用してください。</li>
-  <li><code>imageDstRegionOnTexture</code> (Kage): 代わりに <code>imageDstOrigin</code> または <code>imageDstSize</code> を使用してください。</li>
-  <li><code>imageDstTextureSize</code> (Kage): 代わりにピクセルモードを使用してください。</li>
-  <li><code>imageSrcRegionOnTexture</code> (Kage): 代わりに <code>imageSrc0Origin</code> または <code>imageSrc0Size</code> を使用してください。</li>
-  <li><code>imageSrcTextureSize</code> (Kage): 代わりにピクセルモードを使用してください。</li>
-</ul>
+<table>
+  <tr><th>2.5 以前</th><th>2.6 以後</th></tr>
+  <tr><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MaxIndicesCount"><code>ebiten.MaxIndicesCount</code></a></td><td>該当なし</td></tr>
+  <tr><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.Current"><code>(*audio.Player).Current</code></a></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.Position"><code>Position</code></a></td></tr>
+  <tr><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.Seek"><code>(*audio.Player).Seek</code></a></td><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.SetPosition"><code>SetPosition</code></a></td></tr>
+  <tr><td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text#BoundString"><code>text.BoundString</code></a></td><td><a href="https://pkg.go.dev/golang.org/x/image/font#BoundString"><code>golang.org/x/image/font.BoundString</code></a> か、または <a href="https://pkg.go.dev/golang.org/x/image/font#Metrics"><code>golang.org/x/image/font.Metrics</code></a> (<code>Ascent</code> と <code>Descent</code>) と <a href="https://pkg.go.dev/golang.org/x/image/font#MeasureString"><code>golang.org/x/image/font.MeasureString</code></a></td></tr>
+  <tr><td><code>imageDstRegionOnTexture</code> (Kage)</td><td><code>imageDstOrigin</code> または <code>imageDstSize</code></td></tr>
+  <tr><td><code>imageDstTextureSize</code> (Kage)</td><td>ピクセルモード</td></tr>
+  <tr><td><code>imageSrcRegionOnTexture</code> (Kage)</td><td><code>imageSrc0Origin</code> または <code>imageSrc0Size</code></td></tr>
+  <tr><td><code>imageSrcTextureSize</code> (Kage)</td><td>ピクセルモード</td></tr>
+</table>
 <h3>その他</h3>
 <ul>
   <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale.ScaleWithColorScale"><code>(*ColorScale).ScaleWithColorScale(ColorScale)</code></a> が追加されました (<a href="https://github.com/hajimehoshi/ebiten/issues/2687">#2687</a>)。</li>
