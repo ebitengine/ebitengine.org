@@ -250,7 +250,7 @@ func run() error {
 				return nil
 			})
 			// There is a rate limit to upload files. Sleep to avoid exceeding the limit.
-			time.Sleep(time.Second)
+			time.Sleep(1200 * time.Millisecond)
 		}
 		return g.Wait()
 	})
