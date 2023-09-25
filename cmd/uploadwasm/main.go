@@ -175,7 +175,6 @@ func run() error {
 				args := []string{
 					"build",
 					"-o", filepath.Join(tmpout, name) + ".tmp",
-					"-tags", "example",
 					"./examples/" + e,
 				}
 				fmt.Println("go", strings.Join(args, " "))
