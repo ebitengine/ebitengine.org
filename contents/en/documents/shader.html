@@ -32,12 +32,13 @@ func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4 {
 <h2>Ebitengine API</h2>
 <h3><code>NewShader</code></h3>
 <pre><code>func NewShader(src []byte) (*Shader, error)</code></pre>
-<p><code>NewShader</code> compiles a shader program in the shading language Kage, and returns the result.</p>
+<p><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#NewShader"><code>NewShader</code></a> compiles a shader program in the shading language Kage, and returns the result.</p>
 <p>If the compilation fails, <code>NewShader</code> returns an error.</p>
 <h3><code>(*Image).DrawRectShader</code></h3>
 <pre><code>func DrawRectShader(width, height int, shader *Shader, options *DrawRectShaderOptions)</code></pre>
-<p><code>DrawRectShader</code> draws a rectangle with the specified width and height with the specified shader.</p>
+<p><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.DrawRectShader"><code>DrawRectShader</code></a> draws a rectangle with the specified width and height with the specified shader.</p>
 <h3><code>DrawRectShaderOptions</code></h3>
+<p><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawRectShaderOptions"><code>DrawRectShaderOptions</code></a> represents options for <code>DrawRectShader</code>.</p>
 <pre><code>type DrawRectShaderOptions struct {
     // GeoM is a geometry matrix to draw.
     // The default (zero) value is identity, which draws the rectangle at (0, 0).
@@ -60,7 +61,7 @@ func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4 {
     Images [4]*Image
 }</code></pre>
 <h3>The others</h3>
-<p>For more primitive rendering, there are also <code>(*Image).DrawTrianglesShader</code> and <code>DrawTrianglesShaderOptions</code>.</p>
+<p>For more primitive rendering, there are also <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.DrawTrianglesShader"><code>(*Image).DrawTrianglesShader</code></a> and <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawTrianglesShaderOptions"><code>DrawTrianglesShaderOptions</code></a>.</p>
 <h2>Shading language Kage</h2>
 <h3>Syntax</h3>
 <p>The syntax is basically same as Go. This is completely same in the syntax level. You can do even <code>gofmt</code>.</p>

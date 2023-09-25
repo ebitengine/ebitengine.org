@@ -32,12 +32,13 @@ func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4 {
 <h2>Ebitengine API</h2>
 <h3><code>NewShader</code></h3>
 <pre><code>func NewShader(src []byte) (*Shader, error)</code></pre>
-<p><code>NewShader</code> はシェーディング言語 Kage で記述されたシェーダプログラムをコンパイルし、結果を返します。</p>
+<p><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#NewShader"><code>NewShader</code></a> はシェーディング言語 Kage で記述されたシェーダプログラムをコンパイルし、結果を返します。</p>
 <p>もしコンパイルエラーが起きたならば、 <code>NewShader</code> はエラーを返します。</p>
 <h3><code>(*Image).DrawRectShader</code></h3>
 <pre><code>func DrawRectShader(width, height int, shader *Shader, options *DrawRectShaderOptions)</code></pre>
-<p><code>DrawRectShader</code> は指定された幅と高さ、指定されたシェーダを使って矩形を描画します。</p>
+<p><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.DrawRectShader"><code>DrawRectShader</code></a> は指定された幅と高さ、指定されたシェーダを使って矩形を描画します。</p>
 <h3><code>DrawRectShaderOptions</code></h3>
+<p><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawRectShaderOptions"><code>DrawRectShaderOptions</code></a> は <code>DrawRectShader</code> のためのオプションです。</p>
 <pre><code>type DrawRectShaderOptions struct {
     // GeoM は描画の幾何行列である。
     // デフォルト (ゼロ) 値は単位行列で、矩形を (0, 0) の位置に描画する。
@@ -60,7 +61,7 @@ func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4 {
     Images [4]*Image
 }</code></pre>
 <h3>その他</h3>
-<p>よりプリミティブな描画のために、 <code>(*Image).DrawTrianglesShader</code> と <code>DrawTrianglesShaderOptions</code> もあります。</p>
+<p>よりプリミティブな描画のために、 <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.DrawTrianglesShader"><code>(*Image).DrawTrianglesShader</code></a> と <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawTrianglesShaderOptions"><code>DrawTrianglesShaderOptions</code></a> もあります。</p>
 <h2>シェーディング言語 Kage</h2>
 <h3>文法</h3>
 <p>基本的に Go と同じです。文法レベルでは完全互換です。 <code>gofmt</code> を実行することさえ出来ます。</p>
