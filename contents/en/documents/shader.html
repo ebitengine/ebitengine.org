@@ -9,6 +9,9 @@
 <h2>Example</h2>
 <pre><code>package main
 
+// Specify the 'pixel' mode.
+//kage:unit pixels
+
 // Uniform variables.
 var Time float
 var Cursor vec2
@@ -18,10 +21,11 @@ var ScreenSize vec2
 // Fragment returns the color value for the current position.
 func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4 {
 	// You can define variables with a short variable declaration like Go.
+	pos := position.xy - imageDstOrigin()
 	lightpos := vec3(Cursor, 50)
-	lightdir := normalize(lightpos - dstPos.xyz)
+	lightdir := normalize(lightpos - pos.xyz)
 	normal := normalize(imageSrc1UnsafeAt(srcPos) - 0.5)
-	ambient := 0.25
+	const ambient = 0.25
 	diffuse := 0.75 * max(0.0, dot(normal.xyz, lightdir))
 
 	// You can treat multiple source images by
@@ -80,13 +84,21 @@ func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4 {
   <li><code>init</code> functions</li>
   <li>Method definition</li>
 </ul>
+<h3>Unit mode</h3>
+<p>The unit mode was added to Kage as of v2.6. These comments work as compiler directives to specify the unit mode.</p>
+<ul>
+  <li><code>//kage:unit texels</code> (Texel mode, default)</li>
+  <li><code>//kage:unit pixels</code> (Pixel mode)</li>
+</ul>
+<p>In pixel mode, all units handled by the Kage shader become pixels.</p>
+<p>By default, it is set to texel mode for backward compatibility. For new Kage programs, it is strongly recommended to use pixel mode.</p>
 <h3>Entry point</h3>
 <p>Kage can define only a fragment shader. The <code>Fragment</code> function with the below signature is the entrypoint.</p>
 <pre><code>func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4</code></pre>
 <table>
   <tr><th>Name</th><th>Type</th><th>Description</th></tr>
   <tr><td><code>dstPos</code></td><td><code>vec4</code><td>The destination position in pixels. The 3rd and 4th components are always 0 and 1.</td></tr>
-  <tr><td><code>srcPos</code></td><td><code>vec2</code><td>The source texture's position in texels.</td></tr>
+  <tr><td><code>srcPos</code></td><td><code>vec2</code><td>The source texture's position in texels or pixels. The unit depends on the unit mode.</td></tr>
   <tr><td><code>color</code></td><td><code>vec4</code><td>Supplemental color information given from vertices. Each component values are in between 0 and 1. This value is meaningful only when <code>DrawTrianglesShader</code> is used.</td></tr>
   <tr><td>(Returning value)</td><td><code>vec4</code><td>The current position's color. Each component values are in between 0 and 1.</td></tr>
 </table>
@@ -188,15 +200,23 @@ v2.xyz = v2.xxx        // Get vec3(1, 1, 1), and set it to all the components to
 <h3>Built-in functions (images)</h3>
 <table>
   <tr><th>Function</th><th>Description</th></tr>
-  <tr><th><code>imageSrc<i>N</i>At(pos vec2) vec4</code></th><td>Returns the color value as <code>vec4</code> at the given position <code>pos</code> in texels of the source image <code><i>N</i></code>. <code><i>N</i></code> is 0 to 3. <code>pos</code> is always a position of 0th texture, whichever <code><i>N</i></code> is. For <code><i>N</i></code> ≧ 1, Kage automatically converts the given position to an appropriate position of the <code><i>N</i></code>-th texture.</td></tr>
-  <tr><th><code>imageSrc<i>N</i>UnsafeAt(pos vec2) vec4</code></th><td>Returns the color value as <code>vec4</code> at the given position <code>pos</code> in texels of the source image <i>N</i>. <i>N</i> is 0 to 3. <code>pos</code> is always a position of 0th texture, whichever <code><i>N</i></code> is. For <code><i>N</i></code> ≧ 1, Kage automatically converts the given position to an appropriate position of the <code><i>N</i></code>-th texture.<br>The difference from the safe version (<code>imageSrc<i>N</i>At</code>) is the returning value when the position is out of the bounds. The safe version returns <code>vec4(0)</code> in this case, while the unsafe version's returning value is undefined. The unsafe version is faster. If you are sure that the position is in the bounds, you can use the unsafe version for performance.</td></tr>
+  <tr><th><code>imageSrc<i>N</i>At(pos vec2) vec4</code></th><td>Returns the color value as <code>vec4</code> at the given position <code>pos</code> of the source image <code><i>N</i></code> in texels or pixels . The unit depends on the unit mode. <code><i>N</i></code> is 0 to 3. <code>pos</code> is always a position of 0th texture, whichever <code><i>N</i></code> is. For <code><i>N</i></code> ≧ 1, Kage automatically converts the given position to an appropriate position of the <code><i>N</i></code>-th texture.</td></tr>
+  <tr><th><code>imageSrc<i>N</i>UnsafeAt(pos vec2) vec4</code></th><td>Returns the color value as <code>vec4</code> at the given position <code>pos</code> of the source image <i>N</i> in texels or pixels . The unit depends on the unit mode. <i>N</i> is 0 to 3. <code>pos</code> is always a position of 0th texture, whichever <code><i>N</i></code> is. For <code><i>N</i></code> ≧ 1, Kage automatically converts the given position to an appropriate position of the <code><i>N</i></code>-th texture.<br>The difference from the safe version (<code>imageSrc<i>N</i>At</code>) is the returning value when the position is out of the bounds. The safe version returns <code>vec4(0)</code> in this case, while the unsafe version's returning value is undefined. The unsafe version is faster. If you are sure that the position is in the bounds, you can use the unsafe version for performance.</td></tr>
+  <tr><th><code>imageSrc<i>N</i>Origin() vec2</code></th><td>Returns the upper-left position of the source image <code><i>N</i></code> in texels or pixels on the texture. The unit depends on the unit mode.</td></tr>
+  <tr><th><code>imageSrc<i>N</i>Size() vec2</code></th><td>Returns the size of the source image <code><i>N</i></code> in texels or pixels on the texture. The unit depends on the unit mode.</td></tr>
+  <tr><th><code>imageDstOrigin() vec2</code></th><td>Returns the upper-left position of the destination image in texels or pixels on the texture. The unit depends on the unit mode.</td></tr>
+  <tr><th><code>imageDstSize() vec2</code></th><td>Returns the size of the destination image in texels or pixels on the texture. The unit depends on the unit mode.</td></tr>
+</table>
+<p>These functions are deprecated as of the version 2.6.</p>
+<table>
   <tr><th><code>imageSrcTextureSize() vec2</code></th><td>Returns the source image's texture size in pixels</td></tr>
   <tr><th><code>imageDstTextureSize() vec2</code></th><td>Returns the destination image's texture size in pixels</td></tr>
-  <tr><th><code>imageSrcRegionOnTexture() (vec2, vec2)</code></th><td>Returns the source image's origin position and the size on the texture in texels</td></tr>
-  <tr><th><code>imageDstRegionOnTexture() (vec2, vec2)</code></th><td>Returns the destination image's origin position and the size on the texture in texels (v2.1.0)</td></tr>
+  <tr><th><code>imageSrcRegionOnTexture() (vec2, vec2)</code></th><td>Returns the source image's origin position and the size on the texture in texels or pixels. The unit depends on the unit mode.</td></tr>
+  <tr><th><code>imageDstRegionOnTexture() (vec2, vec2)</code></th><td>Returns the destination image's origin position and the size on the texture in texels or pixels. The unit depends on the unit mode (v2.1.0)</td></tr>
 </table>
 <h3>Textures and images</h3>
-<p>Ebitengine's image (<code>ebiten.Image</code>) is actually a part of an internal texture. Then, position calculations in shaders are a little complex.</p>
+<p>Ebitengine's image (<code>ebiten.Image</code>) is actually a part of an internal texture.</p>
+<p>In pixel mode, all units are in pixels, so there's not much to be particularly aware of. On the other hand, in texel mode, the coordinate calculations on the shader become a bit more complex. The following explanation is mainly for when using texel mode.</p>
 <p>A pixel is a unit for one color dot. On the other hand, texel is a unit covering the whole area with values in between 0 and 1. The meaning of texels depends on a texture, then you cannot mix texels with different textures.</p>
 <p>To convert pixels and texels each other, you can use these formulas.</p>
 <p class="math">\begin{aligned}

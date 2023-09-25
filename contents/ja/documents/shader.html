@@ -9,6 +9,9 @@
 <h2>例</h2>
 <pre><code>package main
 
+// Specify the 'pixel' mode.
+//kage:unit pixels
+
 // Uniform variables.
 var Time float
 var Cursor vec2
@@ -18,10 +21,11 @@ var ScreenSize vec2
 // Fragment returns the color value for the current position.
 func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4 {
 	// You can define variables with a short variable declaration like Go.
+	pos := position.xy - imageDstOrigin()
 	lightpos := vec3(Cursor, 50)
-	lightdir := normalize(lightpos - dstPos.xyz)
+	lightdir := normalize(lightpos - pos.xyz)
 	normal := normalize(imageSrc1UnsafeAt(srcPos) - 0.5)
-	ambient := 0.25
+	const ambient = 0.25
 	diffuse := 0.75 * max(0.0, dot(normal.xyz, lightdir))
 
 	// You can treat multiple source images by
@@ -80,13 +84,21 @@ func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4 {
   <li><code>init</code> 関数</li>
   <li>メソッド定義</li>
 </ul>
+<h3>単位モード</h3>
+<p>バージョン 2.6 から、 Kage に単位モードが加わりました。次のコメントがコンパイラディレクティブとなり、単位モードを指定できます。</p>
+<ul>
+  <li><code>//kage:unit texels</code> (テクセルモード、デフォルト)</li>
+  <li><code>//kage:unit pixels</code> (ピクセルモード)</li>
+</ul>
+<p>ピクセルモードの場合、 Kage シェーダで取り扱う単位が全てピクセルになります。</p>
+<p>デフォルトでは後方互換性のためにテクセルモードになっています。新しい Kage プログラムではピクセルモードにすることを強く推奨します。</p>
 <h3>エントリーポイント</h3>
 <p>Kage が現在定義できるのはフラグメントシェーダのみです。以下のシグニチャを持つ <code>Fragment</code> 関数がエントリーポイントになります。</p>
 <pre><code>func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4</code></pre>
 <table>
   <tr><th>名前</th><th>型</th><th>説明</th></tr>
   <tr><td><code>dstPos</code></td><td><code>vec4</code><td>描画先の座標。単位はピクセル。第 3、第 4 要素は常にそれぞれ 0、 1。</td></tr>
-  <tr><td><code>srcPos</code></td><td><code>vec2</code><td>描画元テクスチャの座標。単位はテクセル。</td></tr>
+  <tr><td><code>srcPos</code></td><td><code>vec2</code><td>描画元テクスチャの座標。単位はテクセルまたはピクセルで、単位モードによる。</td></tr>
   <tr><td><code>color</code></td><td><code>vec4</code><td>頂点から与えられる補助的な色情報。各要素は 0 から 1 の値。 <code>DrawTrianglesShader</code> 関数使用時にのみ意味を持つ。</td></tr>
   <tr><td>(戻り値)</td><td><code>vec4</code><td>現在の座標の色。各要素は 0 から 1 の値。</td></tr>
 </table>
@@ -188,15 +200,23 @@ v2.xyz = v2.xxx        // Get vec3(1, 1, 1), and set it to all the components to
 <h3>組み込み関数 (画像)</h3>
 <table>
   <tr><th>関数</th><th>説明</span></th></tr>
-  <tr><th><code>imageSrc<i>N</i>At(pos vec2) vec4</code></th><td>描画画像 <code><i>N</i></code> の、与えられたテクセル単位の位置 <code>pos</code> の色を <code>vec4</code> で返す。 <code><i>N</i></code> は 0 から 3 の値を取る。 <code>pos</code> は、 <code><i>N</i></code> の値に関わらず、常に 0 番目のテクスチャの位置である。 <code><i>N</i></code> ≧ 1 については、 Kage が自動的に <code><i>N</i></code> 番目のテクスチャの適切な位置に変換する。</td></tr>
-  <tr><th><code>imageSrc<i>N</i>UnsafeAt(pos vec2) vec4</code></th><td>描画画像 <code><i>N</i></code> の、与えられたテクセル単位の位置 <code>pos</code> の色を <code>vec4</code> で返す。 <code><i>N</i></code> は 0 から 3 の値を取る。 <code>pos</code> は、 <code><i>N</i></code> の値に関わらず、常に 0 番目のテクスチャの位置である。 <code><i>N</i></code> ≧ 1 については、 Kage が自動的に <code><i>N</i></code> 番目のテクスチャの適切な位置に変換する。<br>セーフバージョン (<code>imageSrc<i>N</i>At</code>) との違いは、画像の境界外の位置を指定したときの戻り値である。セーフバージョンはこの場合 <code>vec4(0)</code> を返すが、アンセーフバージョンは未定義である。アンセーフバージョンは高速に動作する。もし位置が画像の境界内にあることが確実ならば、パフォーマンスのためにアンセーフバージョンを使ってもよい。</td></tr>
+  <tr><th><code>imageSrc<i>N</i>At(pos vec2) vec4</code></th><td>描画元画像 <code><i>N</i></code> の、与えられたテクセルまたはピクセル単位の位置 <code>pos</code> の色を <code>vec4</code> で返す。単位は単位モードによる。 <code><i>N</i></code> は 0 から 3 の値を取る。 <code>pos</code> は、 <code><i>N</i></code> の値に関わらず、常に 0 番目のテクスチャの位置である。 <code><i>N</i></code> ≧ 1 については、 Kage が自動的に <code><i>N</i></code> 番目のテクスチャの適切な位置に変換する。</td></tr>
+  <tr><th><code>imageSrc<i>N</i>UnsafeAt(pos vec2) vec4</code></th><td>描画元画像 <code><i>N</i></code> の、与えられたテクセルまたはピクセル単位の位置 <code>pos</code> の色を <code>vec4</code> で返す。単位は単位モードによる。 <code><i>N</i></code> は 0 から 3 の値を取る。 <code>pos</code> は、 <code><i>N</i></code> の値に関わらず、常に 0 番目のテクスチャの位置である。 <code><i>N</i></code> ≧ 1 については、 Kage が自動的に <code><i>N</i></code> 番目のテクスチャの適切な位置に変換する。<br>セーフバージョン (<code>imageSrc<i>N</i>At</code>) との違いは、画像の境界外の位置を指定したときの戻り値である。セーフバージョンはこの場合 <code>vec4(0)</code> を返すが、アンセーフバージョンは未定義である。アンセーフバージョンは高速に動作する。もし位置が画像の境界内にあることが確実ならば、パフォーマンスのためにアンセーフバージョンを使ってもよい。</td></tr>
+  <tr><th><code>imageSrc<i>N</i>Origin() vec2</code></th><td>描画元画像 <code><i>N</i></code> のテクスチャ上における左上位置を、テクセルまたはピクセルで返す。単位は単位モードによる。</td></tr>
+  <tr><th><code>imageSrc<i>N</i>Size() vec2</code></th><td>描画元画像 <code><i>N</i></code> の大きさを、テクセルまたはピクセルで返す。単位は単位モードによる。</td></tr>
+  <tr><th><code>imageDstOrigin() vec2</code></th><td>描画先画像 <code><i>N</i></code> のテクスチャ上における左上位置を、テクセルまたはピクセルで返す。単位は単位モードによる。</td></tr>
+  <tr><th><code>imageDstSize() vec2</code></th><td>描画先画像 <code><i>N</i></code> の大きさを、テクセルまたはピクセルで返す。単位は単位モードによる。</td></tr>
+</table>
+<p>バージョン 2.6 から、次の関数は非推奨になりました。</p>
+<table>
   <tr><th><code>imageSrcTextureSize() vec2</code></th><td>描画元画像のテクスチャの大きさをピクセル単位で返す。</td></tr>
   <tr><th><code>imageDstTextureSize() vec2</code></th><td>描画先画像のテクスチャの大きさをピクセル単位で返す。</td></tr>
-  <tr><th><code>imageSrcRegionOnTexture() (vec2, vec2)</code></th><td>描画元画像の、テクスチャ上の原点位置と大きさをテクセル単位で返す。</td></tr>
-  <tr><th><code>imageDstRegionOnTexture() (vec2, vec2)</code></th><td>描画先画像の、テクスチャ上の原点位置と大きさをテクセル単位で返す。 (v2.1.0)</td></tr>
+  <tr><th><code>imageSrcRegionOnTexture() (vec2, vec2)</code></th><td>描画元画像の、テクスチャ上の左上位置と大きさをテクセルまたはピクセル単位で返す。単位は単位モードによる。</td></tr>
+  <tr><th><code>imageDstRegionOnTexture() (vec2, vec2)</code></th><td>描画先画像の、テクスチャ上の左上位置と大きさをテクセルまたはピクセル単位で返す。単位は単位モードによる。 (v2.1.0)</td></tr>
 </table>
 <h3>テクスチャと画像</h3>
-<p>Ebitengine の画像 (<code>ebiten.Image</code>) は実際には内部のテクスチャ上の一部です。そのためシェーダ上での座標計算が少々複雑になります。</p>
+<p>Ebitengine の画像 (<code>ebiten.Image</code>) は実際には内部のテクスチャ上の一部です。</p>
+<p>ピクセルモードの場合、すべての単位はピクセルになるので、あまり留意することはありません。一方テクセルモードの場合、シェーダ上での座標計算が少々複雑になります。以下の説明は、主にテクセルモードを使う場合の説明です。</p>
 <p>ピクセルは 1 画素を 1 とする単位です。一方テクセルは 0 から 1 の範囲が全体を表す単位です。テクセルの意味はテクスチャに依存するため、異なるテクスチャのテクセルを混ぜることは出来ません。</p>
 <p>ピクセルとテクセルを相互に変換するには次の式を使います。</p>
 <p class="math">\begin{aligned}
