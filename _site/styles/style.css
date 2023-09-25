@@ -12,6 +12,9 @@ code {
     font-display: auto;
     font-weight: bold;
 }
+dt {
+    font-weight: bold;
+}
 .hiddenlang {
     display: none;
 }
@@ -230,7 +233,7 @@ h4, h5, h6 {
     margin-top: 24px;
     margin-bottom: 24px;
 }
-p, ul, ol, nav.tags {
+p, ul, ol, nav.tags, dl {
     margin-top: 0;
     margin-bottom: 24px;
 }
@@ -325,7 +328,7 @@ td, th {
 
 /* font size */
 
-p, pre, ul, ol, figcaption, table {
+p, pre, ul, ol, figcaption, table, dl {
     font-size: 16px;
     line-height: 24px;
 }
@@ -534,6 +537,9 @@ nav.path > ul > li:after {
     content: '>';
     margin-left: 12px;
     margin-right: 12px;
+}
+dd {
+    margin-left: 24px;
 }
 
 p.img {
