@@ -128,6 +128,9 @@ func uploadFile(ctx context.Context, name string, r io.Reader) error {
 }
 
 func run() error {
+	// TODO: Update wasm_exec.js automatically
+	fmt.Printf("Do not forget updating wasm_exec.js!\n")
+
 	if *flagUpload {
 		if os.Getenv("GOOGLE_APPLICATION_CREDENTIALS") == "" {
 			return fmt.Errorf("GOOGLE_APPLICATION_CREDENTIALS must be set")
