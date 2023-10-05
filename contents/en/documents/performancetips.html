@@ -9,7 +9,7 @@
   <li>All the filter values are same</li>
   <li>All the address values are same (only for <code>DrawTriangles</code>)</li>
 </ul>
-<p>Even when all the above conditions are satisfied, multiple draw commands can be used in really rare cases. Ebitengine images usually share an internal automatic texture atlas, but when you consume the atlas, or you create a huge image, those images cannot be on the same texture atlas. In this case, draw commands are separated. The texture atlas size is 4096x4096 so far. Another case is when you use an offscreen as a render source. An offscreen doesn't share the texture atlas with high probability.</p>
+<p>Even when all the above conditions are satisfied, multiple draw commands can be used in really rare cases. Ebitengine images usually share an internal automatic texture atlas, but when you consume the atlas, or you create a huge image, those images cannot be on the same texture atlas. In this case, draw commands are separated. The texture atlas size depends on graphic devices. Another case is when you use an offscreen as a render source. An offscreen doesn't share the texture atlas with high probability.</p>
 <p>examples/sprites is a good example to draw > 10000 sprites with one (or a few) draw command(s).</p>
 <h2>Know the actual drawing commands with <code>ebitenginedebug</code> build tag</h2>
 <p>To see actual drawing commands, you can use <code>ebitenginedebug</code> build tag (or <code>ebitendebug</code> for Ebitengine v2.3 or older). For example, if you execute <code>blocks</code> example, you will see the below logs:</p>
