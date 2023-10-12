@@ -97,3 +97,9 @@
   <li>Fixed an issue where crashes could occur when using multiple monitors on macOS (<a href="https://github.com/hajimehoshi/ebiten/issues/2794">#2794</a>).</li>
   <li>Fixed an issue where <code>ebiten.SetWindowIcon(nil)</code> did not reset the icon (<a href="https://github.com/hajimehoshi/ebiten/issues/2796">#2796</a>).</li>
 </ul>
+<h2>v2.6.2</h2>
+<h3>Bug fixes</h3>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/119?closed=1">Issues for v2.6.2</a></p>
+<ul>
+  <li>Fixed an issue where the internal state of <code>ebiten.Image</code> created before calling <code>ebiten.RunGame</code> was not released by the GC (<a href="https://github.com/hajimehoshi/ebiten/issues/2805">#2805</a>).</li>
+</ul>
