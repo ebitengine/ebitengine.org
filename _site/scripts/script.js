@@ -111,42 +111,6 @@ function addCommentStyle(code) {
     }
 }
 
-function updateImages() {
-    for (const e of document.querySelectorAll('p.img')) {
-        const img = e.querySelector('img, iframe, video');
-        if (!img.complete) {
-            const f = () => {
-                adjustHeight(img);
-                img.removeEventListener('load', f);
-            };
-            img.addEventListener('load', f);
-            continue;
-        }
-        adjustHeight(img);
-    }
-}
-
-function adjustHeight(e) {
-    let width = e.offsetWidth;
-    let height = e.offsetHeight;
-
-    // For small diplays, shrink the iframe with keeping its aspect ratio.
-    if (e.tagName === 'IFRAME') {
-        if (e.classList.contains('.twitter-tweet')) {
-            return;
-        }
-        if (width < e.width) {
-            const ratio = e.height / e.width;
-            const height = Math.ceil(width * ratio);
-            e.style.height = `${height}px`;
-        }
-    }
-
-    const unit = 24;
-    height = ~~(((height-1) / unit) + 1) * unit;
-    e.parentNode.style.height = `${height}px`;
-}
-
 let tocLevel = 4;
 
 function disableTOC() {
@@ -269,14 +233,9 @@ function updateCSS() {
 
 window.addEventListener('DOMContentLoaded', () => {
     updateCode();
-    updateImages();
     updateBody();
     updateCSS();
     updateTOC();
-
-    for (const e of document.querySelectorAll('p.math')) {
-        adjustHeight(e.firstChild);
-    }
 
     const sidemenu = document.querySelector('input#sidemenu');
     if (sidemenu !== null) {
@@ -293,7 +252,6 @@ window.addEventListener('DOMContentLoaded', () => {
                 displayMode: true,
                 strict: true,
             });
-            adjustHeight(div);
         }
         for (const e of document.querySelectorAll('span.math')) {
             katex.render(e.textContent, e, {
@@ -325,6 +283,5 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 window.addEventListener('resize', () => {
-    updateImages();
     updateCSS();
 });
