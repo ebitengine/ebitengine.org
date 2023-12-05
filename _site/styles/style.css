@@ -155,7 +155,7 @@ iframe {
 .twitter-tweet iframe {
     border-style: none;
 }
-iframe[src^="https://www.youtube.com/embed/"] {
+iframe[src^="https://www.youtube.com/embed/"], iframe[src^="https://player.vimeo.com/video/"] {
     border-style: none;
 }
 p.meta {
@@ -551,7 +551,7 @@ p.img img, p.img video {
     max-width: 100%;
     height: auto;
 }
-p.img.thumbnail img, p.img iframe, iframe[src^="https://www.youtube.com/embed/"] {
+p.img.thumbnail img, p.img iframe, iframe[src^="https://www.youtube.com/embed/"], iframe[src^="https://player.vimeo.com/video/"] {
     max-width: 100%;
 }
 h1.big > span.main {
