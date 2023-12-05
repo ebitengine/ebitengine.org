@@ -1,4 +1,4 @@
-# ebiten.org
+# ebitengine.org
 
 ## Generating
 
