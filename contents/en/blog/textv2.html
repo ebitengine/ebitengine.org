@@ -1,0 +1,42 @@
+<h1><code>text/v2</code> is Coming</h1>
+<p class="meta">Hajime Hoshi<br><span id="meta-created">2024-01-06</span></p>
+<h2>Issues with the <code>text</code> Package</h2>
+<p>There were the following issues with the existing <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text"><code>text</code></a> package.</p>
+<ul>
+  <li>Once used, <code>font.Face</code> is cached and not released (<a href="https://github.com/hajimehoshi/ebiten/issues/498">#498</a>).</li>
+  <li>Does not support languages requiring complex rendering like Arabic or Thai (<a href="https://github.com/hajimehoshi/ebiten/issues/675">#675</a>).</li>
+  <li>Unable to handle glyph vector data (<a href="https://github.com/hajimehoshi/ebiten/issues/1937">#1937</a>).</li>
+  <li>Does not support text alignment such as right or center alignment (<a href="https://github.com/hajimehoshi/ebiten/issues/2143">#2143</a>).</li>
+  <li>Does not support OpenType font features and variants (<a href="https://github.com/hajimehoshi/ebiten/issues/2454#issuecomment-1705150120">#2454</a>).</li>
+  <li>Unable to handle <code>font.Face</code> that cannot be hashed (<a href="https://github.com/hajimehoshi/ebiten/issues/2669">#2669</a>).</li>
+</ul>
+<p>The <code>text</code> package only dealt with the semi-standard library <a href="https://golang.org/x/image/font"><code>golang.org/x/image/font</code></a>. This package's <a href="https://pkg.go.dev/golang.org/x/image/font#Face"><code>Face</code></a> interface represents the font face. This interface is simple, assuming that 1 code point corresponds to 1 glyph. Therefore, it was not possible to use complex rendering, such as Arabic where glyphs change depending on the context, or OpenType features.</p>
+<p>The <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2"><code>text/v2</code></a> package solves all these issues. The <code>text/v2</code> package uses the implementation of the <a href="https://github.com/go-text/typesetting"><code>github.com/go-text/typesetting</code></a> package in addition to the semi-standard library's <code>font.Face</code>. The <code>typesetting</code> package internally uses a Go port of <a href="https://harfbuzz.github.io/">HarfBuzz</a>, enabling complex rendering. In addition, not only the implementation but also the fundamental redesign of the <code>text</code> package's API design has made it possible to do things like right or center alignment that were not possible before, and fix resource leak bugs that couldn't be fixed.</p>
+<h2>Samples of <code>text/v2</code></h2>
+<p>Here are some samples currently in development.</p>
+<h3>Multilingual Rendering</h3>
+<figure>
+  <p class="img"><img id="meta-share" src="/images/blog/textv2/i18n.png" width="360" ></p>
+</figure>
+<p>It will support complex languages such as Arabic, Hindi, Burmese, Thai, as well as vertical Mongolian and vertical Japanese.</p>
+<h3>Vector</h3>
+<figure>
+  <p class="img"><video controls autoplay src="/images/blog/textv2/vector.mp4" width="360"></p>
+</figure>
+<p>You will be able to easily obtain glyph vector data. For example, you can draw just the outline of characters by combining it with the <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector"><code>vector</code></a> package.</p>
+<h3>Features</h3>
+<figure>
+  <p class="img"><video controls autoplay src="/images/blog/textv2/feature.mp4" width="360"></p>
+</figure>
+<p>You can specify font features for rendering. For example, you can specify the presence of ligatures or variations for each character.</p>
+<h3>Variable Fonts</h3>
+<figure>
+  <p class="img
+
+"><video controls autoplay src="/images/blog/textv2/variation.mp4" width="360"></p>
+</figure>
+<p>You can render variable fonts. From one font file, you can specify the thickness and weight as a continuous value.</p>
+<h2>Future Plans</h2>
+<p>The existing <code>text</code> package will remain as is, and a new package with <code>v2</code> will be added to Ebitengine. This is similar to the recent proposal in Go itself to add <a href="https://github.com/golang/go/discussions/60751"><code>math/rand/v2</code></a>. The official package name for <code>text/v2</code> will be <code>github.com/hajimehoshi/ebiten/v2/text/v2</code>, which is a bit long.</p>
+<p>While Ebitengine is at version 2, the <code>text</code> and <code>text/v2</code> packages will coexist. Existing code should continue to work as is. New code will use the <code>text/v2</code> package. When Ebitengine moves to version 3, the <code>text</code> package may be deprecated.</p>
+<p><code>text/v2</code> is currently under active development. The API of <code>text/v2</code> may change until Ebitengine v2.7.0 is released.</p>

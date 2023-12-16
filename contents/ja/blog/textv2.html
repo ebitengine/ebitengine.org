@@ -1,0 +1,40 @@
+<h1><code>text/v2</code> がやってくる</h1>
+<p class="meta">Hajime Hoshi<br><span id="meta-created">2024-01-06</span></p>
+<h2><code>text</code> パッケージの問題点</h2>
+<p>既存の <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text"><code>text</code></a> パッケージには、次のような問題がありました。</p>
+<ul>
+  <li>一度使われた <code>font.Face</code> はキャッシュされ、リリースされない (<a href="https://github.com/hajimehoshi/ebiten/issues/498">#498</a>)。</li>
+  <li>アラビア語やタイ語などの複雑なレンダリングを必要とする言語をサポートしていない (<a href="https://github.com/hajimehoshi/ebiten/issues/675">#675</a>)。</li>
+  <li>グリフのベクターデータを取り扱えない (<a href="https://github.com/hajimehoshi/ebiten/issues/1937">#1937</a>)。</li>
+  <li>右寄せや中央寄せなどのテキストの配置をサポートしていない (<a href="https://github.com/hajimehoshi/ebiten/issues/2143">#2143</a>)。</li>
+  <li>OpenType フォントのフィーチャーやバリアントをサポートしていない (<a href="https://github.com/hajimehoshi/ebiten/issues/2454#issuecomment-1705150120">#2454</a>)。</li>
+  <li>ハッシュ化できない <code>font.Face</code> を取り扱えない (<a href="https://github.com/hajimehoshi/ebiten/issues/2669">#2669</a>)。</li>
+</ul>
+<p><code>text</code> パッケージは準標準ライブラリの <a href="https://golang.org/x/image/font"><code>golang.org/x/image/font</code></a> のみを取り扱っていました。このパッケージの <a href="https://pkg.go.dev/golang.org/x/image/font#Face"><code>Face</code></a> インターフェイスがフォントフェイスを表します。このインターフェイスは単純で、 1 コードポイントが決まった 1 グリフに対応することを仮定しています。そのため、アラビア語などの状況によってグリフが変わるような複雑なレンダリングや、 OpenType のフィーチャーなどが利用できませんでした。</p>
+<p><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2"><code>text/v2</code></a> パッケージはこれらの問題を全て解決します。 <code>text/v2</code> パッケージは、準標準ライブラリの <code>font.Face</code> に加えて、新しく <a href="https://github.com/go-text/typesetting"><code>github.com/go-text/typesetting</code></a> パッケージの実装を使います。 <code>typesetting</code> パッケージは内部で <a href="https://harfbuzz.github.io/">HarfBuzz</a> を Go に移植したものを使用しており、複雑なレンダリングが可能になっています。また実装だけではなく <code>text</code> パッケージ の API 設計を根本的に見直すことで、これまでできなかった右寄せや中央寄せを出来るようにしたり、直せなかったリソースリークのバグなどが直せるようになりました。</p>
+<h2><code>text/v2</code>のサンプル</h2>
+<p>現在開発中のサンプルをいくつか紹介します。</p>
+<h3>多言語描画</h3>
+<figure>
+  <p class="img"><img id="meta-share" src="/images/blog/textv2/i18n.png" width="360" ></p>
+</figure>
+<p>アラビア語、ヒンディー語、ミャンマー語、タイ語などの描画が複雑な言語に加えて、縦書きモンゴル語や縦書き日本語にも対応します。</p>
+<h3>ベクター</h3>
+<figure>
+  <p class="img"><video controls autoplay src="/images/blog/textv2/vector.mp4" width="360"></p>
+</figure>
+<p>グリフのベクターデータを簡単に取得できるようになります。 <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector"><code>vector</code></a> パッケージと組み合わせて、例えば文字の輪郭だけを描画するといったことができます。</p>
+<h3>フィーチャー</h3>
+<figure>
+  <p class="img"><video controls autoplay src="/images/blog/textv2/feature.mp4" width="360"></p>
+</figure>
+<p>フォントフィーチャーを指定して描画することができます。例えば、リガチャの有無や文字ごとのバリエーションを指定できます。</p>
+<h3>バリアブルフォント</h3>
+<figure>
+  <p class="img"><video controls autoplay src="/images/blog/textv2/variation.mp4" width="360"></p>
+</figure>
+<p>バリアブルフォントを描画することができます。 1 つのフォントファイルから、太さやウェイトを連続した値で指定できます。</p>
+<h2>今後の予定</h2>
+<p>既存の <code>text</code> パッケージはそのままに、新しく <code>v2</code> がついたパッケージが Ebitengine に追加されます。これは Go 本体の最近の提案で <a href="https://github.com/golang/go/discussions/60751"><code>math/rand/v2</code></a> が加わろうとしているのと似ています。 <code>text/v2</code> の正式なパッケージ名は <code>github.com/hajimehoshi/ebiten/v2/text/v2</code> となり、ちょっと長めの名前です。</p>
+<p>Ebitengine のバージョンが 2 である間は、 <code>text</code> パッケージと <code>text/v2</code> パッケージが併存します。既存のコードはそのまま動くはずです。新しいコードは <code>text/v2</code> パッケージを使っていただくことになります。 Ebitengine がバージョン 3 になったときに、 <code>text</code> パッケージは廃止される可能性があります。</p>
+<p><code>text/v2</code> は現在鋭意開発中です。 Ebitengine v2.7.0 が出るまで <code>text/v2</code> の API は変更される可能性があります。</p>
