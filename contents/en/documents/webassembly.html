@@ -3,6 +3,16 @@
 <p>If you want to see your game working on browsers, <a href="https://github.com/hajimehoshi/wasmserve">wasmserve</a> is the easiest way.</p>
 <pre><code>go run github.com/hajimehoshi/wasmserve@latest ./path/to/yourgame</code></pre>
 <p>Then access <code>http://localhost:8080/</code>.</p>
+<p>If something goes wrong, do not forget to 'View Source' on the browser, to find any details.  For example, if your
+game did not have a <pre>go.mod</pre> file you might see error:
+<code>go.mod file not found in current directory or any parent directory</code></p>
+<p>In that case, you probably need to run (example):
+<code>
+cd ./path/to/yourgame
+go mod init example.com/ebitengine-wasmserve-test
+go mod tidy
+go run github.com/hajimehoshi/wasmserve@latest .  # where '.' is path to your game, if no longer in the game dir
+</code></p>
 <h2>Option 2. Compiling by yourself</h2>
 <p>If you want to publish your game, you need to compile your game by yourself.</p>
 <h3>Compiling your game</h3>
