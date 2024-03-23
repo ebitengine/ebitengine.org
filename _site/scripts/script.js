@@ -68,14 +68,19 @@ function updateCode() {
                 return r.text();
             }).then(text => {
                 if (e.dataset['codelinerange']) {
-                    const m = e.dataset['codelinerange'].match(/^(\d+)(-(\d+))?$/);
+                    const m = e.dataset['codelinerange'].match(/^(\d+)(-(\d+)?)?$/);
                     start = parseInt(m[1], 10) - 1;
-                    end = start;
-                    if (m.length >= 4 && m[3] !== undefined) {
-                        end = parseInt(m[3], 10) - 1;
+                    end = start + 1;
+                    if (m.length >= 4) {
+                        if (m[3] !== undefined) {
+                            end = parseInt(m[3], 10);
+                        } else if (m[2] === "-") {
+                            end = undefined;
+                        }
                     }
+                    text = text.trimEnd();
                     const lines = text.split("\n");
-                    text = lines.slice(start, end + 1).join("\n");
+                    text = lines.slice(start, end).join("\n");
                 }
 
                 const code = document.createElement('code');
