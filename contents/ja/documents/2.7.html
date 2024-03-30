@@ -1,0 +1,84 @@
+<h1>Ebitengine 2.7 リリースノート</h1>
+<p><em>この記事はドラフトです。 v2.7.0 はまだリリースされていません。</em></p>
+<h2>v2.7.0</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/88?closed=1">Issues for v2.7.0</a></p>
+<h3>新しい文字列描画パッケージ <code>text/v2</code></h3>
+<p>(<a href="https://github.com/hajimehoshi/ebiten/issues/2925">#2925</a>)</p>
+<p>新しい文字列描画パッケージ <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2"><code>text/v2</code></a> が追加されました。このパッケージは <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text"><code>text</code></a> パッケージの後継です。</p>
+<ul>
+  <li>アラビア語や縦書き日本語などの対応 (<a href="https://github.com/hajimehoshi/ebiten/issues/675">#675</a>)</li>
+  <li>グリフのベクター化 (<a href="https://github.com/hajimehoshi/ebiten/issues/1937">#1937</a>)</li>
+  <li>右寄せなどのアラインメントの指定 (<a href="https://github.com/hajimehoshi/ebiten/issues/2143">#2143</a>)</li>
+  <li>OpenType のフィーチャーなどのサポート (<a href="https://github.com/hajimehoshi/ebiten/issues/2454#issuecomment-1705150120">#2454</a>)</li>
+  <li>その他バグ修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/498">#498</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2669">#2669</a>)</li>
+</ul>
+<figure>
+  <p class="img"><img id="meta-share" src="/images/documents/2.7/i18n.png" width="360" ></p>
+</figure>
+<p>使い方については、次のサンプルを参考にしてください。</p>
+<ul>
+  <li><a href="https://github.com/hajimehoshi/ebiten/tree/main/examples/fontfeature"><code>examples/fontfeature</code></a>: OpenType のフィーチャー</li>
+  <li><a href="https://github.com/hajimehoshi/ebiten/tree/main/examples/fontvariation"><code>examples/fontvariation</code></a>: OpenType のバリエーション</li>
+  <li><a href="https://github.com/hajimehoshi/ebiten/tree/main/examples/fontvector"><code>examples/fontvector</code></a>: グリフのベクター化</li>
+  <li><a href="https://github.com/hajimehoshi/ebiten/tree/main/examples/mixedfont"><code>examples/mixedfont</code></a>: 複数のフォントフェイスの混合</li>
+  <li><a href="https://github.com/hajimehoshi/ebiten/tree/main/examples/text"><code>examples/text</code></a>: 基本的なテキスト描画</li>
+  <li><a href="https://github.com/hajimehoshi/ebiten/tree/main/examples/texti18n"><code>examples/texti18n</code></a>: 様々な言語の描画</li>
+</ul>
+<h3><code>exp/textinput</code></h3>
+<p>IME 対応のための実験的パッケージ <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/textinput"><code>exp/textinput</code></a> のサポート環境として、 Windows が追加されました (<a href="https://github.com/hajimehoshi/ebiten/issues/2735">#2735</a>)。</p>
+<p>また、より簡単に使用するための API <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/textinput#Field"><code>Field</code></a> が追加されました (<a href="https://github.com/hajimehoshi/ebiten/issues/2827">#2827</a>)。</p>
+<h3>その他新しい API</h3>
+<ul>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#BlendOperationMax"><code>ebiten.BlendOperationMax</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2395">#2395</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#BlendOperationMin"><code>ebiten.BlendOperationMin</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2395">#2395</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.Deallocate"><code>(*ebiten.Image).Deallocate</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2808">#2808</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Monitor.DeviceScaleFactor"><code>(*ebiten.Monitor).DeviceScaleFactor</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2795">#2795</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Monitor.Size"><code>(*ebiten.Monitor).Size</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2795">#2795</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#NonZero"><code>ebiten.NonZero</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2782">#2782</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#KeyF13"><code>ebiten.KeyF13</code></a> 〜 <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#KeyF24"><code>ebiten.KeyF24</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2801">#2801</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MaxVertexCount"><code>ebiten.MaxVertexCount</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2828">#2828</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameOptions.SingleThread"><code>ebiten.RunGameOptions.SingleThread</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2830">#2830</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameOptions.X11ClassName"><code>ebiten.RunGameOptions.X11ClassName</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2904">#2904</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameOptions.X11InstanceName"><code>ebiten.RunGameOptions.X11InstanceName</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2904">#2904</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/mobile#RunOnJVM"><code>mobile.RunOnJVM</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2748">#2748</a>)</li>
+</ul>
+<h3>バグ修正</h3>
+<p>このリリースはバージョン 2.6 にあった全てのバグ修正を含みます。</p>
+<h3>非推奨になった API</h3>
+<table>
+  <tr>
+    <th>2.6 以前</th>
+    <th>2.7 以降</th>
+    <th>Issue</th>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DeviceScaleFactor"><code>ebiten.DeviceScaleFactor</code></a></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Monitor"><code>ebiten.Monitor</code></a> と <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Monitor.DeviceScaleFactor"><code>(*ebiten.Monitor).DeviceScaleFactor</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/2795">#2795</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.Dispose"><code>(*ebiten.Image).Dispose</code></a></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.Deallocate"><code>(*ebiten.Image).Deallocate</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/2808">#2808</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MaxVerticesCount"><code>ebiten.MaxVerticesCount</code></a></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MaxVertexCount"><code>ebiten.MaxVertexCount</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/2828">#2828</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ScreenSizeInFullscreen"><code>ebiten.ScreenSizeInFullscreen</code></a></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Monitor"><code>ebiten.Monitor</code></a> と <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Monitor.Size"><code>(*ebiten.Monitor).Size</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/2795">#2795</a></td>
+  </tr>
+  <tr>
+    <td>ビルドタグ <code>ebitenginesinglethread</code></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameOptions.SingleThread"><code>ebiten.RunGameOptions.SingleThread</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/2830">#2830</a></td>
+  </tr>
+</table>
+<h3>非互換な変更</h3>
+<ul>
+  <li><code>gomobile build</code> はサポートされなくなりました (<a href="https://github.com/hajimehoshi/ebiten/issues/2741">#2741</a>)。</li>
+  <li><code>ebitenmobile</code> コマンドを使用する場合、 <a href="https://cs.opensource.google/go/x/mobile/+/365c3533877076b351b0f5611a486ca6840d6864:app/android.go;l=72"><code>golang.org/x/mobile/app</code> の <code>RunOnJVM</code></a> は使用できなくなりました。代わりに <a href="https://github.com/hajimehoshi/ebiten/blob/v2.7.0/mobile/jvm_android.go#L32"><code>github.com/hajimehoshi/ebiten/v2/mobile</code> の <code>RunOnJVM</code></a> を使用してください (<a href="https://github.com/hajimehoshi/ebiten/issues/2748">#2748</a>)。</li>
+</ul>
