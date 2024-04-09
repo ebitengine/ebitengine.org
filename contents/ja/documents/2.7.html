@@ -88,3 +88,10 @@
   <li><code>gomobile build</code> はサポートされなくなりました (<a href="https://github.com/hajimehoshi/ebiten/issues/2741">#2741</a>)。</li>
   <li><code>ebitenmobile</code> コマンドを使用する場合、 <a href="https://cs.opensource.google/go/x/mobile/+/365c3533877076b351b0f5611a486ca6840d6864:app/android.go;l=72"><code>golang.org/x/mobile/app</code> の <code>RunOnJVM</code></a> は使用できなくなりました。代わりに <a href="https://github.com/hajimehoshi/ebiten/blob/v2.7.0/mobile/jvm_android.go#L32"><code>github.com/hajimehoshi/ebiten/v2/mobile</code> の <code>RunOnJVM</code></a> を使用してください (<a href="https://github.com/hajimehoshi/ebiten/issues/2748">#2748</a>)。</li>
 </ul>
+<h2>v2.7.1</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/126?closed=1">Issues for v2.7.1</a></p>
+<h3>バグ修正</h3>
+<ul>
+  <li>Linux の i3wm デスクトップ環境で <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGame"><code>ebiten.RunGame</code></a> 前の <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetWindowSize"><code>ebiten.SetWindowSize</code></a> が正しく動かないことがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/2951">#2951</a>)。</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2"><code>text/v2</code></a> パッケージの <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#Draw"><code>Draw</code></a> 関数で、オプション引数の <code>GeoM</code> が意図せず変更されてしまう問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/2954">#2954</a>)。</li>
+</ul>

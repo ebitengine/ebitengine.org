@@ -92,3 +92,10 @@ Factor</code></a></td>
   <li><code>gomobile build</code> is no longer supported (<a href="https://github.com/hajimehoshi/ebiten/issues/2741">#2741</a>).</li>
   <li>When using the <code>ebitenmobile</code> command, <a href="https://cs.opensource.google/go/x/mobile/+/365c3533877076b351b0f5611a486ca6840d6864:app/android.go;l=72"><code>golang.org/x/mobile/app</code>'s <code>RunOnJVM</code></a> can no longer be used. Instead, use <a href="https://github.com/hajimehoshi/ebiten/blob/v2.7.0/mobile/jvm_android.go#L32"><code>github.com/hajimehoshi/ebiten/v2/mobile</code>'s <code>RunOnJVM</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2748">#2748</a>).</li>
 </ul>
+<h2>v2.7.1</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/126?closed=1">Issues for v2.7.1</a></p>
+<h3>Bug Fixes</h3>
+<ul>
+  <li>Fixed an issue where <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetWindowSize"><code>ebiten.SetWindowSize</code></a> before <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGame"><code>ebiten.RunGame</code></a> did not work correctly in the Linux i3wm desktop environment (<a href="https://github.com/hajimehoshi/ebiten/issues/2951">#2951</a>).</li>
+  <li>Fixed an issue where <code>GeoM</code> of the options argument in the the <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2"><code>text/v2</code></a> package's <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#Draw"><code>Draw</code></a> function was unintentionally modified (<a href="https://github.com/hajimehoshi/ebiten/issues/2954">#2954</a>).</li>
+</ul>
