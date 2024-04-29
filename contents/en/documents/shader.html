@@ -75,7 +75,7 @@
   <tr><th>Name</th><th>Type</th><th>Description</th></tr>
   <tr><td><code>dstPos</code></td><td><code>vec4</code><td>The destination position in pixels. The 3rd and 4th components are always 0 and 1.</td></tr>
   <tr><td><code>srcPos</code></td><td><code>vec2</code><td>The source texture's position in texels or pixels. The unit depends on the unit mode.</td></tr>
-  <tr><td><code>color</code></td><td><code>vec4</code><td>Supplemental color information given from vertices. Each component values are in between 0 and 1. This value is meaningful only when <code>DrawTrianglesShader</code> is used.</td></tr>
+  <tr><td><code>color</code></td><td><code>vec4</code><td>Supplemental color information given from vertices. Each component values are in between 0 and 1. This value is specified by <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawRectShaderOptions.ColorScale"><code>DrawRectShaderOptions.ColorScale</code></a> or vertices information for <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.DrawTrianglesShader"><code>DrawTrianglesShader</code></a>.</tr>
   <tr><td>(Returning value)</td><td><code>vec4</code><td>The current position's color. Each component values are in between 0 and 1.</td></tr>
 </table>
 <h3>Built-in types</h3>
