@@ -26,7 +26,7 @@
 <pre><code>func RunGame(game Game) error</code></pre>
 <p><code>RunGame</code> runs the game. <code>game</code>'s <code>Update</code> is called every tick (1/60 [s] by default) and <code>game</code>'s <code>Draw</code> is called every frame (typically 1/60[s] for 60Hz display). The argument <code>(*Image)</code> is the render target that represents the screen.</p>
 <p>The <code>Update</code> and the <code>Draw</code> are not called when the window is unfocused by default. This setting is configurable with <code>SetRunnableOnUnfocused</code>.</p>
-<p><code>RunGame</code> returns error when 1) OpenGL error happens, 2) audio error happens or 3) f returns error. In the case of 3), <code>RunGame</code> returns the same error.</p>
+<p><code>RunGame</code> returns error when 1) OpenGL error happens, 2) audio error happens or 3) <code>game</code>'s <code>Update</code> returns error. In the case of 3), <code>RunGame</code> returns the same error.</p>
 <p>Don't call <code>RunGame</code> twice or more in one process.</p>
 <p>The typical code with <code>Game</code> and <code>RunGame</code> is this:</p>
 <pre><code>// Game implements ebiten.Game interface.
