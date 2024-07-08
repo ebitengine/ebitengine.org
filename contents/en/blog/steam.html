@@ -95,6 +95,7 @@ echo '&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 </figure>
 <p>Next, create an app-specific password. You can create one easily at <a href="https://appleid.apple.com/">Apple ID website</a>. For more details, see <a href="https://support.apple.com/en-us/HT204397">the help page</a>.</p>
 <p>Next, get your application notarized.</p>
+<p><em>EDIT (2024-07-08):</em> The following information is somewhat outdated. As of July 2024, I have created the library <a href="https://github.com/hajimehoshi/notarize"><code>notarize</code></a> to handle the notarization process up to stapler. Please refer to it.</p>
 <pre><code>name=yourgame
 app_name=YourGame.app
 bundle_id=com.example.yourgame
@@ -149,6 +150,7 @@ rm ${app_name}.zip</code></pre>
 <pre><code>ditto -c -k --keepParent YourGame.app yourgame_darwin_amd64.zip</code></pre>
 <h2>Linux</h2>
 <p>In the case of Linux, <a href="https://github.com/ValveSoftware/steam-runtime">Steam Runtime</a> is prepared as a Dockerfile. Buliding your application in this environment is the easiest way.</p>
+<p><em>EDIT (2024-07-08):</em> The following information is somewhat outdated. As of July 2024, please refer to the Docker images at <a href="https://repo.steampowered.com/steamrt-images-sniper/snapshots/">Sniper</a>.</p>
 <pre><code>name=yourgame
 STEAM_RUNTIME_VERSION=0.20210817.0
 GO_VERSION=$(go env GOVERSION)

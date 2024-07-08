@@ -95,6 +95,7 @@ echo '&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 </figure>
 <p>次に App-Specific Password を作ります。 <a href="https://appleid.apple.com/">Apple ID のサイト</a>から簡単に作れます。詳しくは <a href="https://support.apple.com/en-us/HT204397">Apple のヘルプページ</a>を参考にしてください。</p>
 <p>次に公証を受けます。</p>
+<p><em>EDIT (2024-07-08):</em> 下記の内容は一部古くなってしまっています。2024 年 7 月現在の手順で、 stapler までの公証の手順を行うライブラリ <a href="https://github.com/hajimehoshi/notarize"><code>notarize</code></a> を作成いたしました。ご参照ください。</p>
 <pre><code>name=yourgame
 app_name=YourGame.app
 bundle_id=com.example.yourgame
@@ -149,6 +150,7 @@ rm ${app_name}.zip</code></pre>
 <pre><code>ditto -c -k --keepParent YourGame.app yourgame_darwin_amd64.zip</code></pre>
 <h2>Linux</h2>
 <p>Linux の場合は <a href="https://github.com/ValveSoftware/steam-runtime">Steam Runtime</a> が Dockerfile として用意されています。その環境下でビルドするのが最も簡単です。</p>
+<p><em>EDIT (2024-07-08):</em> 下記の内容は一部古くなってしまっています。 2024 年 7 月現在の Docker イメージは <a href="https://repo.steampowered.com/steamrt-images-sniper/snapshots/">Sniper</a> をご参照ください。</p>
 <pre><code>name=yourgame
 STEAM_RUNTIME_VERSION=0.20210817.0
 GO_VERSION=$(go env GOVERSION)
