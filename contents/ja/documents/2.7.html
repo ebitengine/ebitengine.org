@@ -133,3 +133,12 @@
 <ul>
   <li>Web ブラウザで、 <code>ebiten.SetRunnableOnUnfocused(false)</code> を最初に呼んだときに、キャンバスのサイズが正しく初期化されなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3034">#3034</a>)。</li>
 </ul>
+<h2>v2.7.8</h2>
+<h3>バグ修正</h3>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/133?closed=1">Issues for v2.7.8</a></p>
+<ul>
+  <li>Unmanaged な <code>*ebiten.Image</code> に対して <code>WritePixels</code> を連続して呼ぶとメモリリークする問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3036">#3036</a>)。</li>
+  <li>Windows で MSIME を使ったときに、 <code>textinput.Field</code> で意図せず二重にテキストが入力されてしまう問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3041">#3041</a>)。</li>
+  <li>ブラウザで HTML 要素をゲーム画面の Canvas 上にドロップするとクラッシュする問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3043">#3043</a>)。</li>
+  <li>Windows で複数の同じコントローラーを接続したときに正しく動作しない問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3046">#3046</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3047">#3047</a>)。</li>
+</ul>

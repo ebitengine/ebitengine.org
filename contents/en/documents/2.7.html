@@ -137,3 +137,12 @@ Factor</code></a></td>
 <ul>
   <li>Fixed an issue where the canvas size was not correctly initialized when <code>ebiten.SetRunnableOnUnfocused(false)</code> was called first in web browsers (<a href="https://github.com/hajimehoshi/ebiten/issues/3034">#3034</a>).</li>
 </ul>
+<h2>v2.7.8</h2>
+<h3>Bug Fixes</h3>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/133?closed=1">Issues for v2.7.8</a></p>
+<ul>
+  <li>Fixed a memory leak issue when calling <code>WritePixels</code> consecutively on an unmanaged <code>*ebiten.Image</code> (<a href="https://github.com/hajimehoshi/ebiten/issues/3036">#3036</a>).</li>
+  <li>Fixed an issue where text was input twice unintentionally in <code>textinput.Field</code> when using MSIME on Windows (<a href="https://github.com/hajimehoshi/ebiten/issues/3041">#3041</a>).</li>
+  <li>Fixed a crash issue when dropping an HTML element onto the game screen canvas in a browser (<a href="https://github.com/hajimehoshi/ebiten/issues/3043">#3043</a>).</li>
+  <li>Fixed an issue where multiple identical controllers did not function correctly when connected on Windows (<a href="https://github.com/hajimehoshi/ebiten/issues/3046">#3046</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3047">#3047</a>).</li>
+</ul>
