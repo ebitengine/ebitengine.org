@@ -83,7 +83,12 @@ public class MainActivity extends AppCompatActivity {
         // ...
     }
 }</code></pre>
-
+<p>If you want to use multiple <code>Activity</code> objects or <code>Intent</code>, please consider to make the <code>Activity</code> for Ebitengine <code>singleInstance</code>. It's because Ebitengine's state might be broken when recreating an activity. You can set this in your <code>AndroidManifest.xml</code> like the following. </p>
+<pre><code>&lt;activity
+  ...
+  android:launchMode="singleInstance"&gt;
+  ...
+&lt;/activity&gt;</code></pre>
 <h3>iOS</h3>
 <p>The minimum required iOS version is 13.0.</p>
 <p>Run <code>ebitenmobile bind</code> command for your package:</p>
