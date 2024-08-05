@@ -25,7 +25,7 @@
   </div>
   <div class="grid-item-2">
     <p>The program is almost same as <a href="renderimage.html">render-an-image example</a>. The difference is whether <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawImageOptions"><code>DrawImageOptions</code></a> is specified or not at the <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.DrawImage"><code>DrawImage</code></a> call. In this example, a <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#GeoM"><code>GeoM</code></a> is adjusted. <code>GeoM</code> represents <a href="https://en.wikipedia.org/wiki/Affine_transformation">an affine matrix</a> to translate, scale or rotate the image.</p>
-    <p>In this example, the image is translated by <span class="math">(50, 50)</span> first, and scaled by <span class="math">(1.5, 1)</span>. In Ebitengine, Y axis is not upward but downward. Then, tralslating by <span class="math">(50, 50)</span> means that the image is moved by 50 pixels rightward, and by 50 pixels downward. For scaling, the origin point is upper-left and the directions are also downward and rightward.</p>
+    <p>In this example, the image is translated by <span class="math">(50, 50)</span> first, and scaled by <span class="math">(1.5, 1)</span>. In Ebitengine, Y axis is not upward but downward. Then, translating by <span class="math">(50, 50)</span> means that the image is moved by 50 pixels rightward, and by 50 pixels downward. For scaling, the origin point is upper-left and the directions are also downward and rightward.</p>
   </div>
   <div class="grid-item-2">
     <p class="math">\begin{aligned}
@@ -100,7 +100,7 @@ g
     <p>If the multiplicand is identity, the image is rotated by the <code>Rotate</code> arguments. The center of rotating is the left-upper corner.
   </div>
   <div class="grid-item-4">
-    <p>Of course you can combinate multiple operations of a geometry matrix. They are represented as multiplication of matrices. Note that the order of multiplication matters. For example, the result of translating then scaling an image is, in general, different from scaling then translating the image. In Ebitengine, operations are chained by left-multiplying, then the actual operation order is right to left in mathematical expressions.</p>
+    <p>Of course you can combine multiple operations of a geometry matrix. They are represented as multiplication of matrices. Note that the order of multiplication matters. For example, the result of translating then scaling an image is, in general, different from scaling then translating the image. In Ebitengine, operations are chained by left-multiplying, then the actual operation order is right to left in mathematical expressions.</p>
   </div>
   <div class="grid-item-2">
     <p class="math">\begin{aligned}
