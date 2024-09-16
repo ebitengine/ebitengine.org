@@ -148,3 +148,10 @@
 <ul>
   <li><code>ebiten.DroppedFiles()</code> の戻り値に対して <code>Open(".")</code> を呼ぶと、常に同じオブジェクトを返してしまっていた問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3081">#3081</a>)。</li>
 </ul>
+<h2>v2.7.10</h2>
+<h3>バグ修正</h3>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/135?closed=1">Issues for v2.7.10</a></p>
+<ul>
+  <li>Android でコンテキストロスト発生時に、安全に終了せず、クラッシュしていた問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3097">#3097</a>)。</li>
+  <li><code>RunOptions</code>の<code>InitUnfocused</code> が機能していなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3099">#3099</a>)。</li>
+</ul>

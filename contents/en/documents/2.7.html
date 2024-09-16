@@ -152,3 +152,10 @@ Factor</code></a></td>
 <ul>
   <li>Fixed an issue where calling <code>Open(".")</code> on the return value of <code>ebiten.DroppedFiles()</code> would always return the same object (<a href="https://github.com/hajimehoshi/ebiten/issues/3081">#3081</a>).</li>
 </ul>
+<h2>v2.7.10</h2>
+<h3>Bug Fixes</h3>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/135?closed=1">Issues for v2.7.10</a></p>
+<ul>
+  <li>Fixed an issue where the app crashed instead of exiting gracefully when a context loss occurred on Android (<a href="https://github.com/hajimehoshi/ebiten/issues/3097">#3097</a>).</li>
+  <li>Fixed an issue where <code>InitUnfocused</code> in <code>RunOptions</code> was not functioning (<a href="https://github.com/hajimehoshi/ebiten/issues/3099">#3099</a>).</li>
+</ul>
