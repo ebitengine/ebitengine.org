@@ -1,0 +1,108 @@
+<h1>Ebitengine 2.8 Release Notes</h1>
+<p><em>v2.8.0 has not been released yet.</em> This document is a draft.</p>
+<h2>v2.8.0</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/89?closed=1">Issues for v2.8.0</a></p>
+<p>This release primarily includes minor feature additions, bug fixes, and performance improvements.</p>
+<p>Starting with Ebitengine 2.8, Go 1.22 or higher is required.</p>
+<h3>32-bit Float Audio Stream</h3>
+<p><a href="https://github.com/hajimehoshi/ebiten/issues/2160">Issue #2160</a></p>
+<p>This release adds 32-bit float as a format for audio streams. Compared to 16-bit integer audio streams, 32-bit float streams make processing easier and may improve performance by reducing internal conversions.</p>
+<p>The current 16-bit integer audio stream format will still be supported. You can mix 16-bit integer and 32-bit float streams. While there are no plans to deprecate 16-bit streams for now, Ebitengine version 3 is expected to support only 32-bit float streams.</p>
+<ul>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Context.NewPlayerF32"><code>(*audio.Context).NewPlayerF32</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Context.NewPlayerF32FromBytes"><code>(*audio.Context).NewPlayerF32FromBytes</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#NewInfiniteLoopF32"><code>audio.NewInfiniteLoopF32</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#NewInfiniteLoopWithIntroF32"><code>audio.NewInfiniteLoopWithIntroF32</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#ResampleF32"><code>audio.ResampleF32</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio/mp3#DecodeF32"><code>mp3.DecodeF32</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio/vorbis#DecodeF32"><code>vorbis.DecodeF32</code></a></li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio/wav#DecodeF32"><code>wav.DecodeF32</code></a></li>
+</ul>
+<h3>Adding Custom Data to <code>Vertex</code></h3>
+<p><a href="https://github.com/hajimehoshi/ebiten/issues/2640">Issue #2640</a></p>
+<p>Four new <code>float32</code> members—<code>Custom0</code>, <code>Custom1</code>, <code>Custom2</code>, and <code>Custom3</code>—have been added to the <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Vertex"><code>ebiten.Vertex</code></a> structure as custom elements. This allows for more complex processing using Kage, the custom shader.</p>
+<p>Correspondingly, the signature of the <code>Fragment</code> function in Kage has been updated. When using custom elements, use the signature that accepts <code>custom vec4</code>.</p>
+<ul>
+  <li><code>func Fragment()</code></li>
+  <li><code>func Fragment(dstPos vec4)</code></li>
+  <li><code>func Fragment(dstPos vec4, srcPos vec2)</code></li>
+  <li><code>func Fragment(dstPos vec4, srcPos vec2, color vec4)</code></li>
+  <li><code>func Fragment(dstPos vec4, srcPos vec2, color vec4, custom vec4)</code></li>
+</ul>
+<h3>Improved Portability of <code>exp/textinput</code></h3>
+<p><a href="https://github.com/hajimehoshi/ebiten/issues/3072">Issue #3072</a></p>
+<p><code>exp/textinput</code> supported Windows and macOS but was not implemented for environments like Linux. When used on Linux, no text could be input.</p>
+<p>From this release, when <code>exp/textinput</code> is used in environments where IME handling is not implemented, text input will be possible without using IME. This improves code portability. The plan is to extend IME handling to more environments in the future.</p>
+<h3>OpenGL ES Preference</h3>
+<p><a href="https://github.com/hajimehoshi/ebiten/issues/2944">Issue #2944</a></p>
+<p>In environments where OpenGL ES is available, it will now be preferred over OpenGL. This resolves performance issues in environments like the Raspberry Pi. The environment variable <code>EBITENGINE_OPENGL</code> is now ignored.</p>
+<h3>New APIs</h3>
+<ul>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorSpaceDefault"><code>ebiten.ColorSpaceDefault</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2871">#2871</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorSpaceSRGB"><code>ebiten.ColorSpaceSRGB</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2871">#2871</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorSpaceDisplayP3"><code>ebiten.ColorSpaceDisplayP3</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2871">#2871</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawImageOptions.DisableMipmaps"><code>ebiten.DrawImageOptions.DisableMipmaps</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3095">#3095</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawTrianglesOptions.DisableMipmaps"><code>ebiten.DrawTrianglesOptions.DisableMipmaps</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3095">#3095</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#FillRuleFillAll"><code>ebiten.FillRuleFillAll</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3006">#3006</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#FillRuleNoneZero"><code>ebiten.FillRuleNoneZero</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3006">#3006</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#FillRuleEvenOdd"><code>ebiten.FillRuleEvenOdd</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3006">#3006</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RequestAttention"><code>ebiten.RequestAttention()</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2998">#2998</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameOptions.ColorSpace"><code>ebiten.RunGameOptions.ColorSpace</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2871">#2871</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameOptions.DisableHiDPI"><code>ebiten.RunGameOptions.DisableHiDPI</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2987">#2987</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio/mp3#Stream.SampleRate"><code>(*mp3.Stream).SampleRate()</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2996">#2996</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio/vorbis#Stream.SampleRate"><code>(*vorbis.Stream).SampleRate()</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2996">#2996</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio/wav#Stream.SampleRate"><code>(*wav.Stream).SampleRate()</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2996">#2996</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#Glyph.OriginOffsetX"><code>text.Glyph.OriginOffsetX</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3070">#3070</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#Glyph.OriginOffsetY"><code>text.Glyph.OriginOffsetY</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3070">#3070</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#Glyph.OriginX"><code>text.Glyph.OriginX</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3070">#3070</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#Glyph.OriginY"><code>text.Glyph.OriginY</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3070">#3070</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#Metrics.CapHeight"><code>text.Metrics.CapHeight</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3082">#3082</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#Metrics.XHeight"><code>text.Metrics.XHeight</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3082">#3082</a>)</li>
+</ul>
+<h3>Deprecated APIs</h3>
+<table>
+  <tr>
+    <th>Before v2.8</th>
+    <th>After v2.8</th>
+    <th>Issue</th>
+  </tr>
+  <tr>
+    <td><code>ebiten.FillAll</code></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#FillRuleFillAll"><code>ebiten.FillRuleFillAll</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3006">#3006</a></td>
+  </tr>
+  <tr>
+    <td><code>ebiten.FillNonZero</code></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#FillRuleNoneZero"><code>ebiten.FillRuleNoneZero</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3006">#3006</a></td>
+  </tr>
+  <tr>
+    <td><code>ebiten.FillEvenOdd</code></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#FillRuleEvenOdd"><code>ebiten.FillRuleEvenOdd</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3006">#3006</a></td>
+  </tr>
+</table>
+<h3>Bug Fixes</h3>
+<p>This release includes all bug fixes from version 2.7 in addition to the following fixes:</p>
+<ul>
+  <li>Fixed an issue where cursor position became incorrect after cursor capture failure in Safari (<a href="https://github.com/hajimehoshi/ebiten/issues/2764">#2764</a>).</li>
+  <li>Fixed an issue where IME was unnecessarily handled when not in use on Windows (<a href="https://github.com/hajimehoshi/ebiten/issues/2918">#2918</a>).</li>
+  <li>Fixed several issues in the Kage parser (<a href="https://github.com/hajimehoshi/ebiten/issues/2965">#2965</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/2989">#2989</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/2993">#2993</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3111">#3111</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3112">#3112</a>).</li>
+  <li>Fixed an issue where pressing Enter was sometimes ignored in mobile browsers when using <code>exp/textinput</code> (<a href="https://github.com/hajimehoshi/ebiten/issues/3015">#3015</a>).</li>
+  <li>Fixed a crash when a non-hashable <code>io.Reader</code> was given to <code>audio.NewPlayer</code> (<a href="https://github.com/hajimehoshi/ebiten/issues/3039">#3039</a>).</li>
+  <li>Fixed an issue where <code>ebiten.DroppedFiles</code> did not work correctly when multiple files were dropped in Firefox and Safari (<a href="https://github.com/hajimehoshi/ebiten/issues/3045">#3045</a>).</li>
+  <li>Fixed an issue where <code>SetScreenClearedEveryFrame(false)</code> did not work properly on ChromeOS Linux (<a href="https://github.com/hajimehoshi/ebiten/issues/3055">#3055</a>).</li>
+  <li>Fixed an issue where Ebitengine did not work on Android Termux (<a href="https://github.com/hajimehoshi/ebiten/issues/3057">#3057</a>).</li>
+  <li>Fixed an issue where <code>cmd/ebitenmobile</code> did not work correctly depending on the contents of the go.mod file (<a href="https://github.com/hajimehoshi/ebiten/issues/3086">#3086</a>).</li>
+  <li>Fixed an issue where the window was not displayed when <code>SetRunnableOnUnfocused(false)</code> was called before starting the game on ChromeOS Linux (<a href="https://github.com/hajimehoshi/ebiten/issues/3091">#3091</a>).</li>
+  <li>Fixed an issue where the rendering became incorrect when resizing the window while using <code>SetScreenClearedEveryFrame(false)</code> (<a href="https://github.com/hajimehoshi/ebiten/issues/3105">#3105</a>).</li>
+</ul>
+<h3>Performance Improvements</h3>
+<ul>
+  <li>Improved the performance of the <code>vector</code> package (<a href="https://github.com/hajimehoshi/ebiten/issues/3060">#3060</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3061">#3061</a>).</li>
+  <li>Improved mipmap performance (<a href="https://github.com/hajimehoshi/ebiten/issues/3093">#3093</a>).</li>
+</ul>
+<h3>Breaking Changes</h3>
+<ul>
+  <li>The return type of <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#GoTextFaceSource.UnsafeInternal"><code>(*GoTextFaceSource).UnsafeInternal()</code></a> in <code>text/v2</code> has been changed from <a href="https://pkg.go.dev/github.com/go-text/typesetting/opentype/api/font#Face"><code>font.Face</code></a> to <code>any</code> due to an update in the dependent library <a href="https://github.com/go-text/typesetting"><code>go-text/typesetting</code></a>.</li>
+</ul>
