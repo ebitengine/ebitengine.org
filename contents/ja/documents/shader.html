@@ -69,13 +69,20 @@
 <p>ピクセルモードの場合、 Kage シェーダで取り扱う単位が全てピクセルになります。</p>
 <p>デフォルトでは後方互換性のためにテクセルモードになっています。新しい Kage プログラムではピクセルモードにすることを強く推奨します。</p>
 <h3>エントリーポイント</h3>
-<p>Kage が現在定義できるのはフラグメントシェーダのみです。以下のシグニチャを持つ <code>Fragment</code> 関数がエントリーポイントになります。</p>
-<pre><code>func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4</code></pre>
+<p>Kage が現在定義できるのはフラグメントシェーダのみです。以下のいずれかのシグニチャを持つ <code>Fragment</code> 関数がエントリーポイントになります。</p>
+<ul>
+  <li><code>func Fragment() vec4</code></li>
+  <li><code>func Fragment(dstPos vec4) vec4</code></li>
+  <li><code>func Fragment(dstPos vec4, srcPos vec2) vec4</code></li>
+  <li><code>func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4</code></li>
+  <li><code>func Fragment(dstPos vec4, srcPos vec2, color vec4, custom vec4) vec4</code></li>
+</ul>
 <table>
   <tr><th>名前</th><th>型</th><th>説明</th></tr>
   <tr><td><code>dstPos</code></td><td><code>vec4</code><td>描画先の座標。単位はピクセル。第 3、第 4 要素は常にそれぞれ 0、 1。</td></tr>
   <tr><td><code>srcPos</code></td><td><code>vec2</code><td>描画元テクスチャの座標。単位はテクセルまたはピクセルで、単位モードによる。</td></tr>
   <tr><td><code>color</code></td><td><code>vec4</code><td>頂点から与えられる補助的な色情報。各要素は 0 から 1 の値。この値は <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawRectShaderOptions.ColorScale"><code>DrawRectShaderOptions.ColorScale</code></a> か <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.DrawTrianglesShader"><code>DrawTrianglesShader</code></a> の頂点情報で指定される。</td></tr>
+  <tr><td><code>custom</code></td><td><code>vec4</code><td>任意の用途に使用できるカスタム値。</td></tr>
   <tr><td>(戻り値)</td><td><code>vec4</code><td>現在の座標の色。各要素は 0 から 1 の値。</td></tr>
 </table>
 <h3>組み込み型</h3>

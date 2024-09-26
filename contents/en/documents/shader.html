@@ -69,13 +69,20 @@
 <p>In pixel mode, all units handled by the Kage shader become pixels.</p>
 <p>By default, it is set to texel mode for backward compatibility. For new Kage programs, it is strongly recommended to use pixel mode.</p>
 <h3>Entry point</h3>
-<p>Kage can define only a fragment shader. The <code>Fragment</code> function with the below signature is the entrypoint.</p>
-<pre><code>func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4</code></pre>
+<p>Kage can define only a fragment shader. The <code>Fragment</code> function with one of the following signatures is the entrypoint.</p>
+<ul>
+  <li><code>func Fragment() vec4</code></li>
+  <li><code>func Fragment(dstPos vec4) vec4</code></li>
+  <li><code>func Fragment(dstPos vec4, srcPos vec2) vec4</code></li>
+  <li><code>func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4</code></li>
+  <li><code>func Fragment(dstPos vec4, srcPos vec2, color vec4, custom vec4) vec4</code></li>
+</ul>
 <table>
   <tr><th>Name</th><th>Type</th><th>Description</th></tr>
   <tr><td><code>dstPos</code></td><td><code>vec4</code><td>The destination position in pixels. The 3rd and 4th components are always 0 and 1.</td></tr>
   <tr><td><code>srcPos</code></td><td><code>vec2</code><td>The source texture's position in texels or pixels. The unit depends on the unit mode.</td></tr>
   <tr><td><code>color</code></td><td><code>vec4</code><td>Supplemental color information given from vertices. Each component values are in between 0 and 1. This value is specified by <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawRectShaderOptions.ColorScale"><code>DrawRectShaderOptions.ColorScale</code></a> or vertices information for <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.DrawTrianglesShader"><code>DrawTrianglesShader</code></a>.</tr>
+  <tr><td><code>custom</code></td><td><code>vec4</code><td>Custom values for any purposes.</td></tr>
   <tr><td>(Returning value)</td><td><code>vec4</code><td>The current position's color. Each component values are in between 0 and 1.</td></tr>
 </table>
 <h3>Built-in types</h3>
