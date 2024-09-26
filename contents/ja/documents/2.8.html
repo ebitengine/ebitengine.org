@@ -22,11 +22,11 @@
 <p><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Vertex"><code>ebiten.Vertex</code></a> 構造体に、カスタム要素として、新たに 4 つの <code>float32</code> 型メンバー <code>Custom0</code>、 <code>Custom1</code>、 <code>Custom2</code>、 <code>Custom3</code> が追加されました。これにより、カスタムシェーダである Kage を使ったより複雑な処理が可能になります。</p>
 <p>この変更に伴い、 Kage の <code>Fragment</code> 関数のシグニチャが以下の種類を取れるように変更されました。カスタム要素を使用する場合、 <code>custom vec4</code> を取るシグニチャを使用してください。</p>
 <ul>
-  <li><code>func Fragment()</code></li>
-  <li><code>func Fragment(dstPos vec4)</code></li>
-  <li><code>func Fragment(dstPos vec4, srcPos vec2)</code></li>
-  <li><code>func Fragment(dstPos vec4, srcPos vec2, color vec4)</code></li>
-  <li><code>func Fragment(dstPos vec4, srcPos vec2, color vec4, custom vec4)</code></li>
+  <li><code>func Fragment() vec4</code></li>
+  <li><code>func Fragment(dstPos vec4) vec4</code></li>
+  <li><code>func Fragment(dstPos vec4, srcPos vec2) vec4</code></li>
+  <li><code>func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4</code></li>
+  <li><code>func Fragment(dstPos vec4, srcPos vec2, color vec4, custom vec4) vec4</code></li>
 </ul>
 <h3><code>exp/textinput</code> のポータビリティの改善</h3>
 <p><a href="https://github.com/hajimehoshi/ebiten/issues/3072">Issue #3072</a></p>
