@@ -25,14 +25,6 @@ cp $goroot\misc\wasm\wasm_exec.js .</code></pre>
 <pre><code>&lt;!DOCTYPE html&gt;
 &lt;script src="wasm_exec.js"&gt;&lt;/script&gt;
 &lt;script&gt;
-// Polyfill
-if (!WebAssembly.instantiateStreaming) {
-    WebAssembly.instantiateStreaming = async (resp, importObject) => {
-        const source = await (await resp).arrayBuffer();
-        return await WebAssembly.instantiate(source, importObject);
-    };
-}
-
 const go = new Go();
 WebAssembly.instantiateStreaming(fetch("yourgame.wasm"), go.importObject).then(result => {
     go.run(result.instance);
