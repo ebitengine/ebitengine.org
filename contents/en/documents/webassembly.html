@@ -30,7 +30,14 @@ WebAssembly.instantiateStreaming(fetch("yourgame.wasm"), go.importObject).then(r
     go.run(result.instance);
 });
 &lt;/script&gt;</code></pre>
-<p>Then open this HTML in your browser. You might need a local HTTP server.</p>
+<h3>Running The HTML File</h3>
+<p>
+    Install goexec: <pre><code>go install github.com/shurcooL/goexec@latest</code></pre> after installation
+    <pre><code>go get github.com/shurcooL/go-goon</code></pre>
+</p>
+<pre><code>
+goexec 'http.ListenAndServe(`:8080`, http.FileServer(http.Dir(`.`)))'
+</code></pre>
 <p>If you want to embed your game into your web page, using iframe is strongly recommended. The screen scale is automatically adjusted. If the above HTML&apos;s name is <code>main.html</code>, the host HTML will be like this:</p>
 <pre><code>&lt;!DOCTYPE html&gt;
 &lt;iframe src="main.html" width="640" height="480"&gt;&lt;/iframe&gt;</code></pre>
