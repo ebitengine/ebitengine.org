@@ -32,8 +32,8 @@ WebAssembly.instantiateStreaming(fetch("yourgame.wasm"), go.importObject).then(r
 &lt;/script&gt;</code></pre>
 <h3>Running The HTML File</h3>
 <p>
-    Install goexec: <pre><code>go install github.com/shurcooL/goexec@latest</code></pre> after installation
-    <pre><code>go get github.com/shurcooL/go-goon</code></pre>
+    Install goexec: <code>go install github.com/shurcooL/goexec@latest</code> after installation
+     <code>go get github.com/shurcooL/go-goon</code>
 </p>
 <pre><code>
 goexec 'http.ListenAndServe(`:8080`, http.FileServer(http.Dir(`.`)))'
