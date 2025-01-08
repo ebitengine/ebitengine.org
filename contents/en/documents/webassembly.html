@@ -16,9 +16,18 @@ Remove-Item Env:GOOS
 Remove-Item Env:GOARCH</code></pre>
 <h3>Copying <code>wasm_exec.js</code> to execute the WebAssembly binary</h3>
 <p>On a Unix/Linux shell:</p>
-<pre><code>cp $(go env GOROOT)/misc/wasm/wasm_exec.js .</code></pre>
+<pre><code># Go 1.24 and newer
+cp $(go env GOROOT)/lib/wasm/wasm_exec.js .
+
+# Go 1.23 and older
+cp $(go env GOROOT)/misc/wasm/wasm_exec.js .</code></pre>
 <p>On Windows PowerShell:</p>
 <pre><code>$goroot = go env GOROOT
+
+# Go 1.24 and newer
+cp $goroot\lib\wasm\wasm_exec.js .
+
+# Go 1.23 and older
 cp $goroot\misc\wasm\wasm_exec.js .</code></pre>
 <h3>Creating an HTML</h3>
 <p>Create this HTML:</p>
