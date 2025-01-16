@@ -31,15 +31,16 @@ func init() {
 <p>This binding doesn't implement most of the APIs. I plan to implement them in the future.</p>
 <h2>Windows</h2>
 <p>Windows is the easiest, and what you have to do is to build your game by Go in the regular way. On Windows, Ebiten is in pure Go, then you can build it anywhere by specifying <code>GOOS</code> and <code>GOARCH</code>.</p>
+<p><em>EDIT (2025-01-16):</em> An issue has been reported where Go applications may freeze when running in a Windows Steam environment (<a href="https://github.com/hajimehoshi/ebiten/issues/3181">#3181</a>, <a href="https://github.com/golang/go/issues/71242">golang/go#71242</a>). As a workaround, specify <code>-ldflags="-X=runtime.godebugDefault=asyncpreemptoff=1"</code> when executing <code>go build</code>.</p>
 <p>On PowerShell, the commands are like this.</p>
 <pre><code>$Env:GOARCH = '386'
-    go build -o yourgame_windows_386.exe .
-    $Env:GOARCH = 'amd64'
-    go build -o yourgame_windows_amd64.exe .
-    Remove-Item Env:GOARCH</code></pre>
+go build -o yourgame_windows_386.exe .
+$Env:GOARCH = 'amd64'
+go build -o yourgame_windows_amd64.exe .
+Remove-Item Env:GOARCH</code></pre>
 <p>On a POSIX shell, the commands are like this.</p>
 <pre><code>env GOOS=windows GOARCH=386 go build -o yourgame_windows_386.exe .
-    env GOOS=windows GOARCH=amd64 go build -o yourgame_windows_amd64.exe .</code></pre>
+env GOOS=windows GOARCH=amd64 go build -o yourgame_windows_amd64.exe .</code></pre>
 <p>When buliding a GUI application for Windows, you can specify <code>-ldflags=-H=windowsgui</code> to vanish the console. As Ebiten closes it automatically anyway, it is also fine not to specify this.</p>
 <p>An icon is not necessary. If you care, please use a tool to embed resources as appropriate.</p>
 <p>Then, compress the <code>exe</code> files as zips, and upload them as builds at Steamworks.</p>

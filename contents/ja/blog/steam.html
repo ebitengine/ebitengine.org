@@ -31,6 +31,7 @@ func init() {
 <p>なおこのバインディングはまだ API をほとんど実装していません。今後対応予定です。</p>
 <h2>Windows</h2>
 <p>Windows は最も簡単で、普通に Go でビルドするだけです。 Ebiten は Windows においては Pure Go なので、 <code>GOOS</code> と <code>GOARCH</code> を指定すればどこでもビルドできます。</p>
+<p><em>EDIT (2025-01-16):</em> Go アプリケーションを Windows Steam 環境で動かすときに、フリーズすることがある問題が報告されています (<a href="https://github.com/hajimehoshi/ebiten/issues/3181">#3181</a>、 <a href="https://github.com/golang/go/issues/71242">golang/go#71242</a>)。ワークアラウンドとして、 <code>go build</code> を実行する際に <code>-ldflags="-X=runtime.godebugDefault=asyncpreemptoff=1"</code> を指定してください。</p>
 <p>PowerShell でビルドする場合は次のようになります。</p>
 <pre><code>$Env:GOARCH = '386'
 go build -o yourgame_windows_386.exe .
@@ -39,7 +40,7 @@ go build -o yourgame_windows_amd64.exe .
 Remove-Item Env:GOARCH</code></pre>
 <p>POSIX シェルでビルドする場合は次のようになります。</p>
 <pre><code>env GOOS=windows GOARCH=386 go build -o yourgame_windows_386.exe .
-    env GOOS=windows GOARCH=amd64 go build -o yourgame_windows_amd64.exe .</code></pre>
+env GOOS=windows GOARCH=amd64 go build -o yourgame_windows_amd64.exe .</code></pre>
 <p>Windows 向け GUI アプリをビルドする際には <code>-ldflags=-H=windowsgui</code> をつけると、最初のコンソールの表示がなくなります。 Ebiten の場合はコンソールを自動で閉じるので、つけなくても問題はありません。</p>
 <p>アイコンは必須ではありません。気になる方はリソースを埋め込むツールを適宜使ってください。</p>
 <p>こうして出来上がった <code>exe</code> ファイルを zip で固めて、 Steamworks にビルドとしてアップロードしてください。</p>
