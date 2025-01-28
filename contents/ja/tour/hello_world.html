@@ -1,0 +1,91 @@
+<h1>ハローワールド!</h1>
+<p>最初の Ebitengine のゲームとして、「Hello, World!」と表示してみましょう!</p>
+<p>プログラムを実行する前に、Ebitengine をインストールする必要があります。<a href="/ja/documents/install.html">Ebitengine のインストール方法</a>を参照してください。</p>
+<h2>コード</h2>
+<p>このツアーではあなたが <code>go.mod</code> ファイルと同じディレクトリで作業していることを想定しています。そうでなければ、以下のコマンドでディレクトリと <code>go.mod</code> ファイルを作成してください。</p>
+<pre><code>mkdir yourgame
+cd yourgame
+go mod init foo # もしくは github.com/yourname/yourgame など</code></pre>
+<p><code>main.go</code> を以下のように作成します：</p>
+<pre data-codesrc="/go/helloworld/main.go"></pre>
+<p><code>go.mod</code> ファイルを <code>go mod init</code> で初期化したばかりの場合は、このコマンドで依存関係を解決します。</p>
+<pre><code>go mod tidy</code></pre>
+<p>その後、<code>go run</code> で Go のプログラムを実行します：</p>
+<pre><code>go run main.go</code></pre>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <p>画面に「Hello, World!」というテキストが表示されたら、プログラムが正常に動作しています! おめでとうございます!</p>
+  </div>
+  <div class="grid-item-2">
+    <p class="img screenshot"><img src="/images/go/helloworld.png" width="320" height="240"></p>
+  </div>
+</div>
+<h2>コードの仕組み</h2>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <pre data-codesrc="/go/helloworld/main.go" data-codelinerange="1-8"></pre>
+  </div>
+  <div class="grid-item-2">
+    <p>Ebitengine のパッケージをインポートします。このプログラムでは 2 つのパッケージをインポートします： <br><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2">github.com/hajimehoshi/ebiten/v2</a></code> <br><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/ebitenutil">github.com/hajimehoshi/ebiten/v2/ebitenutil</a></code></p>
+    <p><code>github.com/hajimehoshi/ebiten/v2</code> は描画と入力の機能を提供する Ebitengine のコアパッケージです。</p>
+    <p><code>github.com/hajimehoshi/ebiten/v2/ebitenutil</code> は Ebitengine のユーティリティパッケージです。このプログラムでは、このパッケージを使用してデバッグメッセージを画面に表示します。</p>
+    <p>Ebitengine には他にもいくつかのパッケージがあります。 詳細については<a href="/en/documents/packages.html">パッケージのページ</a>を参照してください。</p>
+  </div>
+  <div class="grid-item-2">
+    <pre data-codesrc="/go/helloworld/main.go" data-codelinerange="10-10"></pre>
+  </div>
+  <div class="grid-item-2">
+    <p><code>Game</code> 構造体を定義します。<code>Game</code> は <code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Game">ebiten.Game</a></code> インターフェースを実装したものです。 <code>ebiten.Game</code> は Ebitengine のゲームに必須な関数である <code>Update</code> 、<code>Draw</code> 、<code>Layout</code> を持っています。 1 つずつ見ていきましょう。</p>
+  </div>
+  <div class="grid-item-2">
+    <pre data-codesrc="/go/helloworld/main.go" data-codelinerange="12-14"></pre>
+  </div>
+  <div class="grid-item-2">
+    <p>毎ティック呼び出される <code>(*Game).Update</code> 関数を定義します。ティックは論理的な更新の時間単位です。デフォルト値は 1/60 [s] で、<code>Update</code> が 1 秒あたり 60 回呼び出されます（言い換えれば、Ebitengine のゲームは秒間 60 ティックで動作します）。</p>
+    <p><code>Update</code> はゲームの論理的な状態を更新します。このハローワールドの例では何の状態も保持していないため、この関数では何も行っていません。</p>
+    <p><code>Update</code> はエラーの値を返します。このコードでは <code>Update</code> は常に <code>nil</code> を返しています。一般に、更新関数が nil 以外のエラーを返すと、Ebitengine のゲームは中断されます。このプログラムでは nil 以外を返さないため、ユーザがウィンドウを閉じない限り、Ebitengine のゲームは停止しません。</p>
+  </div>
+  <div class="grid-item-2">
+    <pre data-codesrc="/go/helloworld/main.go" data-codelinerange="16-16"></pre>
+  </div>
+  <div class="grid-item-2">
+    <p>毎フレーム呼び出される <code>(*Game).Draw</code> 関数を定義します。フレームはレンダリングの時間単位で、ディスプレイのリフレッシュレートによって異なります。モニターのリフレッシュレートが 60 [Hz] の場合、<code>Draw</code> は 1 秒間に 60 回呼び出されます。</p>
+    <p><code>Draw</code> は <code>ebiten.Image</code> へのポインタである引数 <code>screen</code> を取ります。Ebitengine では、画像ファイルから作成された画像、オフスクリーン画像（一次的なレンダーターゲット）、画面などのような全ての画像が <code>ebiten.Image</code> オブジェクトとして表現されます。引数の <code>screen</code> は最終的なレンダリング先です。ウィンドウには <code>screen</code> の最終的な状態が毎フレーム表示されます。</p>
+  </div>
+  <div class="grid-item-2">
+    <pre data-codesrc="/go/helloworld/main.go" data-codelinerange="17-18"></pre>
+  </div>
+  <div class="grid-item-2">
+    <p><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/ebitenutil#DebugPrint">ebitenutil.DebugPrint</a></code> は画像上にデバッグメッセージを表示するユーティリティ関数です。この場合では、<code>screen</code> がデバッグ出力の表示先として渡されています。<code>Draw</code> が呼ばれるたびに <code>screen</code> はリセット（別の言葉で言えばクリア）されるので、<code>DebugPrint</code> は毎回呼び出す必要があります。</p>
+  </div>
+  <div class="grid-item-2">
+    <pre data-codesrc="/go/helloworld/main.go" data-codelinerange="20-22"></pre>
+  </div>
+  <div class="grid-item-2">
+    <p><code>(*Game).Layout</code> 関数を定義します。<code>Layout</code> はデスクトップ上のウィンドウのサイズを引数で受け取り、ゲームの論理的な画面サイズを返します。このコードでは引数を無視して固定値を返しています。つまり、ゲーム画面のサイズは、ウィンドウのサイズによらず常に同じ大きさになります。<code>Layout</code> は、ウィンドウのサイズが変更可能な場合などに、より意味を持ちます。</p>
+  </div>
+  <div class="grid-item-2">
+    <pre data-codesrc="/go/helloworld/main.go" data-codelinerange="24-24"></pre>
+  </div>
+  <div class="grid-item-2">
+    <p>このプログラムのエントリーポイントである <code>main</code> 関数を定義します。</p>
+  </div>
+  <div class="grid-item-2">
+    <pre data-codesrc="/go/helloworld/main.go" data-codelinerange="25-25"></pre>
+  </div>
+  <div class="grid-item-2">
+    <p><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetWindowSize">ebiten.SetWindowSize</a></code> ではウィンドウの大きさを設定します。これが呼び出されない場合、デフォルトのウィンドウサイズが使用されます。</p>
+  </div>
+  <div class="grid-item-2">
+    <pre data-codesrc="/go/helloworld/main.go" data-codelinerange="26-26"></pre>
+  </div>
+  <div class="grid-item-2">
+    <p><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetWindowTitle">ebiten.SetWindowTitle</a></code> ではウィンドウのタイトルを設定します。</p>
+  </div>
+  <div class="grid-item-2">
+    <pre data-codesrc="/go/helloworld/main.go" data-codelinerange="27-30"></pre>
+  </div>
+  <div class="grid-item-2">
+    <p><code><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGame">ebiten.RunGame</a></code> は Ebitengine のゲームのメインループを実行する関数です。引数は <code>Game</code> オブジェクトで、これは <code>ebiten.Game</code> を実装したものです。<code>ebiten.RunGame</code> はエラーが起きた際に nil 以外のエラー値を返します。このプログラムでは、nil 以外のエラーが返されると致命的なエラーとしてログに記録します。</p>
+  </div>
+</div>
