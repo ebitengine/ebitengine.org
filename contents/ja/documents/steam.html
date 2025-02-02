@@ -1,6 +1,6 @@
 <h1>Steam</h1>
 <h2>概要</h2>
-<p>このドキュメントでは、 Ebitengine ゲームを Steam に対応させるために必要な手順を説明します。 Steam でゲームをリリースするためには審査が必要です。審査を通すためには、単に Ebitengine ゲームを Go でビルドするだけではありません。様々な作業が必要になります。この記事では Ebiten ゲームを審査に通すために必要な事項をまとめます。 Steamworks の一般的な解説は省きます。</p>
+<p>このドキュメントでは、 Ebitengine ゲームを Steam に対応させるために必要な手順を説明します。 Steam でゲームをリリースするためには審査が必要です。審査を通すためには、単に Ebitengine ゲームを Go でビルドするだけではありません。様々な作業が必要になります。この記事では Ebitengine ゲームを審査に通すために必要な事項をまとめます。 Steamworks の一般的な解説は省きます。</p>
 <p>以下の説明では、ゲーム名を <code>yourgame</code>、ユーザー名を <code>Your Name</code> などにしています。適宜読み替えてください。</p>
 <h2>Steamworks SDK</h2>
 <p>Steam の機能にはユーザーの言語取得や実績解除などがあります。それらは <a href="https://partner.steamgames.com/doc/sdk">Steamworks SDK</a> 経由で呼び出されます。 SDK のファイル形式は DLL や so ファイルなどの動的ライブラリなので、 Go から使うためには一工夫必要です。</p>

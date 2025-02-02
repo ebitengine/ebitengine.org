@@ -1,6 +1,6 @@
 <h1>Steam</h1>
 <h2>Overview</h2>
-<p>This document explains the steps necessary to support an Ebitengine game on Steam. In order to release a game on Steam, it must undergo an approval process. To pass this review, simply building an Ebitengine game with Go is not enough. A variety of tasks are required. This article summarizes the items necessary to get an Ebiten game approved. A general explanation of Steamworks is omitted.</p>
+<p>This document explains the steps necessary to support an Ebitengine game on Steam. In order to release a game on Steam, it must undergo an approval process. To pass this review, simply building an Ebitengine game with Go is not enough. A variety of tasks are required. This article summarizes the items necessary to get an Ebitengine game approved. A general explanation of Steamworks is omitted.</p>
 <p>In the following explanation, the game name is <code>yourgame</code> and the user name is <code>Your Name</code>, etc. Please adjust these as appropriate.</p>
 <h2>Steamworks SDK</h2>
 <p>Steam features include retrieving the user's language, unlocking achievements, and more. These features are accessed via the <a href="https://partner.steamgames.com/doc/sdk">Steamworks SDK</a>. Since the SDK's files are in the form of dynamic libraries (such as DLLs or .so files), some extra work is needed to use them from Go.</p>
