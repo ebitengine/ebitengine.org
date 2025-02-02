@@ -39,7 +39,7 @@ Remove-Item Env:GOARCH</code></pre>
 <h2>macOS</h2>
 <p>macOS の場合は <code>.app</code> 形式のアプリケーションを作る必要があります。また Apple から<a href="https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution">公証 (Notarization)</a> を受ける必要があります。公証を受けるためには <a href="https://developer.apple.com/">Apple Developer</a> の登録が必須です。</p>
 <p>本記事作成にあたって、ブログ記事「<a href="https://coldandold.com/posts/releasing-steam-game-on-mac/">Releasing Steam Games on Mac Is a Monster Pain</a>」を参考にしました。</p>
-<p>まずアイコンファイルを <code>icns</code> 形式で用意します。この形式は PNG などを <code>Preview.app</code> で開いてエクスポートするだけで作れます。エクスポートのフォーマット一覧に出てこない場合は、 Alt キーを押しながらフォーマット一覧を開くと出てきます。</p>
+<p>まずアイコンファイルを <code>icns</code> 形式で用意します。この形式は PNG などを <code>Preview.app</code> で開いてエクスポートするだけで作れます。エクスポートのフォーマット一覧に出てこない場合は、 Option キーを押しながらフォーマット一覧を開くと出てきます。</p>
 <p>次に必要最小限の <code>.app</code> を次のように作ります。アーキテクチャとして、 amd64 (Intel) と arm64 (ARM) のユニバーサルバイナリを <code>lipo</code> コマンドで作成します。</p>
 <pre><code>name=yourgame
 app_name=YourGame.app

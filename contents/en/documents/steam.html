@@ -39,7 +39,7 @@ Remove-Item Env:GOARCH</code></pre>
 <h2>macOS</h2>
 <p>On macOS, you need to create an application in the <code>.app</code> format. In addition, you must obtain notarization from Apple (<a href="https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution">Notarization</a>). To receive notarization, you must be registered with <a href="https://developer.apple.com/">Apple Developer</a>.</p>
 <p>In writing this article, I referred to the blog post “<a href="https://coldandold.com/posts/releasing-steam-game-on-mac/">Releasing Steam Games on Mac Is a Monster Pain</a>”.</p>
-<p>First, prepare an icon file in the <code>icns</code> format. This format can be created simply by opening a PNG or similar in <code>Preview.app</code> and exporting it. If it does not appear in the export format list, hold down the Alt key while opening the list.</p>
+<p>First, prepare an icon file in the <code>icns</code> format. This format can be created simply by opening a PNG or similar in <code>Preview.app</code> and exporting it. If it does not appear in the export format list, hold down the Option key while opening the list.</p>
 <p>Next, create the minimal <code>.app</code> as follows. For the architecture, create a universal binary for amd64 (Intel) and arm64 (ARM) using the <code>lipo</code> command.</p>
 <pre><code>name=yourgame
 app_name=YourGame.app
