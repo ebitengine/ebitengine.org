@@ -27,14 +27,13 @@ func init() {
 <p>Please note that this binding has not yet implemented most of the API. More features are planned for future updates.</p>
 <h2>Windows</h2>
 <p>Windows is the simplest case, where you just build with Go normally. Since Ebitengine is Pure Go on Windows, you can build it anywhere by specifying <code>GOOS</code> and <code>GOARCH</code>.</p>
-<p>There have been reports of an issue where Go applications freeze when running in the Windows Steam environment (<a href="https://github.com/hajimehoshi/ebiten/issues/3181">#3181</a>, <a href="https://github.com/golang/go/issues/71242">golang/go#71242</a>). As a workaround, please specify <code>-ldflags="-X=runtime.godebugDefault=asyncpreemptoff=1"</code> when executing <code>go build</code>.</p>
+<p>There have been reports of an issue where Go applications freeze when running in the Windows Steam environment (<a href="https://github.com/hajimehoshi/ebiten/issues/3181">#3181</a>, <a href="https://github.com/golang/go/issues/71242">golang/go#71242</a>). As a workaround, please specify <code>-ldflags="-X=runtime.godebugDefault=asyncpreemptoff=1"</code> when executing <code>go build</code>. Additionally, in the steps below, the <code>-H=windowsgui</code> flag is added to prevent the console from opening at startup.</p>
 <p>When building with PowerShell, it looks like this:</p>
 <pre><code>$Env:GOARCH = 'amd64'
-go build -o yourgame_windows_amd64.exe -ldflags="-X=runtime.godebugDefault=asyncpreemptoff=1" .
+go build -o yourgame_windows_amd64.exe -ldflags="-X=runtime.godebugDefault=asyncpreemptoff=1 -H=windowsgui" .
 Remove-Item Env:GOARCH</code></pre>
 <p>When building in a POSIX shell, it looks like this:</p>
-<pre><code>env GOOS=windows GOARCH=amd64 go build -o yourgame_windows_amd64.exe -ldflags="-X=runtime.godebugDefault=asyncpreemptoff=1" .</code></pre>
-<p>When building a GUI application for Windows, if you add <code>-ldflags=-H=windowsgui</code>, the initial console window will not appear. Although Ebitengine automatically closes the console, adding this flag will provide a better user experience.</p>
+<pre><code>env GOOS=windows GOARCH=amd64 go build -o yourgame_windows_amd64.exe -ldflags="-X=runtime.godebugDefault=asyncpreemptoff=1 -H=windowsgui" .</code></pre>
 <p>Icons are not mandatory. If you wish, use a resource embedding tool as appropriate. During game execution, you can change the icon displayed in the taskbar by calling <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetWindowIcon"><code>ebiten.SetWindowIcon</code></a>.</p>
 <p>Once the <code>exe</code> file is created in this manner, compress it into a zip file and upload it to Steamworks as a build.</p>
 <h2>macOS</h2>
