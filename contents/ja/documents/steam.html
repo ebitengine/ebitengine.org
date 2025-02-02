@@ -1,0 +1,157 @@
+<h1>Steam</h1>
+<h2>概要</h2>
+<p>このドキュメントでは、 Ebitengine ゲームを Steam に対応させるために必要な手順を説明します。 Steam でゲームをリリースするためには審査が必要です。審査を通すためには、単に Ebitengine ゲームを Go でビルドするだけではありません。様々な作業が必要になります。この記事では Ebiten ゲームを審査に通すために必要な事項をまとめます。 Steamworks の一般的な解説は省きます。</p>
+<p>以下の説明では、ゲーム名を <code>yourgame</code>、ユーザー名を <code>Your Name</code> などにしています。適宜読み替えてください。</p>
+<h2>Steamworks SDK</h2>
+<p>Steam の機能にはユーザーの言語取得や実績解除などがあります。それらは <a href="https://partner.steamgames.com/doc/sdk">Steamworks SDK</a> 経由で呼び出されます。 SDK のファイル形式は DLL や so ファイルなどの動的ライブラリなので、 Go から使うためには一工夫必要です。</p>
+<p>そこで、 <a href="https://github.com/hajimehoshi/go-steamworks"><code>go-steamworks</code></a> というバインディングを作りました。 import するだけで使えます。ただし、 Windows の場合は Steamworks の DLL を別途ダウンロードして同梱する必要があります。</p>
+<p>例えば、「Steam クライアント経由で開いていなかったら開き直す」処理は次のように書けます。</p>
+<pre><code>package main
+
+import (
+	"os"
+
+	"github.com/hajimehoshi/go-steamworks"
+)
+
+const appID = 480 // Use your application ID.
+
+func init() {
+	if steamworks.RestartAppIfNecessary(appID) {
+		os.Exit(1)
+	}
+	if !steamworks.Init() {
+		panic("steamworks.Init failed")
+	}
+}</code></pre>
+<p>なおこのバインディングはまだ API をほとんど実装していません。今後対応予定です。</p>
+<h2>Windows</h2>
+<p>Windows は最も簡単で、普通に Go でビルドするだけです。 Ebitengine は Windows においては Pure Go なので、 <code>GOOS</code> と <code>GOARCH</code> を指定すればどこでもビルドできます。</p>
+<p>Go アプリケーションを Windows Steam 環境で動かすときに、フリーズすることがある問題が報告されています (<a href="https://github.com/hajimehoshi/ebiten/issues/3181">#3181</a>、 <a href="https://github.com/golang/go/issues/71242">golang/go#71242</a>)。ワークアラウンドとして、 <code>go build</code> を実行する際に <code>-ldflags="-X=runtime.godebugDefault=asyncpreemptoff=1"</code> を指定してください。</p>
+<p>PowerShell でビルドする場合は次のようになります。</p>
+<pre><code>$Env:GOARCH = 'amd64'
+go build -o yourgame_windows_amd64.exe -ldflags="-X=runtime.godebugDefault=asyncpreemptoff=1" .
+Remove-Item Env:GOARCH</code></pre>
+<p>POSIX シェルでビルドする場合は次のようになります。</p>
+<pre><code>env GOOS=windows GOARCH=amd64 go build -o yourgame_windows_amd64.exe -ldflags="-X=runtime.godebugDefault=asyncpreemptoff=1" .</code></pre>
+<p>Windows 向け GUI アプリをビルドする際には <code>-ldflags=-H=windowsgui</code> をつけると、最初のコンソールの表示がなくなります。 Ebitengine の場合はコンソールを自動で閉じるので、つけなくても問題はありませんが、つけたほうがユーザー体験は良いでしょう。</p>
+<p>アイコンは必須ではありません。気になる方はリソースを埋め込むツールを適宜使ってください。ゲーム実行中に <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetWindowIcon"><code>ebiten.SetWindowIcon</code></a> を呼ぶことで、タスクバーに表示されるアイコンを変更することはできます。</p>
+<p>こうして出来上がった <code>exe</code> ファイルを zip で固めて、 Steamworks にビルドとしてアップロードしてください。</p>
+<h2>macOS</h2>
+<p>macOS の場合は <code>.app</code> 形式のアプリケーションを作る必要があります。また Apple から<a href="https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution">公証 (Notarization)</a> を受ける必要があります。公証を受けるためには <a href="https://developer.apple.com/">Apple Developer</a> の登録が必須です。</p>
+<p>本記事作成にあたって、ブログ記事「<a href="https://coldandold.com/posts/releasing-steam-game-on-mac/">Releasing Steam Games on Mac Is a Monster Pain</a>」を参考にしました。</p>
+<p>まずアイコンファイルを <code>icns</code> 形式で用意します。この形式は PNG などを <code>Preview.app</code> で開いてエクスポートするだけで作れます。エクスポートのフォーマット一覧に出てこない場合は、 Alt キーを押しながらフォーマット一覧を開くと出てきます。</p>
+<p>次に必要最小限の <code>.app</code> を次のように作ります。アーキテクチャとして、 amd64 (Intel) と arm64 (ARM) のユニバーサルバイナリを <code>lipo</code> コマンドで作成します。</p>
+<pre><code>name=yourgame
+app_name=YourGame.app
+bundle_id=com.example.yourgame
+
+rm -rf ${app_name}
+mkdir -p ${app_name}/Contents/MacOS
+mkdir -p ${app_name}/Contents/Resources
+env CGO_ENABLED=1 CGO_CFLAGS=-mmacosx-version-min=10.12 CGO_LDFLAGS=-mmacosx-version-min=10.12 GOARCH=amd64 go build -o ${name}_amd64 .
+env CGO_ENABLED=1 CGO_CFLAGS=-mmacosx-version-min=10.12 CGO_LDFLAGS=-mmacosx-version-min=10.12 GOARCH=arm64 go build -o ${name}_arm64 .
+lipo ${name}_amd64 ${name}_arm64 -create -output ${app_name}/Contents/MacOS/${name}
+rm ${name}_amd64
+rm ${name}_arm64
+cp icon.icns ${app_name}/Contents/Resources/icon.icns
+echo '&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+  &lt;dict&gt;
+    &lt;key&gt;CFBundlePackageType&lt;/key&gt;
+    &lt;string&gt;APPL&lt;/string&gt;
+    &lt;key&gt;CFBundleInfoDictionaryVersion&lt;/key&gt;
+    &lt;string&gt;6.0&lt;/string&gt;
+    &lt;key&gt;CFBundleExecutable&lt;/key&gt;
+    &lt;string&gt;{{.Name}}&lt;/string&gt;
+    &lt;key&gt;CFBundleIdentifier&lt;/key&gt;
+    &lt;string&gt;{{.BundleID}}&lt;/string&gt;
+    &lt;key&gt;CFBundleIconFile&lt;/key&gt;
+    &lt;string&gt;icon.icns&lt;/string&gt;
+    &lt;key&gt;CFBundleVersion&lt;/key&gt;
+    &lt;string&gt;0.0.0&lt;/string&gt;
+    &lt;key&gt;CFBundleShortVersionString&lt;/key&gt;
+    &lt;string&gt;0.0.0&lt;/string&gt;
+    &lt;key&gt;NSHighResolutionCapable&lt;/key&gt;
+    &lt;true /&gt;
+    &lt;key&gt;LSMinimumSystemVersion&lt;/key&gt;
+    &lt;string&gt;10.12.0&lt;/string&gt;
+  &lt;/dict&gt;
+&lt;/plist&gt;' |
+    sed -e "s/{{.Name}}/${name}/g" |
+    sed -e "s/{{.BundleID}}/${bundle_id}/g" &gt; ${app_name}/Contents/Info.plist</code></pre>
+<p>次に App ID (Bundle ID) を、 <a href="https://developer.apple.com/account/">Apple Developer の Account ページ</a>で、ない場合は作成します。</p>
+<figure>
+  <p class="img"><img src="/images/documents/steam/app_id.png"></p>
+</figure>
+<p>次に Developer ID (Developer ID Application) の Certificate を、 <a href="https://developer.apple.com/account/">Apple Developer の Account ページ</a>で、ない場合は作成します。</p>
+<figure>
+  <p class="img"><img src="/images/documents/steam/developer_id_application.png"></p>
+</figure>
+<p>次に App-Specific Password を作ります。 <a href="https://appleid.apple.com/">Apple ID のサイト</a>から簡単に作れます。詳しくは <a href="https://support.apple.com/en-us/HT204397">Apple のヘルプページ</a>を参考にしてください。</p>
+<p>次に公証を受けます。 stapler までの公証の手順を行うライブラリ <a href="https://github.com/hajimehoshi/notarize"><code>notarize</code></a> を作成いたしました。ご参照ください。以下が使用例です。</p>
+<pre><code>package main
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/hajimehoshi/notarize"
+)
+
+func main() {
+	appPassword := os.Getenv("APP_PASSWORD")
+	if appPassword == "" {
+		fmt.Fprintln(os.Stderr, "an environment variable APP_PASSWORD must be set. see https://support.apple.com/en-us/HT204397")
+		os.Exit(1)
+	}
+
+	op := &notarize.NotarizeOptions{
+		AppleID:         "yourname@yourgame.example.com",
+		SigningIdentity: "Developer ID Application: Your Name (YOURTEAMID)",
+		TeamID:          "YOURTEAMID",
+		AppPassword:     appPassword,
+		ProgressOutput:  os.Stdout,
+	}
+	if err := notarize.Notarize("YourGame.app", op); err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		os.Exit(1)
+	}
+}</code></pre>
+<p>こうして出来上がった <code>.app</code> を Steamworks にビルドとしてアップロードする際、 <code>zip</code> コマンドや Finder のメニューで zip ファイルを作ってはいけません。公証を受けた <code>.app</code> には特殊なファイルをが含まれていて、普通に zip を作ろうとするとそのファイルが欠落してしまいます。代わりに <code>ditto</code> コマンドを使って zip ファイルを作ります。</p>
+<pre><code>ditto -c -k --keepParent YourGame.app yourgame_darwin_amd64.zip</code></pre>
+<h2>Linux</h2>
+<p>Linux の場合は <a href="https://github.com/ValveSoftware/steam-runtime">Steam Runtime</a> が Dockerfile として用意されています。その環境下でビルドするのが最も簡単です。 2025 年 1 月現在の Docker イメージは <a href="https://repo.steampowered.com/steamrt-images-sniper/snapshots/">Sniper</a> をご参照ください。 32bit Linux には対応していないようです。</p>
+<pre><code>name=yourgame
+STEAM_RUNTIME_VERSION=3.0.20250108.112707
+GO_VERSION=$(go env GOVERSION)
+
+mkdir -p .cache/${STEAM_RUNTIME_VERSION}
+
+# Download binaries for amd64.
+if [[ ! -f .cache/${STEAM_RUNTIME_VERSION}/com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.Dockerfile ]]; then
+    (cd .cache/${STEAM_RUNTIME_VERSION}; curl --location --remote-name https://repo.steampowered.com/steamrt-images-sniper/snapshots/${STEAM_RUNTIME_VERSION}/com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.Dockerfile)
+fi
+if [[ ! -f .cache/${STEAM_RUNTIME_VERSION}/com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.tar.gz ]]; then
+    (cd .cache/${STEAM_RUNTIME_VERSION}; curl --location --remote-name https://repo.steampowered.com/steamrt-images-sniper/snapshots/${STEAM_RUNTIME_VERSION}/com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.tar.gz)
+fi
+if [[ ! -f .cache/${GO_VERSION}.linux-amd64.tar.gz ]]; then
+    (cd .cache; curl --location --remote-name https://golang.org/dl/${GO_VERSION}.linux-amd64.tar.gz)
+fi
+
+# Build for amd64
+(cd .cache/${STEAM_RUNTIME_VERSION}; docker build -f com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.Dockerfile -t steamrt_sniper_amd64:latest .)
+docker run --rm --workdir=/work --volume $(pwd):/work steamrt_sniper_amd64:latest /bin/sh -c "
+export PATH=\$PATH:/usr/local/go/bin
+export CGO_CFLAGS=-std=gnu99
+
+rm -rf /usr/local/go && tar -C /usr/local -xzf .cache/${GO_VERSION}.linux-amd64.tar.gz
+
+go build -o ${name}_linux_amd64 .
+"</code></pre>
+<p>出来上がった <code>yourgame_linux_amd64</code> をそれぞれ zip に固めて、 Steamworks にビルドとしてアップロードしてください。</p>
+<h2>その他</h2>
+<ul>
+  <li><a href="https://partner.steamgames.com/doc/store/testing">Dev Comp パッケージ</a>をダウンロードできるようにアカウントを設定することを強く推奨します。 Steam でゲームがダウンロードされる本来の箇所 (<code>steamapps/common/yourgame</code>) で実行ファイルを置き換えることで、本番に近いテストが行なえます。</li>
+</ul>

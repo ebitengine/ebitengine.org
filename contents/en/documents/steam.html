@@ -1,0 +1,157 @@
+<h1>Steam</h1>
+<h2>Overview</h2>
+<p>This document explains the steps necessary to support an Ebitengine game on Steam. In order to release a game on Steam, it must undergo an approval process. To pass this review, simply building an Ebitengine game with Go is not enough. A variety of tasks are required. This article summarizes the items necessary to get an Ebiten game approved. A general explanation of Steamworks is omitted.</p>
+<p>In the following explanation, the game name is <code>yourgame</code> and the user name is <code>Your Name</code>, etc. Please adjust these as appropriate.</p>
+<h2>Steamworks SDK</h2>
+<p>Steam features include retrieving the user's language, unlocking achievements, and more. These features are accessed via the <a href="https://partner.steamgames.com/doc/sdk">Steamworks SDK</a>. Since the SDK's files are in the form of dynamic libraries (such as DLLs or .so files), some extra work is needed to use them from Go.</p>
+<p>To address this, we have created a binding called <a href="https://github.com/hajimehoshi/go-steamworks"><code>go-steamworks</code></a>. You can use it simply by importing it. However, on Windows, you must separately download and include the Steamworks DLL.</p>
+<p>For example, the process of “restarting the application if it wasn’t opened via the Steam client” can be written as follows:</p>
+<pre><code>package main
+
+import (
+	"os"
+
+	"github.com/hajimehoshi/go-steamworks"
+)
+
+const appID = 480 // Use your application ID.
+
+func init() {
+	if steamworks.RestartAppIfNecessary(appID) {
+		os.Exit(1)
+	}
+	if !steamworks.Init() {
+		panic("steamworks.Init failed")
+	}
+}</code></pre>
+<p>Please note that this binding has not yet implemented most of the API. More features are planned for future updates.</p>
+<h2>Windows</h2>
+<p>Windows is the simplest case, where you just build with Go normally. Since Ebitengine is Pure Go on Windows, you can build it anywhere by specifying <code>GOOS</code> and <code>GOARCH</code>.</p>
+<p>There have been reports of an issue where Go applications freeze when running in the Windows Steam environment (<a href="https://github.com/hajimehoshi/ebiten/issues/3181">#3181</a>, <a href="https://github.com/golang/go/issues/71242">golang/go#71242</a>). As a workaround, please specify <code>-ldflags="-X=runtime.godebugDefault=asyncpreemptoff=1"</code> when executing <code>go build</code>.</p>
+<p>When building with PowerShell, it looks like this:</p>
+<pre><code>$Env:GOARCH = 'amd64'
+go build -o yourgame_windows_amd64.exe -ldflags="-X=runtime.godebugDefault=asyncpreemptoff=1" .
+Remove-Item Env:GOARCH</code></pre>
+<p>When building in a POSIX shell, it looks like this:</p>
+<pre><code>env GOOS=windows GOARCH=amd64 go build -o yourgame_windows_amd64.exe -ldflags="-X=runtime.godebugDefault=asyncpreemptoff=1" .</code></pre>
+<p>When building a GUI application for Windows, if you add <code>-ldflags=-H=windowsgui</code>, the initial console window will not appear. Although Ebitengine automatically closes the console, adding this flag will provide a better user experience.</p>
+<p>Icons are not mandatory. If you wish, use a resource embedding tool as appropriate. During game execution, you can change the icon displayed in the taskbar by calling <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetWindowIcon"><code>ebiten.SetWindowIcon</code></a>.</p>
+<p>Once the <code>exe</code> file is created in this manner, compress it into a zip file and upload it to Steamworks as a build.</p>
+<h2>macOS</h2>
+<p>On macOS, you need to create an application in the <code>.app</code> format. In addition, you must obtain notarization from Apple (<a href="https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution">Notarization</a>). To receive notarization, you must be registered with <a href="https://developer.apple.com/">Apple Developer</a>.</p>
+<p>In writing this article, I referred to the blog post “<a href="https://coldandold.com/posts/releasing-steam-game-on-mac/">Releasing Steam Games on Mac Is a Monster Pain</a>”.</p>
+<p>First, prepare an icon file in the <code>icns</code> format. This format can be created simply by opening a PNG or similar in <code>Preview.app</code> and exporting it. If it does not appear in the export format list, hold down the Alt key while opening the list.</p>
+<p>Next, create the minimal <code>.app</code> as follows. For the architecture, create a universal binary for amd64 (Intel) and arm64 (ARM) using the <code>lipo</code> command.</p>
+<pre><code>name=yourgame
+app_name=YourGame.app
+bundle_id=com.example.yourgame
+
+rm -rf ${app_name}
+mkdir -p ${app_name}/Contents/MacOS
+mkdir -p ${app_name}/Contents/Resources
+env CGO_ENABLED=1 CGO_CFLAGS=-mmacosx-version-min=10.12 CGO_LDFLAGS=-mmacosx-version-min=10.12 GOARCH=amd64 go build -o ${name}_amd64 .
+env CGO_ENABLED=1 CGO_CFLAGS=-mmacosx-version-min=10.12 CGO_LDFLAGS=-mmacosx-version-min=10.12 GOARCH=arm64 go build -o ${name}_arm64 .
+lipo ${name}_amd64 ${name}_arm64 -create -output ${app_name}/Contents/MacOS/${name}
+rm ${name}_amd64
+rm ${name}_arm64
+cp icon.icns ${app_name}/Contents/Resources/icon.icns
+echo '&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+  &lt;dict&gt;
+    &lt;key&gt;CFBundlePackageType&lt;/key&gt;
+    &lt;string&gt;APPL&lt;/string&gt;
+    &lt;key&gt;CFBundleInfoDictionaryVersion&lt;/key&gt;
+    &lt;string&gt;6.0&lt;/string&gt;
+    &lt;key&gt;CFBundleExecutable&lt;/key&gt;
+    &lt;string&gt;{{.Name}}&lt;/string&gt;
+    &lt;key&gt;CFBundleIdentifier&lt;/key&gt;
+    &lt;string&gt;{{.BundleID}}&lt;/string&gt;
+    &lt;key&gt;CFBundleIconFile&lt;/key&gt;
+    &lt;string&gt;icon.icns&lt;/string&gt;
+    &lt;key&gt;CFBundleVersion&lt;/key&gt;
+    &lt;string&gt;0.0.0&lt;/string&gt;
+    &lt;key&gt;CFBundleShortVersionString&lt;/key&gt;
+    &lt;string&gt;0.0.0&lt;/string&gt;
+    &lt;key&gt;NSHighResolutionCapable&lt;/key&gt;
+    &lt;true /&gt;
+    &lt;key&gt;LSMinimumSystemVersion&lt;/key&gt;
+    &lt;string&gt;10.12.0&lt;/string&gt;
+  &lt;/dict&gt;
+&lt;/plist&gt;' |
+    sed -e "s/{{.Name}}/${name}/g" |
+    sed -e "s/{{.BundleID}}/${bundle_id}/g" &gt; ${app_name}/Contents/Info.plist</code></pre>
+<p>Next, create an App ID (Bundle ID) on the <a href="https://developer.apple.com/account/">Apple Developer Account page</a> if one does not already exist.</p>
+<figure>
+  <p class="img"><img src="/images/documents/steam/app_id.png" alt="App ID"></p>
+</figure>
+<p>Then, create a Developer ID (Developer ID Application) Certificate on the <a href="https://developer.apple.com/account/">Apple Developer Account page</a> if you don’t already have one.</p>
+<figure>
+  <p class="img"><img src="/images/documents/steam/developer_id_application.png" alt="Developer ID Application"></p>
+</figure>
+<p>Next, create an App-Specific Password. This can be easily created from the <a href="https://appleid.apple.com/">Apple ID website</a>. For details, please refer to <a href="https://support.apple.com/en-us/HT204397">Apple’s support page</a>.</p>
+<p>Now, notarize the app. We have created a library called <a href="https://github.com/hajimehoshi/notarize"><code>notarize</code></a> that handles the steps up to stapler for notarization. Please refer to it. Below is an example of its usage.</p>
+<pre><code>package main
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/hajimehoshi/notarize"
+)
+
+func main() {
+	appPassword := os.Getenv("APP_PASSWORD")
+	if appPassword == "" {
+		fmt.Fprintln(os.Stderr, "an environment variable APP_PASSWORD must be set. see https://support.apple.com/en-us/HT204397")
+		os.Exit(1)
+	}
+
+	op := &notarize.NotarizeOptions{
+		AppleID:         "yourname@yourgame.example.com",
+		SigningIdentity: "Developer ID Application: Your Name (YOURTEAMID)",
+		TeamID:          "YOURTEAMID",
+		AppPassword:     appPassword,
+		ProgressOutput:  os.Stdout,
+	}
+	if err := notarize.Notarize("YourGame.app", op); err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		os.Exit(1)
+	}
+}</code></pre>
+<p>When uploading the resulting <code>.app</code> to Steamworks as a build, do not create a zip file using the <code>zip</code> command or Finder’s menu. The notarized <code>.app</code> contains special files that will be lost if you create a zip in the normal way. Instead, use the <code>ditto</code> command to create the zip file.</p>
+<pre><code>ditto -c -k --keepParent YourGame.app yourgame_darwin_amd64.zip</code></pre>
+<h2>Linux</h2>
+<p>For Linux, Valve’s <a href="https://github.com/ValveSoftware/steam-runtime">Steam Runtime</a> is provided as a Dockerfile. Building in that environment is the simplest approach. As of January 2025, please refer to the <a href="https://repo.steampowered.com/steamrt-images-sniper/snapshots/">Sniper</a> Docker image. Note that 32-bit Linux does not appear to be supported.</p>
+<pre><code>name=yourgame
+STEAM_RUNTIME_VERSION=3.0.20250108.112707
+GO_VERSION=$(go env GOVERSION)
+
+mkdir -p .cache/${STEAM_RUNTIME_VERSION}
+
+# Download binaries for amd64.
+if [[ ! -f .cache/${STEAM_RUNTIME_VERSION}/com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.Dockerfile ]]; then
+    (cd .cache/${STEAM_RUNTIME_VERSION}; curl --location --remote-name https://repo.steampowered.com/steamrt-images-sniper/snapshots/${STEAM_RUNTIME_VERSION}/com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.Dockerfile)
+fi
+if [[ ! -f .cache/${STEAM_RUNTIME_VERSION}/com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.tar.gz ]]; then
+    (cd .cache/${STEAM_RUNTIME_VERSION}; curl --location --remote-name https://repo.steampowered.com/steamrt-images-sniper/snapshots/${STEAM_RUNTIME_VERSION}/com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.tar.gz)
+fi
+if [[ ! -f .cache/${GO_VERSION}.linux-amd64.tar.gz ]]; then
+    (cd .cache; curl --location --remote-name https://golang.org/dl/${GO_VERSION}.linux-amd64.tar.gz)
+fi
+
+# Build for amd64
+(cd .cache/${STEAM_RUNTIME_VERSION}; docker build -f com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.Dockerfile -t steamrt_sniper_amd64:latest .)
+docker run --rm --workdir=/work --volume $(pwd):/work steamrt_sniper_amd64:latest /bin/sh -c "
+export PATH=\$PATH:/usr/local/go/bin
+export CGO_CFLAGS=-std=gnu99
+
+rm -rf /usr/local/go && tar -C /usr/local -xzf .cache/${GO_VERSION}.linux-amd64.tar.gz
+
+go build -o ${name}_linux_amd64 .
+"</code></pre>
+<p>Compress the resulting <code>yourgame_linux_amd64</code> into a zip file and upload it to Steamworks as a build.</p>
+<h2>Others</h2>
+<ul>
+  <li>It is strongly recommended to configure your account to allow the download of the <a href="https://partner.steamgames.com/doc/store/testing">Dev Comp package</a>. By replacing the executable in the original location where Steam downloads the game (<code>steamapps/common/yourgame</code>), you can perform tests that are close to the production environment.</li>
+</ul>
