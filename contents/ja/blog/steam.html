@@ -1,6 +1,6 @@
 <h1>Steam に Ebiten ゲームをリリースする方法</h1>
 <p class="meta">Hajime Hoshi<br><span id="meta-created">2021-08-29</span></p>
-<p>EDIT (2025-02-02): 最新版は <a href="/ja/documents/steam.html">Steam ドキュメント</a>にて更新しています。</p>
+<p><em>EDIT (2025-02-02):</em> 最新版は <a href="/ja/documents/steam.html">Steam ドキュメント</a>にて更新しています。</p>
 <p>先日、 Ebiten 製ゲーム「<a href="https://store.steampowered.com/app/1710390/__2007/">いの べーしょん 2007!</a>」を Steam ストアでリリースすることに成功しました。無料ゲームです。 Windows、 macOS、 Linux の全プラットフォームに対応させました。なおソースコードは <a href="https://github.com/hajimehoshi/go-inovation">GitHub</a> にて公開されています。</p>
 <figure>
   <p class="img"><img src="/images/blog/steam/innovation2007.png"></p>
@@ -48,7 +48,7 @@ env GOOS=windows GOARCH=amd64 go build -o yourgame_windows_amd64.exe .</code></p
 <h2>macOS</h2>
 <p>macOS の場合は <code>.app</code> 形式のアプリケーションを作る必要があります。また Apple から<a href="https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution">公証 (Notarization)</a> を受ける必要があります。公証は、 Steam 審査のためには厳密には必須ではないらしいのですが、ないと新しめ (10.15 以降?) の macOS では動かなくなるので、ほぼ必須といってよいでしょう。公証を受けるためには <a href="https://developer.apple.com/">Apple Developer</a> の登録が必須です。</p>
 <p>本記事作成にあたって、ブログ記事 <a href="https://coldandold.com/posts/releasing-steam-game-on-mac/">Releasing Steam Games on Mac Is a Monster Pain</a> を参考にしました。</p>
-<p>アーキテクチャは amd64 を前提とします。残念ながら、 Steamworks SDK が M1 (arm64) にまだ対応していないようです。 (EDIT 2022-05-07: 最新の Steamworks SDK は M1 (arm64) をサポートしています。)</p>
+<p>アーキテクチャは amd64 を前提とします。残念ながら、 Steamworks SDK が M1 (arm64) にまだ対応していないようです。 (<em>EDIT 2022-05-07:</em> 最新の Steamworks SDK は M1 (arm64) をサポートしています。)</p>
 <p>まずアイコンファイルを <code>icns</code> 形式で用意します。この形式は PNG などを <code>Preview.app</code> で開いてエクスポートするだけで作れます。エクスポートのフォーマット一覧に出てこない場合は、 Alt キーを押しながらフォーマット一覧を開くと出てきます。</p>
 <p>次に必要最小限の <code>.app</code> を次のように作ります。</p>
 <pre><code>name=yourgame
