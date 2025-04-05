@@ -1,0 +1,81 @@
+<h1>DebugUI v0.1.0 がリリースされました</h1>
+<p class="meta">Hajime Hoshi<br><span id="meta-created">2025-04-05</span></p>
+<p><a href="https://github.com/ebitengine/debugui">DebugUI</a> は、Ebitengine のデバッグ用 UI ライブラリです。ゲームを開発していると、デバッグ用の UI が必要になることがあります。例えば、 FPS や TPS を表示したり、ゲーム内パラメータを動的に変更したりなどです。そのためにクリックの処理やキーボードの処理を書いたり、 UI 描画のコードを書いたりするのは面倒ですね。 DebugUI は簡単に使えるデバッグ用 UI を提供します。</p>
+<p>DebugUI を使用すると、パラメータが多量にある操作もスッキリと取り扱うことができます。</p>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <figure>
+      <p class="img"><img src="/images/blog/debugui/before.png" width="360" alt="DebugUI 使用前"></p>
+      <figcaption>DebugUI 使用前</figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-2">
+    <figure>
+      <p class="img"><img src="/images/blog/debugui/after.png" width="360" alt="DebugUI 使用後" id="meta-share"></p>
+      <figcaption>DebugUI 使用後</figcaption>
+    </figure>
+  </div>
+</div>
+<p>DebugUI は Immediate Mode な API です。例えば 1 個のウィンドウと 1 個のボタンを表示するコードは次のようになります。</p>
+<pre><code>package main
+
+import (
+	"fmt"
+	"image"
+	"os"
+
+	"github.com/ebitengine/debugui"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+)
+
+type Game struct {
+	debugui debugui.DebugUI
+
+	count int
+}
+
+func (g *Game) Update() error {
+	if _, err := g.debugui.Update(func(ctx *debugui.Context) error {
+		ctx.Window("Test", image.Rect(60, 60, 160, 120), func(layout debugui.ContainerLayout) {
+			ctx.Button("Button").On(func() {
+				g.count++
+			})
+		})
+		return nil
+	}); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (g *Game) Draw(screen *ebiten.Image) {
+	g.debugui.Draw(screen)
+	ebitenutil.DebugPrint(screen, fmt.Sprintf("Count: %d", g.count))
+}
+
+func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
+	return outsideWidth, outsideHeight
+}
+
+func main() {
+	if err := ebiten.RunGame(&Game{}); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}</code></pre>
+<p>これを実行すると次のような画面になります。</p>
+<figure>
+  <p class="img"><img src="/images/blog/debugui/simple.png" width="552" alt="ボタン 1 つの DebugUI 使用例"></p>
+  <figcaption>ボタン 1 つの DebugUI 使用例</figcaption>
+</figure>
+<p>ポイントは次のとおりです。</p>
+<ul>
+  <li><code>debugui.DebugUI</code> は、明示的な初期化が不要で、いきなり使用できます。</li>
+  <li>ゲームの <code>Update</code> と <code>Draw</code> で、 <code>DebugUI</code> の <code>Update</code> と <code>Draw</code> をそれぞれ呼びます。</li>
+  <li><code>DebugUI</code> は Immediate Mode な API です。 <code>DebugUI</code> の <code>Update</code> に渡した関数はゲームの <code>Update</code> ごとに実行されます。 UI を構成するウィジェット、例えばウィンドウやボタンなどは、毎回 <code>Window</code> や <code>Button</code> 関数の評価によって「作り直し」になります。ウィジェットは毎回作り直しにはなるものの、基本的に「コード上の同じ箇所の関数呼び出しによって作られたウィジェットは同じもの」であるとみなされ、状態管理されます。</li>
+  <li>ボタンを押した後に実行される関数は <code>Buton</code> 関数の戻り値の <code>On</code> メソッドで指定します。ここで指定した関数は、ボタンが押されたときのみ評価されます。</li>
+  <li>ウィンドウはドラッグで場所移動できたり、右下をドラッグしてサイズを変えられたりします。先ほど説明したとおり、ウィンドウは <code>Window</code> 関数で毎回作られますが、この状態はちゃんと保持されます。</li>
+</ul>
+<p>もう少し複雑な例は、 <a href="https://github.com/hajimehoshi/ebiten/tree/main/examples/windowsize">Ebitengine のサンプル</a>や <a href="https://github.com/ebitengine/debugui/tree/main/example">DebugUI のサンプル</a>などをご覧ください。</p>
+<p>DebugUI はまだバージョン 0 なので、 API の破壊的変更が将来行われる可能性があります。ご注意ください。</p>

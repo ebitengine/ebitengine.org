@@ -1,0 +1,81 @@
+<h1>DebugUI v0.1.0 Released</h1>
+<p class="meta">Hajime Hoshi<br><span id="meta-created">2025-04-05</span></p>
+<p><a href="https://github.com/ebitengine/debugui">DebugUI</a> is a debugging UI library for Ebitengine. When developing games, you may sometimes need a debugging UI—for example, to display FPS or TPS, or to dynamically change in-game parameters. Writing code for mouse clicks, keyboard handling, and UI rendering for these tasks can be a hassle. DebugUI provides an easy-to-use debugging UI.</p>
+<p>With DebugUI, you can handle complex parameter adjustments in a clean and organized way.</p>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <figure>
+      <p class="img"><img src="/images/blog/debugui/before.png" width="360" alt="Before using DebugUI"></p>
+      <figcaption>Before using DebugUI</figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-2">
+    <figure>
+      <p class="img"><img src="/images/blog/debugui/after.png" width="360" alt="After using DebugUI" id="meta-share"></p>
+      <figcaption>After using DebugUI</figcaption>
+    </figure>
+  </div>
+</div>
+<p>DebugUI uses an Immediate Mode API. For example, the following code shows how to display a window with a single button:</p>
+<pre><code>package main
+
+import (
+	"fmt"
+	"image"
+	"os"
+
+	"github.com/ebitengine/debugui"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+)
+
+type Game struct {
+	debugui debugui.DebugUI
+
+	count int
+}
+
+func (g *Game) Update() error {
+	if _, err := g.debugui.Update(func(ctx *debugui.Context) error {
+		ctx.Window("Test", image.Rect(60, 60, 160, 120), func(layout debugui.ContainerLayout) {
+			ctx.Button("Button").On(func() {
+				g.count++
+			})
+		})
+		return nil
+	}); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (g *Game) Draw(screen *ebiten.Image) {
+	g.debugui.Draw(screen)
+	ebitenutil.DebugPrint(screen, fmt.Sprintf("Count: %d", g.count))
+}
+
+func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
+	return outsideWidth, outsideHeight
+}
+
+func main() {
+	if err := ebiten.RunGame(&Game{}); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}</code></pre>
+<p>This is what the screen looks like when you run it:</p>
+<figure>
+  <p class="img"><img src="/images/blog/debugui/simple.png" width="552" alt="Example of using DebugUI with a single button"></p>
+  <figcaption>Example of using DebugUI with a single button</figcaption>
+</figure>
+<p>Key points:</p>
+<ul>
+  <li><code>debugui.DebugUI</code> can be used immediately without explicit initialization.</li>
+  <li>In your game's <code>Update</code> and <code>Draw</code> functions, call <code>DebugUI</code>'s <code>Update</code> and <code>Draw</code> respectively.</li>
+  <li><code>DebugUI</code> uses an Immediate Mode API. The function you pass to <code>DebugUI</code>'s <code>Update</code> is executed on every game <code>Update</code>. Widgets that make up the UI—such as windows and buttons—are "recreated" each time by calling the <code>Window</code> or <code>Button</code> functions. While widgets are technically recreated every frame, they are considered the same widgets if they are created from the same location in your code, and their state is preserved.</li>
+  <li>The function to be executed when a button is pressed can be specified using the <code>On</code> method on the return value of the <code>Button</code> function. This function is only evaluated when the button is actually pressed.</li>
+  <li>Windows can be dragged to move them, and their size can be adjusted by dragging the bottom-right corner. As mentioned earlier, windows are recreated each frame via the <code>Window</code> function, but their state is still maintained properly.</li>
+</ul>
+<p>For more complex examples, see the <a href="https://github.com/hajimehoshi/ebiten/tree/main/examples/windowsize">Ebitengine samples</a> or the <a href="https://github.com/ebitengine/debugui/tree/main/example">DebugUI examples</a>.</p>
+<p>Note that DebugUI is still at version 0, so breaking changes to the API may occur in the future.</p>
