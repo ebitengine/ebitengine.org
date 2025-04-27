@@ -149,7 +149,7 @@ rm ${app_name}.zip</code></pre>
 <p>公証のログを見たい場合は、次のコマンドを実行してください。引数は適切な値に置き換えてください。コマンドを実行すると URL が表示され、それにアクセスすると現在の状況が見れます。失敗した場合は失敗理由も書いてあるはずです。</p>
 <pre><code>xcrun altool --notarization-info UUID --username YOUR_MAIL_ADDRESS --password APP_SPECIFIC_PASSWORD</code></pre>
 <p>こうして出来上がった <code>.app</code> を Steamworks にビルドとしてアップロードする際、 <code>zip</code> コマンドや Finder のメニューで zip ファイルを作ってはいけません。公証を受けた <code>.app</code> には特殊なファイルをが含まれていて、普通に zip を作ろうとするとそのファイルが欠落してしまいます。代わりに <code>ditto</code> コマンドを使って zip ファイルを作ります。</p>
-<pre><code>ditto -c -k --keepParent YourGame.app yourgame_darwin_amd64.zip</code></pre>
+<pre><code>ditto -c -k --keepParent YourGame.app yourgame_darwin.zip</code></pre>
 <h2>Linux</h2>
 <p>Linux の場合は <a href="https://github.com/ValveSoftware/steam-runtime">Steam Runtime</a> が Dockerfile として用意されています。その環境下でビルドするのが最も簡単です。</p>
 <p><em>EDIT (2024-07-08):</em> 下記の内容は一部古くなってしまっています。 2024 年 7 月現在の Docker イメージは <a href="https://repo.steampowered.com/steamrt-images-sniper/snapshots/">Sniper</a> をご参照ください。</p>

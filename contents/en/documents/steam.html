@@ -119,7 +119,7 @@ func main() {
 	}
 }</code></pre>
 <p>When uploading the resulting <code>.app</code> to Steamworks as a build, do not create a zip file using the <code>zip</code> command or Finder’s menu. The notarized <code>.app</code> contains special files that will be lost if you create a zip in the normal way. Instead, use the <code>ditto</code> command to create the zip file.</p>
-<pre><code>ditto -c -k --keepParent YourGame.app yourgame_darwin_amd64.zip</code></pre>
+<pre><code>ditto -c -k --keepParent YourGame.app yourgame_darwin.zip</code></pre>
 <h2>Linux</h2>
 <p>For Linux, Valve’s <a href="https://github.com/ValveSoftware/steam-runtime">Steam Runtime</a> is provided as a Dockerfile. Building in that environment is the simplest approach. As of January 2025, please refer to the <a href="https://repo.steampowered.com/steamrt-images-sniper/snapshots/">Sniper</a> Docker image. Note that 32-bit Linux does not appear to be supported.</p>
 <pre><code>name=yourgame
