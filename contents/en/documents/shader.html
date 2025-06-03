@@ -98,7 +98,7 @@
 <p><code>float</code> is a floating point number. Unlike Go's <code>float32</code> and <code>float64</code>, <code>float</code> doesn't have a guarantee for the precision.</p>
 <p><code>vec2</code>, <code>vec3</code>, <code>vec4</code>, called vectors, are tuples that has 2, 3, and 4 components respectively. Each component is <code>float</code>. Swizzling operation is available on vector values.</p>
 <p><code>ivec2</code>, <code>ivec3</code>, <code>ivec4</code> are also vectors and each component is <code>int</code>.</p>
-<p><code>mat2</code>, <code>mat3</code>, <code>mat4</code> are 2, 3 and 4 dimensional square matrices. Each component is <code>float</code>.</p>
+<p><code>mat2</code>, <code>mat3</code>, <code>mat4</code> are 2, 3 and 4 dimensional square matrices. Each component is <code>float</code>. Like GLSL, they use column-major order.</p>
 <p>Kage also supports arrays. Kage doesn't support structs yet.</p>
 <h3>Initializing functions for built-in types</h3>
 <p>Similar to Go, you can get the type's value by using the type name as a function. Vector types and matrix types are so special that they can take flexible arguments.</p>
