@@ -29,6 +29,8 @@ cp $goroot\lib\wasm\wasm_exec.js .
 
 # Go 1.23 and older
 cp $goroot\misc\wasm\wasm_exec.js .</code></pre>
+<p>If <code>wasm_exec.js</code> cannot be found, download the <code>wasm_exec.js</code> for the same version of Go you used to compile the game from <a href="https://go.googlesource.com/go">the official repository</a> or <a href="https://github.com/golang/go">the GitHub repository</a>. For example, if you used Go 1.24.5, the path to <code>wasm_exec.js</code> would be:</p>
+<pre><code>https://raw.githubusercontent.com/golang/go/refs/tags/go1.24.5/lib/wasm/wasm_exec.js</code></pre>
 <h3>Creating an HTML</h3>
 <p>Create this HTML:</p>
 <pre><code>&lt;!DOCTYPE html&gt;

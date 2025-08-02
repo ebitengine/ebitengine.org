@@ -29,6 +29,8 @@ cp $goroot\lib\wasm\wasm_exec.js .
 
 # Go 1.23 以前
 cp $goroot\misc\wasm\wasm_exec.js .</code></pre>
+<p>もし <code>wasm_exec.js</code> が見つからない場合は、<a href="https://go.googlesource.com/go">公式リポジトリ</a>や <a href="https://github.com/golang/go">GitHub リポジトリ</a>から、ゲームのコンパイルに使った Go と同じのバージョンの <code>wasm_exec.js</code> をダウンロードしてください。例えば Go 1.24.5 を使用した場合、 <code>wasm_exec.js</code> のパスは次のようになります:</p>
+<pre><code>https://raw.githubusercontent.com/golang/go/refs/tags/go1.24.5/lib/wasm/wasm_exec.js</code></pre>
 <h3>HTML の作成</h3>
 <p>次のような HTML を作成してください:</p>
 <pre><code>&lt;!DOCTYPE html&gt;
