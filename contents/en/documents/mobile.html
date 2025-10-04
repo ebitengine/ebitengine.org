@@ -83,12 +83,13 @@ public class MainActivity extends AppCompatActivity {
         // ...
     }
 }</code></pre>
-<p>If you want to use multiple <code>Activity</code> objects or <code>Intent</code>, please consider to make the <code>Activity</code> for Ebitengine <code>singleInstance</code>. It's because Ebitengine's state might be broken when recreating an activity. You can set this in your <code>AndroidManifest.xml</code> like the following. </p>
+<p>EDIT (2025-10-04): We used to recommend <code>singleInstance</code> for the launch mode in <code>AndroidManifest.xml</code>, but found <code>singleTop</code> is better especially for other components like banner ads. <code>singleTop</code> should be the default value, so you don't have to modify the XML file.</p>
+<!--p>If you want to use multiple <code>Activity</code> objects or <code>Intent</code>, please consider to make the <code>Activity</code> for Ebitengine <code>singleTop</code>. It's because Ebitengine's state might be broken when recreating an activity. You can set this in your <code>AndroidManifest.xml</code> like the following. </p>
 <pre><code>&lt;activity
   ...
-  android:launchMode="singleInstance"&gt;
+  android:launchMode="singleTop"&gt;
   ...
-&lt;/activity&gt;</code></pre>
+&lt;/activity&gt;</code></pre-->
 <h3>iOS</h3>
 <p>The minimum required iOS version is 13.0.</p>
 <p>Run <code>ebitenmobile bind</code> command for your package:</p>
