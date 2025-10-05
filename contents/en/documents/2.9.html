@@ -1,0 +1,140 @@
+<h1>Ebitengine 2.9 Release Notes</h1>
+<p><em>These release notes are a draft. v2.9.0 has not been released yet.</em></p>
+<h2>v2.9.0</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/124?closed=1">Issues for v2.8.0</a></p>
+<p>This release mainly adds minor features, bug fixes, and performance improvements.</p>
+<p>Starting from Ebitengine 2.9, Go 1.24 or later is required.</p>
+<h3>Improved Rendering Quality for Vector Graphics</h3>
+<p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/3124">#3124</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3278">#3278</a></p>
+<p>Previously, the <code>vector</code> package used functions such as <code>AppendVerticesAndIndicesForFilling</code> and <code>AppendVerticesAndIndicesForStroke</code> to decompose vector shapes into triangles, which were then rendered. This approach had the following issues:</p>
+<ul>
+  <li>Edges did not look clean. Ebitengine adopted a method of rendering vector graphics onto a large offscreen buffer and then scaling it down, but both efficiency and quality were unsatisfactory.</li>
+  <li>It was not possible to render semi-transparent colors.</li>
+  <li>The <code>Blend</code> option did not behave as expected.</li>
+</ul>
+<p>The new approach uses a special shader to create a custom stencil buffer, which is then used to fill with colors. This increases the number of samples per pixel while consuming the same or fewer textures, improving rendering quality. Additionally, instead of drawing multiple overlapping triangles, the finished stencil buffer is filled at once, allowing correct rendering of semi-transparent colors and proper handling of the <code>Blend</code> option. The implementation was inspired by Evan Wallace’s blog post, <a href="https://medium.com/@evanwallace/easy-scalable-text-rendering-on-the-gpu-c3f4d782c5ac">“Easy Scalable Text Rendering on the GPU”</a>.</p>
+<p>The newly added functions are mainly <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#FillPath"><code>vector.FillPath()</code></a> and <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#StrokePath"><code>vector.StrokePath()</code></a>. The old <code>AppendVerticesAndIndicesFor…</code> functions are now deprecated. Deprecated functions will continue to work as long as Ebitengine remains in the same major version, but may be removed in future major versions.</p>
+<figure>
+  <div class="grid-container">
+    <div class="grid-item-2">
+      <p class="img"><a href="/images/documents/2.9/before.png"><img src="/images/documents/2.9/before.png" width="360" ></a></p>
+    </div>
+    <div class="grid-item-2">
+      <p class="img"><a href="/images/documents/2.9/after.png"><img src="/images/documents/2.9/after.png" width="360" ></a></p>
+    </div>
+  </div>
+  <figcaption>Comparison between the previous vector graphics rendering and the new vector graphics rendering</figcaption>
+</figure>
+<h3>Bug Fixes</h3>
+<p>In addition to the fixes listed below, this release also includes all bug fixes from version 2.8.</p>
+<ul>
+  <li>Fixed a crash that could occur when moving a window between monitors (<a href=https://github.com/hajimehoshi/ebiten/issues/3121">#3121</a>).</li>
+  <li>Fixed incorrect results with <code>ebiten.IsMouseButtonPressed</code> and <code>inpututil.IsMouseButtonJustPressed</code> when using a touchpad (<a href="https://github.com/hajimehoshi/ebiten/issues/3137">#3137</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3249">#3249</a>).</li>
+  <li>Fixed <code>(*audio.Player).Position()</code> not returning the correct value when the window was in the background (<a href="https://github.com/hajimehoshi/ebiten/issues/3154">#3154</a>).</li>
+  <li>Fixed a crash in the Kage shading language when specifying a bool type for a uniform variable (<a href="https://github.com/hajimehoshi/ebiten/issues/3165">#3165</a>).</li>
+  <li>Fixed a crash when providing a source that did not properly implement <code>io.Seeker</code> to a decoder (e.g., in the <code>audio/vorbis</code> package) (<a href="https://github.com/hajimehoshi/ebiten/issues/3192">#3192</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3193">#3193</a>).</li>
+  <li>Fixed <code>ebiten.SetWindowMousePassThrough</code> not working properly when called before startup (<a href="https://github.com/hajimehoshi/ebiten/issues/3222">#3222</a>).</li>
+  <li>Fixed occasional screen flickering on macOS (<a href="https://github.com/hajimehoshi/ebiten/issues/3278">#3278</a>).</li>
+  <li>Fixed an issue where music could start playing automatically after waking from sleep (<a href="https://github.com/hajimehoshi/ebiten/issues/3297">#3297</a>).</li>
+  <li>Other minor fixes</li>
+</ul>
+<h3>New APIs</h3>
+<ul>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DefaultDrawFinalScreen"><code>ebiten.DefaultDrawFinalScreen</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3139">#3139</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#FilterPixelated"><code>ebiten.FilterPixelated</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/2826">#2826</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Tick"><code>ebiten.Tick()</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3213">#3213</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.DrawTriangles32"><code>(*ebiten.Image).DrawTriangles32</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3201">#3201</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.DrawTrianglesShader32"><code>(*ebiten.Image).DrawTrianglesShader32</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3201">#3201</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameOptions.ApplePressAndHoldEnabled"><code>ebiten.RunGameOptions.ApplePressAndHoldEnabled</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3233">#3233</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#ResampleReader"><code>audio.ResampleReader</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3194">#3194</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#ResampleReaderF32"><code>audio.ResampleReaderF32</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3194">#3194</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/colorm#DrawImageOptions.ColorScale"><code>colorm.DrawImageOptions.ColorScale</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3188">#3188</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#DrawPathOptions"><code>vector.DrawPathOptions</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3287">#3287</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#FillOptions"><code>vector.FillOptions</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3287">#3287</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#FillCircle"><code>vector.FillCircle()</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3150">#3150</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#FillPath"><code>vector.FillPath()</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3278">#3278</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#FillRect"><code>vector.FillRect()</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3150">#3150</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#StrokePath"><code>vector.StrokePath()</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3278">#3278</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#Path.AddPath"><code>(*vector.Path).AddPath()</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3266">#3266</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#Path.AddStroke"><code>(*vector.Path).AddStroke()</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3266">#3266</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#Path.Bounds"><code>(*vector.Path).Bounds()</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3271">#3271</a>)</li>
+  <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#Path.Reset"><code>(*vector.Path).Reset()</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3123">#3123</a>)</li>
+</ul>
+<h3>Deprecated APIs</h3>
+<table>
+  <tr>
+    <th>Up to 2.8</th>
+    <th>Since 2.9</th>
+    <th>Issue</th>
+  </tr>
+  <tr>
+    <td><code>ebiten.FillRule</code></td>
+    <td></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a></td>
+  </tr>
+  <tr>
+    <td><code>ebiten.DrawTrianglesOptions.AntiAlias</code></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#FillPath"><code>vector.FillPath()</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a></td>
+  </tr>
+  <tr>
+    <td><code>ebiten.DrawTrianglesOptions.FillRule</code></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#FillPath"><code>vector.FillPath()</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a></td>
+  </tr>
+  <tr>
+    <td><code>ebiten.DrawTrianglesShaderOptions.AntiAlias</code></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#FillPath"><code>vector.FillPath()</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a></td>
+  </tr>
+  <tr>
+    <td><code>ebiten.DrawTrianglesShaderOptions.FillRule</code></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#FillPath"><code>vector.FillPath()</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a></td>
+  </tr>
+  <tr>
+    <td><code>audio.Resample()</code></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#ResampleReader"><code>audio.ResampleReader()</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3194">#3194</a></td>
+  </tr>
+  <tr>
+    <td><code>audio.ResampleF32()</code></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#ResampleReaderF32"><code>audio.ResampleReaderF32()</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3194">#3194</a></td>
+  </tr>
+  <tr>
+    <td><code>colorm.DrawTrianglesOptions.AntiAlias</code></td>
+    <td></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a></td>
+  </tr>
+  <tr>
+    <td><code>colorm.DrawTrianglesOptions.FillRule</code></td>
+    <td></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a></td>
+  </tr>
+  <tr>
+    <td><code>text/v2.GoTextFace.Script</code></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#GoTextFace.Language"><code>text/v2.GoTextFace.Language</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3175">#3175</a></td>
+  </tr>
+  <tr>
+    <td><code>vector.Path.AppendVerticesAndIndicesForFilling()</code></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#FillPath"><code>vector.FillPath()</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a></td>
+  </tr>
+  <tr>
+    <td><code>vector.Path.AppendVerticesAndIndicesForStroke()</code></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#FillPath"><code>vector.FillPath()</code></a> and <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#Path.AddStroke"><code>vector.Path.AddStroke()</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a></td>
+  </tr>
+  <tr>
+    <td><code>vector.DrawFilledCircle()</code></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#FillCircle"><code>vector.FillCircle()</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3150">#3150</a></td>
+  </tr>
+  <tr>
+    <td><code>vector.DrawFilledRect()</code></td>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#FillRect"><code>vector.FillRect()</code></a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3150">#3150</a></td>
+  </tr>
+</table>
