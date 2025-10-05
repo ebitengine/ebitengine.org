@@ -161,8 +161,8 @@ v2.xyz = v2.xxx        // Get vec3(1, 1, 1), and set it to all the components to
   <tr><th><code>ceil(x T) T</code></th><td><span class="math">x</span> 以上の最も近い整数と同じ値を返す。</td></tr>
   <tr><th><code>fract(x T) T</code></th><td><span class="math">x - \mathrm{floor}(x)</span> を返す。</td></tr>
   <tr><th><code>mod(x, y T) T</code></th><td><span class="math">x - y \cdot \mathrm{floor}(x/y)</span> を返す。</td></tr>
-  <tr><th><code>min(x, y T) T</code></th><td><span class="math">x \lt y</span> ならば <span class="math">x</span> を、それ以外の場合は <span class="math">y</span> を返す。</td></tr>
-  <tr><th><code>max(x, y T) T</code></th><td><span class="math">x \lt y</span> ならば <span class="math">y</span> を、それ以外の場合は <span class="math">x</span> を返す。</td></tr>
+  <tr><th><code>min(args ...T) T</code></th><td><span class="math">\mathrm{args}</span> の最小値を返す。 Ebitengine v2.8 までは引数の数は 2 個のみ。</td></tr>
+  <tr><th><code>max(args ...T) T</code></th><td><span class="math">\mathrm{args}</span> の最大値を返す。 Ebitengine v2.8 までは引数の数は 2 個のみ。</td></tr>
   <tr><th><code>clamp(x, min_value, max_value T) T</code></th><td><span class="math">\min(\max(x, \mathit{min\_value}), \mathit{max\_value})</span> を返す。</td></tr>
   <tr><th><code>mix(x, y, a T) T</code></th><td><span class="math">x \cdot (1 - a) + y \cdot a</span> を返す。</td></tr>
   <tr><th><code>step(edge, x T) T</code></th><td><span class="math">x \lt \mathit{edge}</span> ならば <span class="math">0</span> を、それ以外の場合は <span class="math">1</span> を返す。</td></tr>

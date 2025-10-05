@@ -161,8 +161,8 @@ v2.xyz = v2.xxx        // Get vec3(1, 1, 1), and set it to all the components to
   <tr><th><code>ceil(x T) T</code></th><td>Returns a value equal to the nearest integer that is greater than or equal to <span class="math">x</span></td></tr>
   <tr><th><code>fract(x T) T</code></th><td>Returns <span class="math">x - \mathrm{floor}(x)</span></td></tr>
   <tr><th><code>mod(x, y T) T</code></th><td>Returns <span class="math">x - y \cdot \mathrm{floor}(x/y)</span></td></tr>
-  <tr><th><code>min(x, y T) T</code></th><td>Returns <span class="math">x</span> if <span class="math">x \lt y</span>, or <span class="math">y</span> otherwise</td></tr>
-  <tr><th><code>max(x, y T) T</code></th><td>Returns <span class="math">y</span> if <span class="math">x \lt y</span>, or <span class="math">x</span> otherwise</td></tr>
+  <tr><th><code>min(args ...T) T</code></th><td>Returns the minimum value of <span class="math">\mathrm{args}</span>. Up to Ebitengine v2.8, the number of arguments was limited to 2.</td></tr>
+<tr><th><code>max(args ...T) T</code></th><td>Returns the maximum value of <span class="math">\mathrm{args}</span>. Up to Ebitengine v2.8, the number of arguments was limited to 2.</td></tr>
   <tr><th><code>clamp(x, min_value, max_value T) T</code></th><td>Returns <span class="math">\min(\max(x, \mathit{min\_value}), \mathit{max\_value})</span></td></tr>
   <tr><th><code>mix(x, y, a T) T</code></th><td>Returns <span class="math">x \cdot (1 - a) + y \cdot a</span></td></tr>
   <tr><th><code>step(edge, x T) T</code></th><td>Returns <span class="math">0</span> if <span class="math">x \lt \mathit{edge}</span>, or <span class="math">1</span> otherwise</td></tr>
