@@ -13,7 +13,7 @@
   <li><code>Blend</code> オプションが期待通りに動作しなかった。</li>
 </ul>
 <p>新しい手法では、特殊なシェーダーを用いて独自のステンシルバッファーを作成し、そのステンシルバッファーを使って色を塗りつぶすようにしました。これにより、同程度かそれ未満のテクスチャ使用量でも 1 ピクセルあたりのサンプル数が増え、描画結果の質が向上しました。また、複数の三角形を重ねて描画するのではなく、完成されたステンシルバッファーを一気に塗りつぶすため、半透明色を使った描画や <code>Blend</code> オプションの指定が正しく動作するようになりました。実装にあたっては Evan Wallace さんのブログ記事「<a href="https://medium.com/@evanwallace/easy-scalable-text-rendering-on-the-gpu-c3f4d782c5ac">Easy Scalable Text Rendering on the GPU</a>」を参考にさせていただきました。</p>
-<p>新描画手法のために追加された関数は主に <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#FillPath"><code>vector.FillPath()</code></a> と <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#StrokePath"><code>vector.StrokePath()</code></a> になります。新描画手法を使用するためには、これまでの <code>AppendVerticesAndIndicesFor</code>… 関数呼出しを、新しい関数呼び出しに置き換える必要があります。これまでの <code>AppendVerticesAndIndicesFor</code>… 関数に関しては描画の結果は変わりません。また、これらの関数は非推奨になります。これの非推奨関数は、 Ebitengine のメジャーバージョンが同じである限り、これまで通り動きます。ただし、新しいメジャーバージョンでは削除される可能性があります。</p>
+<p>新描画手法のために追加された関数は主に <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#FillPath"><code>vector.FillPath()</code></a> と <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#StrokePath"><code>vector.StrokePath()</code></a> になります。新描画手法を使用するためには、これまでの <code>AppendVerticesAndIndicesFor</code>… 関数呼出しを、新しい関数呼び出しに置き換える必要があります。これまでの <code>AppendVerticesAndIndicesFor</code>… 関数に関しては描画の結果は変わりません。また、これらの関数は非推奨になります。非推奨関数は、 Ebitengine のメジャーバージョンが同じである限り、これまで通り動きます。ただし、新しいメジャーバージョンでは削除される可能性があります。</p>
 <figure>
   <div class="grid-container">
     <div class="grid-item-2">
