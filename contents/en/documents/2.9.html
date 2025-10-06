@@ -25,19 +25,6 @@
   </div>
   <figcaption>Comparison between the previous vector graphics rendering and the new vector graphics rendering</figcaption>
 </figure>
-<h3>Bug Fixes</h3>
-<p>In addition to the fixes listed below, this release also includes all bug fixes from version 2.8.</p>
-<ul>
-  <li>Fixed a crash that could occur when moving a window between monitors (<a href=https://github.com/hajimehoshi/ebiten/issues/3121">#3121</a>).</li>
-  <li>Fixed incorrect results with <code>ebiten.IsMouseButtonPressed</code> and <code>inpututil.IsMouseButtonJustPressed</code> when using a touchpad (<a href="https://github.com/hajimehoshi/ebiten/issues/3137">#3137</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3249">#3249</a>).</li>
-  <li>Fixed <code>(*audio.Player).Position()</code> not returning the correct value when the window was in the background (<a href="https://github.com/hajimehoshi/ebiten/issues/3154">#3154</a>).</li>
-  <li>Fixed a crash in the Kage shading language when specifying a bool type for a uniform variable (<a href="https://github.com/hajimehoshi/ebiten/issues/3165">#3165</a>).</li>
-  <li>Fixed a crash when providing a source that did not properly implement <code>io.Seeker</code> to a decoder (e.g., in the <code>audio/vorbis</code> package) (<a href="https://github.com/hajimehoshi/ebiten/issues/3192">#3192</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3193">#3193</a>).</li>
-  <li>Fixed <code>ebiten.SetWindowMousePassThrough</code> not working properly when called before startup (<a href="https://github.com/hajimehoshi/ebiten/issues/3222">#3222</a>).</li>
-  <li>Fixed occasional screen flickering on macOS (<a href="https://github.com/hajimehoshi/ebiten/issues/3278">#3278</a>).</li>
-  <li>Fixed an issue where music could start playing automatically after waking from sleep (<a href="https://github.com/hajimehoshi/ebiten/issues/3297">#3297</a>).</li>
-  <li>Other minor fixes</li>
-</ul>
 <h3>New APIs</h3>
 <ul>
   <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DefaultDrawFinalScreen"><code>ebiten.DefaultDrawFinalScreen</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3139">#3139</a>)</li>
@@ -138,3 +125,21 @@
     <td><a href="https://github.com/hajimehoshi/ebiten/issues/3150">#3150</a></td>
   </tr>
 </table>
+<h3>Bug Fixes</h3>
+<p>In addition to the fixes listed below, this release also includes all bug fixes from version 2.8.</p>
+<ul>
+  <li>Fixed a crash that could occur when moving a window between monitors (<a href=https://github.com/hajimehoshi/ebiten/issues/3121">#3121</a>).</li>
+  <li>Fixed incorrect results with <code>ebiten.IsMouseButtonPressed</code> and <code>inpututil.IsMouseButtonJustPressed</code> when using a touchpad (<a href="https://github.com/hajimehoshi/ebiten/issues/3137">#3137</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3249">#3249</a>).</li>
+  <li>Fixed <code>(*audio.Player).Position()</code> not returning the correct value when the window was in the background (<a href="https://github.com/hajimehoshi/ebiten/issues/3154">#3154</a>).</li>
+  <li>Fixed a crash in the Kage shading language when specifying a bool type for a uniform variable (<a href="https://github.com/hajimehoshi/ebiten/issues/3165">#3165</a>).</li>
+  <li>Fixed a crash when providing a source that did not properly implement <code>io.Seeker</code> to a decoder (e.g., in the <code>audio/vorbis</code> package) (<a href="https://github.com/hajimehoshi/ebiten/issues/3192">#3192</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3193">#3193</a>).</li>
+  <li>Fixed <code>ebiten.SetWindowMousePassThrough</code> not working properly when called before startup (<a href="https://github.com/hajimehoshi/ebiten/issues/3222">#3222</a>).</li>
+  <li>Fixed occasional screen flickering on macOS (<a href="https://github.com/hajimehoshi/ebiten/issues/3278">#3278</a>).</li>
+  <li>Fixed an issue where music could start playing automatically after waking from sleep (<a href="https://github.com/hajimehoshi/ebiten/issues/3297">#3297</a>).</li>
+  <li>Other minor fixes</li>
+</ul>
+<h3>Performance Improvements</h3>
+<ul>
+  <li>Modified so that the result of <code>(*ebiten.Image).SubImage()</code> is cached internally for a certain period of time (<a href="https://github.com/hajimehoshi/ebiten/issues/2902">#2902</a>).</li>
+  <li>Other minor performance improvements</li>
+</ul>

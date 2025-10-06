@@ -25,19 +25,6 @@
   </div>
   <figcaption>これまでのベクターグラフィックス描画と新しいベクターグラフィックス描画の比較</figcaption>
 </figure>
-<h3>バグ修正</h3>
-<p>このリリースは、以下の修正に加えて、バージョン 2.8 にあった全てのバグ修正を含みます。</p>
-<ul>
-  <li>ウィンドウのモニター間の移動でクラッシュが起きることがあった問題の修正 (<a href=https://github.com/hajimehoshi/ebiten/issues/3121">#3121</a>)。</li>
-  <li>タッチパッドの入力で <code>ebiten.IsMouseButtonPressed</code> や <code>inpututil.IsMouseButtonJustPressed</code> の結果が正しくないことがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3137">#3137</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3249">#3249</a>)。</li>
-  <li>ウィンドウがバックグラウンドのときに、 <code>(*audio.Player).Position()</code> が正しい値を返さなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3154">#3154</a>)。</li>
-  <li>シェーディング言語 Kage で、ユニフォーム変数に bool 型を指定するとクラッシュした問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3165">#3165</a>)。</li>
-  <li><code>audio/vorbis</code> パッケージなどで、 <code>io.Seeker</code> を正しく実装していないソースをデコーダなどに与えたときにクラッシュした問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3192">#3192</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3193">#3193</a>)。</li>
-  <li><code>ebiten.SetWindowMousePassThrough</code> を起動前に呼んでも正しく動作しなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3222">#3222</a>)。</li>
-  <li>macOS で画面に時々ちらつきが発生していた問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3278">#3278</a>)。</li>
-  <li>スリープ復帰時に音楽が勝手に再生してしまうことがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3297">#3297</a>)。</li>
-  <li>その他マイナーな問題の修正</li>
-</ul>
 <h3>新しい API</h3>
 <ul>
   <li><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DefaultDrawFinalScreen"><code>ebiten.DefaultDrawFinalScreen</code></a> (<a href="https://github.com/hajimehoshi/ebiten/issues/3139">#3139</a>)</li>
@@ -138,3 +125,21 @@
     <td><a href="https://github.com/hajimehoshi/ebiten/issues/3150">#3150</a></td>
   </tr>
 </table>
+<h3>バグ修正</h3>
+<p>このリリースは、以下の修正に加えて、バージョン 2.8 にあった全てのバグ修正を含みます。</p>
+<ul>
+  <li>ウィンドウのモニター間の移動でクラッシュが起きることがあった問題の修正 (<a href=https://github.com/hajimehoshi/ebiten/issues/3121">#3121</a>)。</li>
+  <li>タッチパッドの入力で <code>ebiten.IsMouseButtonPressed</code> や <code>inpututil.IsMouseButtonJustPressed</code> の結果が正しくないことがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3137">#3137</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3249">#3249</a>)。</li>
+  <li>ウィンドウがバックグラウンドのときに、 <code>(*audio.Player).Position()</code> が正しい値を返さなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3154">#3154</a>)。</li>
+  <li>シェーディング言語 Kage で、ユニフォーム変数に bool 型を指定するとクラッシュした問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3165">#3165</a>)。</li>
+  <li><code>audio/vorbis</code> パッケージなどで、 <code>io.Seeker</code> を正しく実装していないソースをデコーダなどに与えたときにクラッシュした問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3192">#3192</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3193">#3193</a>)。</li>
+  <li><code>ebiten.SetWindowMousePassThrough</code> を起動前に呼んでも正しく動作しなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3222">#3222</a>)。</li>
+  <li>macOS で画面に時々ちらつきが発生していた問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3278">#3278</a>)。</li>
+  <li>スリープ復帰時に音楽が勝手に再生してしまうことがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3297">#3297</a>)。</li>
+  <li>その他マイナーな問題の修正</li>
+</ul>
+<h3>パフォーマンス改善</h3>
+<ul>
+  <li><code>(*ebiten.Image).SubImage()</code> の結果が内部で一定時間キャッシュされるように修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/2902">#2902</a>)。</li>
+  <li>その他マイナーなパフォーマンス改善</li>
+</ul>
