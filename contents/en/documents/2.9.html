@@ -138,3 +138,9 @@
   <li>Modified so that the result of <code>(*ebiten.Image).SubImage()</code> is cached internally for a certain period of time (<a href="https://github.com/hajimehoshi/ebiten/issues/2902">#2902</a>).</li>
   <li>Other minor performance improvements</li>
 </ul>
+<h2>v2.9.1</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/146?closed=1">Issues for v2.9.1</a></p>
+<h3>Bug Fixes</h3>
+<ul>
+  <li>Fixed an issue where <code>inpututil.IsKeyJustReleased</code> could return true for multiple consecutive frames even though the key was released only once (<a href="https://github.com/hajimehoshi/ebiten/issues/3326">#3326</a>).</li>
+</ul>
