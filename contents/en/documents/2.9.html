@@ -4,7 +4,7 @@
 <p>This release mainly adds minor features, bug fixes, and performance improvements.</p>
 <p>Starting from Ebitengine 2.9, Go 1.24 or later is required.</p>
 <h3>Improved Rendering Quality for Vector Graphics</h3>
-<p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/3124">#3124</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3278">#3278</a></p>
+<p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/2409">#2409</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3124">#3124</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3278">#3278</a></p>
 <p>Previously, the <code>vector</code> package used functions such as <code>AppendVerticesAndIndicesForFilling</code> and <code>AppendVerticesAndIndicesForStroke</code> to decompose vector shapes into triangles, which were then rendered. This approach had the following issues:</p>
 <ul>
   <li>Edges did not look clean. Ebitengine adopted a method of rendering vector graphics onto a large offscreen buffer and then scaling it down, but both efficiency and quality were unsatisfactory.</li>

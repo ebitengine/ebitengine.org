@@ -4,7 +4,7 @@
 <p>このリリースでは、主に細かい機能追加、バグ修正、パフォーマンス改善を行いました。</p>
 <p>Ebitengine 2.9 から Go 1.24 以上が必要になりました。</p>
 <h3>ベクターグラフィックスの描画クオリティ向上</h3>
-<p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/3124">#3124</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3278">#3278</a></p>
+<p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/2409">#2409</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3124">#3124</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3153">#3153</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3278">#3278</a></p>
 <p>これまでの <code>vector</code> パッケージは <code>AppendVerticesAndIndicesForFilling</code> 関数や <code>AppendVerticesAndIndicesForStroke</code> 関数を用いて、ベクター図形を三角形の図形に分割してそれを三角形として描画していました。これには次のような問題がありました:</p>
 <ul>
   <li>エッジ部分がきれいにならない。 Ebitengine では一旦大きいオフスクリーンにベクターグラフィックを描画してそれを縮めるという手法を採用しているが、実行効率も質もあまり良くなかった。</li>
