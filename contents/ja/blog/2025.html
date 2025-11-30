@@ -1,0 +1,426 @@
+<style>
+  .avatar {
+      height: 168px;
+      margin-bottom: 0;
+  }
+  .avatar img {
+      border-radius: 50%;
+  }
+</style>
+<h1>2025 年の Ebitengine</h1>
+<p class="meta">Hajime Hoshi<br><span id="meta-created">2025-12-07</span></p>
+<p>自分が Ebitengine を開発し始めてから 12 年になりました。この記事は、 2025 年の Ebitengine の回顧録です。</p>
+<p>スクリーンショットなどの画像の著作権は、すべてアプリケーションの作者に帰属します。</p>
+
+<h2>スポンサー</h2>
+<p>2024 年 12 月から 2025 年 11 月の間、以下の方々にスポンサー (<a href="https://github.com/sponsors/hajimehoshi">GitHub Sponsors</a>、 <a href="https://www.patreon.com/hajimehoshi_">Patreon</a>、 <a href="https://thanks.dev">thanks.dev</a>)していただきました。心より感謝いたします。</p>
+<p>(米ドル換算でスポンサー総額の大きい順、敬称略)</p>
+<div class="grid-container">
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://odencat.com/"><img src="/images/odencat.png" width="168"></a></p>
+      <figcaption><a href="https://odencat.com/">Odencat Inc.</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><img src="/images/gopher.png" width="168"></p>
+      <figcaption>Jordan Dziat</figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><img src="/images/gopher.png" width="168"></p>
+      <figcaption>Paprika</figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/silbinarywolf"><img src="https://github.com/silbinarywolf.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/silbinarywolf">Jae B</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/davidroman0O"><img src="https://github.com/davidroman0O.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/davidroman0O">0xAkraw</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/smsunarto"><img src="https://github.com/smsunarto.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/smsunarto">Scott</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/mcuadros"><img src="https://github.com/mcuadros.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/mcuadros">Máximo Cuadros</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/m110"><img src="https://github.com/m110.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/m110">Miłosz Smółka</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/canonical"><img src="https://github.com/canonical.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/canonical">Canonical</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/sourcegraph"><img src="https://github.com/sourcegraph.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/sourcegraph">Sourcegraph</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/yottonoko"><img src="https://github.com/yottonoko.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/yottonoko">yottonoko</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><img src="/images/gopher.png" width="168"></p>
+      <figcaption>Michael Raines</figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/cdemers"><img src="https://github.com/cdemers.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/cdemers">Charle Demers</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/DWethmar"><img src="https://github.com/DWethmar.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/DWethmar">Dennis Wethmar</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/elgopher"><img src="https://github.com/elgopher.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/elgopher">Jacek Olszak</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/zJeremiah"><img src="https://github.com/zJeremiah.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/zJeremiah">Jeremiah</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/co0p"><img src="https://github.com/co0p.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/co0p">Julian Godesa</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/aelbrecht"><img src="https://github.com/aelbrecht.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/aelbrecht">Rudolf Aelbrecht</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/mortenson"><img src="https://github.com/mortenson.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/mortenson">Samuel Mortenson</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/shrmpy"><img src="https://github.com/shrmpy.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/shrmpy">Shrimp Research</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/windo"><img src="https://github.com/windo.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/windo">Siim Põder</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/hosht"><img src="https://github.com/hosht.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/hosht">Takanobu Hoshino</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/TheMightyGit"><img src="https://github.com/TheMightyGit.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/TheMightyGit">Johnny</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/halfnibble"><img src="https://github.com/halfnibble.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/halfnibble">Josh Wedekind</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/CyphrRiot"><img src="https://github.com/CyphrRiot.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/CyphrRiot">セyphrロiot</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/nathany"><img src="https://github.com/nathany.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/nathany">Nathan Youngman</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/OpenSauce"><img src="https://github.com/OpenSauce.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/OpenSauce">Leigh</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><img src="/images/gopher.png" width="168"></p>
+      <figcaption>Stefano Manzonato</figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <ul>
+      <li><a href="https://github.com/sauravbajra">Saurav Bajracharya</a></li>
+      <li><a href="https://github.com/griffithsh">Huw Griffiths</a></li>
+      <li><a href="https://github.com/jacobsalmela">Jacob Salmela</a></li>
+      <li><a href="https://github.com/kengonakajima">Kengo Nakajima</a></li>
+    </ul>
+  </div>
+  <div class="grid-item-1">
+    <ul>
+      <li><a href="https://github.com/liamg">Liam Galvin</a></li>
+      <li><a href="https://github.com/neguse">neguse</a></li>
+      <li><a href="https://github.com/Kazuhito00">KazuhitoTakahashi</a></li>
+      <li><a href="https://github.com/bigtallbill">Bill Nunney</a></li>
+    </ul>
+  </div>
+  <div class="grid-item-1">
+    <ul>
+      <li><a href="https://github.com/shiyou0130011">Tzuyang Tsai</a></li>
+      <li><a href="https://github.com/waystones">Waystones</a></li>
+      <li><a href="https://github.com/brudnak">Andrew Brudnak ✨</a></li>
+      <li><a href="https://github.com/arekkusu66">arekkusu</a></li>
+    </ul>
+  </div>
+  <div class="grid-item-1">
+    <ul>
+      <li><a href="https://github.com/akatsuki105">Akatsuki</a></li>
+      <li><a href="https://github.com/greenthepear">Marcel</a></li>
+      <li><a href="https://github.com/seipan">Shotaro Yamasaki</a></li>
+      <li>Carlton Segbefia</li>
+    </ul>
+  </div>
+</div>
+
+<h2>コントリビューター</h2>
+<p>2024 年 12 月から 2025 年 11 月の間、以下の方々にコントリビュートしていただきました。心より感謝いたします。</p>
+<p>(コミット数順、敬称略)</p>
+<h3>Ebitengine</h3>
+<div class="grid-container">
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/12ya"><img src="https://github.com/12ya.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/12ya">iliya</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/philyawj"><img src="https://github.com/philyawj.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/philyawj">Jordan Philyaw</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <ul>
+      <li><a href="https://github.com/rustversion">rustversion</a></li>
+      <li><a href="https://github.com/quasilyte">quasilyte</a></li>
+      <li><a href="https://github.com/oliverbestmann">oliverbestmann</a></li>
+      <li><a href="https://github.com/noboruma">Thomas Legris</a></li>
+    </ul>
+  </div>
+  <div class="grid-item-1">
+    <ul>
+      <li><a href="https://github.com/liuyueyangxmu">liuyueyangxmu</a></li>
+      <li><a href="https://github.com/kazzmir">Jon Rafkind</a></li>
+      <li><a href="https://github.com/houpo-bob">houpo-bob</a></li>
+      <li><a href="https://github.com/arrannn">Arran Tate</a></li>
+    </ul>
+  </div>
+</div>
+<h3>PureGo</h3>
+<div class="grid-container">
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/TotallyGamerJet"><img src="https://github.com/TotallyGamerJet.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/TotallyGamerJet">TotallyGamerJet</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/tmc"><img src="https://github.com/tmc.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/tmc">Travis Cline</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/qmuntal"><img src="https://github.com/qmuntal.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/qmuntal">Quim Muntal</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <ul>
+      <li><a href="https://github.com/oliverbestmann">oliverbestmann</a></li>
+      <li><a href="https://github.com/limeidan">Meidan Li</a></li>
+      <li><a href="https://github.com/LucDrenth">Luc</a></li>
+      <li><a href="https://github.com/JupiterRider">JupiterRider</a></li>
+    </ul>
+  </div>
+</div>
+<h3>Oto</h3>
+<div class="grid-container">
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/oliverbestmann"><img src="https://github.com/oliverbestmann.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/oliverbestmann">oliverbestmann</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/Saitock"><img src="https://github.com/Saitock.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/Saitock">Saitock</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-1">
+    <figure>
+      <p class="img avatar"><a href="https://github.com/LucDrenth"><img src="https://github.com/LucDrenth.png?size=168" width="168"></a></p>
+      <figcaption><a href="https://github.com/LucDrenth">Luc</a></figcaption>
+    </figure>
+  </div>
+</div>
+
+<h2>家庭用ゲーム機向けゲーム</h2>
+<p>(開発元、パブリッシャーは敬称略)</p>
+<h3>スノーマン・ストーリー</h3>
+<figure>
+  <p class="img"><a href="https://odencat.com/snowman/ja.html"><img src="/images/showcase/snowmanstory_ja.png" width="744"></a></p>
+  <figcaption>Copyright <a href="https://odencat.com">Odencat</a></figcaption>
+</figure>
+<h3>Coral &amp; The Abyss</h3>
+<figure>
+  <p class="img"><a href="https://www.intrugligames.com/coral-and-the-abyss.html"><img src="/images/showcase/coralandtheabyss.png" width="744"></a></p>
+  <figcaption>Copyright <a href="https://www.intrugligames.com/">Intrugli Games</a></figcaption>
+</figure>
+<h3>狂気より愛をこめて</h3>
+<figure>
+  <p class="img"><a href="https://playism.com/game/frommadness-withlove/"><img src="/images/showcase/frommadnesswithlove_ja.png" width="744"></a></p>
+  <figcaption>Copyright <a href="https://rokettojam123.wixsite.com/jamsanppoid">じゃむさんっぽいど</a></figcaption>
+</figure>
+
+<h2>ゲームジャムのゲーム</h2>
+<p>(作者名は敬称略)</p>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <p><a href="https://itch.io/jam/ebitengine-game-jam-2025">Ebitengine Game Jame 2025</a> が 6 月に開催されました。ここでは<a href="https://itch.io/jam/ebitengine-game-jam-2025/results">最終結果</a>から TOP 4 ゲームをピックアップします。他のゲームについては、<a href="https://itch.io/jam/ebitengine-game-jam-2025/entries">ジャムのエントリー</a>をご参照ください。</p>
+  </div>
+  <div class="grid-item-2">
+    <p class="img"><a href="https://itch.io/jam/ebitengine-game-jam-2025"><img src="/images/blog/2025/ebitenginegamejam2025.png" width="360"></a></p>
+  </div>
+</div>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <h3>On est là !</h3>
+    <p>作者: Loïg</p>
+    <p class="img thumbnail"><a href="https://loig.itch.io/on-est-la"><img src="/images/blog/2025/onestla.png" width="360" alt="On est là!"></a></p>
+  </div>
+  <div class="grid-item-2">
+    <h3>Unibun</h3>
+    <p>作者: Mikelangelon</p>
+    <p class="img thumbnail"><a href="https://mikelangelon.itch.io/unibun"><img src="/images/blog/2025/unibun.png" width="360" alt="Unibun"></a></p>
+  </div>
+  <div class="grid-item-2">
+    <h3>ANTony and CleopatROACH</h3>
+    <p>作者: digdugdiggy</p>
+    <p class="img thumbnail"><a href="https://digdugdiggy.itch.io/antony-and-cleopatroach"><img src="/images/blog/2025/antonyandcleopatroach.png" width="360" alt="ANTony and CleopatROACH"></a></p>
+  </div>
+  <div class="grid-item-2">
+    <h3>UNION JUMPERS!</h3>
+    <p>作者: pankona</p>
+    <p class="img thumbnail"><a href="https://pankona.itch.io/union-jumpers"><img src="/images/blog/2025/unionjumpers.png" width="360" alt="UNION JUMPERS!"></a></p>
+  </div>
+</div>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <p>また、 2024 年クリスマスに <a href="https://itch.io/jam/ebitengine-holiday-hack-2024">Ebitengine Holiday Hack 2024</a> が開催されました。</p>
+  </div>
+  <div class="grid-item-2">
+    <p class="img"><a href="https://itch.io/jam/ebitengine-holiday-hack-2024"><img src="/images/blog/2025/ehh2024.png" width="360"></a></p>
+  </div>
+</div>
+
+<h2>その他のゲーム</h2>
+<p>今年公開された Ebitengine 製のゲームのうち、 Steam などのストアに掲載されたものなどを紹介します。すべての Ebitengine 製作品に感謝します!</p>
+<p>(開発元、パブリッシャーは敬称略)</p>
+<h3>SAEKO: Giantess Dating Sim</h3>
+<figure>
+  <p class="img"><a href="https://saekogame.com/"><img src="/images/showcase/saeko.png?20251020" width="744"></a></p>
+  <figcaption>Copyright <a href="https://safehavn.dev/">SAFE HAVN STUDIO</a></figcaption>
+</figure>
+<h3>猫の願いが叶うなら</h3>
+<figure>
+  <p class="img"><a href="https://odencat.com/odencatanniversary/ja.html"><img src="/images/blog/2025/wishuponacat_ja.jpg" width="744"></a></p>
+  <figcaption>Copyright <a href="https://odencat.com">Odencat</a></figcaption>
+</figure>
+<div class="grid-container">
+  <div class="grid-item-2">
+    <h3>Dinoslap</h3>
+    <figure>
+      <p class="img"><a href="https://store.steampowered.com/app/3747670/Dinoslap/"><img src="/images/blog/2025/dinoslap.jpg" width="360"></a></p>
+      <figcaption>Copyright <a href="https://bsoftgames.com/">bSoft games</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-2">
+    <h3>Voden's Job</h3>
+    <figure>
+      <p class="img"><a href="https://store.steampowered.com/app/3783540/Vodens_Job/"><img src="/images/blog/2025/vodensjob.jpg" width="360"></a></p>
+      <figcaption>Copyright <a href="https://www.intrugligames.com/">Intrugli Games</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-2">
+    <h3>Barfbot</h3>
+    <figure>
+      <p class="img"><a href="https://store.steampowered.com/app/3449070/Barfbot/"><img src="/images/blog/2025/barfbot.jpg" width="360"></a></p>
+      <figcaption>Copyright <a href="https://bsoftgames.com/">bSoft games</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-2">
+    <h3>Quin Excluder</h3>
+    <figure>
+      <p class="img"><a href="https://store.steampowered.com/app/4176470/Quin_Excluder/"><img src="/images/blog/2025/quinexcluder.jpg" width="360"></a></p>
+      <figcaption>Copyright <a href="https://www.youtube.com/@MEGAAK-SOFT">MEGAAK SOFT</a></figcaption>
+    </figure>
+  </div>
+  <div class="grid-item-2">
+    <h3>NebuLeet</h3>
+    <figure>
+      <p class="img"><a href="https://store.steampowered.com/app/3024370/NebuLeet/"><img src="/images/blog/2025/nebuleet.jpg" width="360"></a></p>
+      <figcaption>Copyright <a href="https://github.com/quasilyte">quasilyte</a></figcaption>
+    </figure>
+  </div>
+</div>
+
+<h2>2025 年以降の Ebitengine</h2>
+<p>Ebitengine は今年で 12 周年を迎えました。 12 周年となると 2D ゲームエンジンとしてはだいぶ成熟し、新機能追加ペースも落ちました。実際、 2024 年までは毎年 2 回マイナーバージョンアップデートを行っていましたが、今年 2025 年は <a href="/ja/documents/2.9.html">v2.9</a> の一回だけとなりました。</p>
+<p>一方、今年もお陰様で、 Ebitengine を使った様々なゲームがリリースされました。特に家庭用ゲーム機向けゲームは 3 本リリースされ、これまでリリースされた家庭用ゲーム機向けゲームは合計 9 本となりました。たいへん嬉しく思います。</p>
+<p>作者である Hajime Hoshi は 2025 年に一体何をしていたかというと、単純に会社の仕事をしていたというのもありますが、 GUI フレームワーク <a href="https://github.com/guigui-gui/guigui">Guigui</a> の開発に注力しておりました。 Ebitengine には GUI やエディタがない、という点はかなり前から指摘され続けていました。 Guigui はサードパーティライブラリとしてこの機能を提供するものです。弊社 Odencat 社内でゲームエディタを以前から開発中なのですが、 Guigui はそこから汎用的な部分を抽出した GUI フレームワークになります。実際のエディタ開発や使用体験からフィードバックを得て、 Guigui および Ebitengine を改善し、それをエディタにまた反映させるという、フィードバックループを回しております。 Guigui は未だにアルファ版で API が安定してませんが、来年には v0.1 を出せたらいいなと考えています。</p>
+<p>来年も引き続き Ebitengine をより良いものにしていきたいと考えています。それでは皆さん、よいお年を!</p>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+      setTOCLevel(2);
+  });
+</script>
