@@ -20,9 +20,9 @@ func init() {
 	if steamworks.RestartAppIfNecessary(appID) {
 		os.Exit(1)
 	}
-	if err := steamworks.Init(); err != nil {
-		panic("steamworks.Init failed")
-	}
+    if err := steamworks.Init(); err != nil {
+         panic(fmt.Sprintf("steamworks.Init failed: %v", err))
+    }
 }</code></pre>
 <p>Please note that this binding has not yet implemented most of the API. More features are planned for future updates.</p>
 <h2>Windows</h2>
