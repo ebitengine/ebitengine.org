@@ -22,7 +22,7 @@ func init() {
 		os.Exit(1)
 	}
     if err := steamworks.Init(); err != nil {
-         panic(fmt.Sprintf("steamworks.Init failed: %v", err))
+        panic(fmt.Sprintf("steamworks.Init failed: %v", err))
     }
 }</code></pre>
 <p>なおこのバインディングはまだ API をほとんど実装していません。今後対応予定です。</p>

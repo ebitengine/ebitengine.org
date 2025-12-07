@@ -22,7 +22,7 @@ func init() {
 		os.Exit(1)
 	}
     if err := steamworks.Init(); err != nil {
-         panic(fmt.Sprintf("steamworks.Init failed: %v", err))
+        panic(fmt.Sprintf("steamworks.Init failed: %v", err))
     }
 }</code></pre>
 <p>Please note that this binding has not yet implemented most of the API. More features are planned for future updates.</p>
