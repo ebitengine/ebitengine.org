@@ -21,9 +21,9 @@ func init() {
 	if steamworks.RestartAppIfNecessary(appID) {
 		os.Exit(1)
 	}
-    if err := steamworks.Init(); err != nil {
-        panic(fmt.Sprintf("steamworks.Init failed: %v", err))
-    }
+	if err := steamworks.Init(); err != nil {
+		panic(fmt.Sprintf("steamworks.Init failed: %v", err))
+	}
 }</code></pre>
 <p>なおこのバインディングはまだ API をほとんど実装していません。今後対応予定です。</p>
 <h2>Windows</h2>
