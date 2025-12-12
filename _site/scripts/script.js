@@ -92,6 +92,7 @@ function updateCode() {
                 e.appendChild(code);
             });
         })(e);
+        addCopyButton(e);
     }
 }
 
@@ -114,6 +115,23 @@ function addCommentStyle(code) {
         span.textContent = line + '\n'
         code.appendChild(span);
     }
+}
+
+function addCopyButton(pre) {
+    pre.style.position = "relative";
+
+    const btn = document.createElement("button");
+    btn.classList.add("copy-btn");
+    btn.textContent = "Copy";
+
+    btn.addEventListener("click", () => {
+        navigator.clipboard.writeText(pre.textContent.trim()).then(() => {
+            btn.textContent = "Copied";
+            setTimeout(() => btn.textContent = "Copy", 700);
+        });
+    });
+
+    pre.insertBefore(btn, pre.firstChild);
 }
 
 let tocLevel = 4;
