@@ -126,7 +126,7 @@ function addCopyButton(pre) {
     btn.textContent = "Copy";
 
     btn.addEventListener("click", () => {
-        navigator.clipboard.writeText(pre.textContent.trim()).then(() => {
+        navigator.clipboard.writeText(pre.querySelector("code").textContent.trim()).then(() => {
             btn.textContent = "Copied";
             setTimeout(() => btn.textContent = "Copy", 700);
         });
