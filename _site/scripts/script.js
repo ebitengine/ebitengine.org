@@ -60,6 +60,7 @@ function updateCode() {
         if (!e.dataset['codesrc']) {
             for (const code of e.querySelectorAll('code')) {
                 addCommentStyle(code);
+                addCopyButton(e);
             }
             continue;
         }
@@ -90,9 +91,9 @@ function updateCode() {
                 code.textContent = text;
                 addCommentStyle(code);
                 e.appendChild(code);
+                addCopyButton(e);
             });
         })(e);
-        addCopyButton(e);
     }
 }
 
