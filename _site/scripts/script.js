@@ -60,6 +60,7 @@ function updateCode() {
         if (!e.dataset['codesrc']) {
             for (const code of e.querySelectorAll('code')) {
                 addCommentStyle(code);
+                addCopyButton(e);
             }
             continue;
         }
@@ -90,6 +91,7 @@ function updateCode() {
                 code.textContent = text;
                 addCommentStyle(code);
                 e.appendChild(code);
+                addCopyButton(e);
             });
         })(e);
     }
@@ -114,6 +116,23 @@ function addCommentStyle(code) {
         span.textContent = line + '\n'
         code.appendChild(span);
     }
+}
+
+function addCopyButton(pre) {
+    pre.style.position = "relative";
+
+    const btn = document.createElement("button");
+    btn.classList.add("copy-btn");
+    btn.textContent = "Copy";
+
+    btn.addEventListener("click", () => {
+        navigator.clipboard.writeText(pre.querySelector("code").textContent.trim()).then(() => {
+            btn.textContent = "Copied";
+            setTimeout(() => btn.textContent = "Copy", 700);
+        });
+    });
+
+    pre.insertBefore(btn, pre.firstChild);
 }
 
 let tocLevel = 4;
