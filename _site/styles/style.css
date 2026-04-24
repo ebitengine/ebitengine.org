@@ -748,6 +748,24 @@ ul.toplinks li img {
     opacity: 0.7;
 }
 
+.copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    border-radius: 8px;
+    padding: 2px 6px;
+    background: rgba(0,0,0,0.8);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.copy-btn:hover {
+    opacity: 1;
+}
+
 /* test image */
 
 /*body > nav, main {
