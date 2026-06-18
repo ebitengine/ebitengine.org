@@ -11,6 +11,7 @@ code {
     font-family: 'Roboto Mono', monospace;
     font-display: auto;
     font-weight: bold;
+    font-variant-ligatures: none;
 }
 dt {
     font-weight: bold;
