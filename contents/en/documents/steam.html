@@ -107,7 +107,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	op := &notarize.NotarizeOptions{
+	op := &amp;notarize.NotarizeOptions{
 		AppleID:         "yourname@yourgame.example.com",
 		SigningIdentity: "Developer ID Application: Your Name (YOURTEAMID)",
 		TeamID:          "YOURTEAMID",
@@ -146,7 +146,7 @@ docker run --rm --workdir=/work --volume $(pwd):/work steamrt_sniper_amd64:lates
 export PATH=\$PATH:/usr/local/go/bin
 export CGO_CFLAGS=-std=gnu99
 
-rm -rf /usr/local/go && tar -C /usr/local -xzf .cache/${GO_VERSION}.linux-amd64.tar.gz
+rm -rf /usr/local/go &amp;&amp; tar -C /usr/local -xzf .cache/${GO_VERSION}.linux-amd64.tar.gz
 
 go build -o ${name}_linux_amd64 .
 "</code></pre>
