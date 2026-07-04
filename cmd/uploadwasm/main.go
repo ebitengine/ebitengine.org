@@ -17,19 +17,24 @@ package main
 import (
 	"compress/gzip"
 	"context"
+	"crypto/sha256"
+	"encoding/base64"
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"runtime"
+	"sort"
 	"strings"
 	"sync"
-	"time"
 
-	"cloud.google.com/go/storage"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -62,65 +67,119 @@ func examples() ([]string, error) {
 	return es, nil
 }
 
-const bucket = "ebiten-dot-org-wasm"
+const (
+	bucket    = "res-ebitengine-org"
+	keyPrefix = "wasm/"
+)
 
-func updateBucket(ctx context.Context) error {
-	fmt.Println("Updating bucket...")
+var wasmExecQueryRE = regexp.MustCompile(`wasm_exec\.js\?[^"]*`)
 
-	client, err := storage.NewClient(ctx)
+// updateWasmExec copies wasm_exec.js from the toolchain that builds the example
+// binaries and rewrites the cache-busting query string in _wasm.html to the new
+// file's content hash. dir selects the module whose GOROOT (and thus toolchain
+// version) is used, matching how the examples are built.
+func updateWasmExec(dir string) error {
+	cmd := exec.Command("go", "env", "GOROOT")
+	cmd.Dir = dir
+	out, err := cmd.Output()
 	if err != nil {
 		return err
 	}
-	defer client.Close()
+	goroot := strings.TrimSpace(string(out))
 
-	b := client.Bucket(bucket)
-	if _, err := b.Update(ctx, storage.BucketAttrsToUpdate{
-		CORS: []storage.CORS{
-			{
-				Methods: []string{"*"},
-				Origins: []string{"*"},
-			},
-		},
-	}); err != nil {
+	// Go 1.24 moved wasm_exec.js from misc/wasm to lib/wasm.
+	src := filepath.Join(goroot, "lib", "wasm", "wasm_exec.js")
+	if _, err := os.Stat(src); err != nil {
+		src = filepath.Join(goroot, "misc", "wasm", "wasm_exec.js")
+	}
+
+	content, err := os.ReadFile(src)
+	if err != nil {
 		return err
 	}
+
+	if err := os.WriteFile(filepath.Join("_site", "scripts", "wasm_exec.js"), content, 0o644); err != nil {
+		return err
+	}
+
+	sum := sha256.Sum256(content)
+	hash := base64.RawURLEncoding.EncodeToString(sum[:])[:10]
+
+	htmlPath := filepath.Join("_site", "_wasm.html")
+	html, err := os.ReadFile(htmlPath)
+	if err != nil {
+		return err
+	}
+	html = wasmExecQueryRE.ReplaceAll(html, []byte("wasm_exec.js?"+hash))
+	if err := os.WriteFile(htmlPath, html, 0o644); err != nil {
+		return err
+	}
+
+	fmt.Printf("Updated wasm_exec.js from %s (hash %s)\n", src, hash)
 	return nil
 }
 
-func uploadFile(ctx context.Context, name string, r io.Reader) error {
-	fmt.Printf("Uploading %s...\n", name)
+var wasmURLVersionRE = regexp.MustCompile(`\$\{name\}\.wasm(\?v=[0-9A-Za-z_-]*)?`)
 
-	client, err := storage.NewClient(ctx)
+// stampWasmVersion rewrites the cache-busting query string on the .wasm URL in
+// _wasm.html to a hash over all built binaries. Without it a stale browser cache
+// could serve a binary that mismatches the freshly cache-busted wasm_exec.js
+// loader. names holds the example base names; the binaries are dir/<name>.wasm.
+func stampWasmVersion(dir string, names []string) error {
+	sorted := append([]string(nil), names...)
+	sort.Strings(sorted)
+
+	h := sha256.New()
+	for _, name := range sorted {
+		content, err := os.ReadFile(filepath.Join(dir, name+".wasm"))
+		if err != nil {
+			return err
+		}
+		fmt.Fprintf(h, "%s\x00", name)
+		h.Write(content)
+	}
+	hash := base64.RawURLEncoding.EncodeToString(h.Sum(nil))[:10]
+
+	htmlPath := filepath.Join("_site", "_wasm.html")
+	html, err := os.ReadFile(htmlPath)
 	if err != nil {
 		return err
 	}
-	defer client.Close()
-
-	b := client.Bucket(bucket)
-	if _, err := b.Update(ctx, storage.BucketAttrsToUpdate{
-		CORS: []storage.CORS{
-			{
-				Methods: []string{"*"},
-				Origins: []string{"*"},
-			},
-		},
-	}); err != nil {
+	html = wasmURLVersionRE.ReplaceAllLiteral(html, []byte("${name}.wasm?v="+hash))
+	if err := os.WriteFile(htmlPath, html, 0o644); err != nil {
 		return err
 	}
 
-	w := b.Object(name).NewWriter(ctx)
-	defer w.Close()
+	fmt.Printf("Stamped .wasm version %s\n", hash)
+	return nil
+}
 
-	w.ACL = []storage.ACLRule{
-		{
-			Entity: storage.AllUsers,
-			Role:   storage.RoleReader,
-		},
+func newS3Client(ctx context.Context) (*s3.Client, error) {
+	cfg, err := config.LoadDefaultConfig(ctx,
+		config.WithRegion("auto"),
+		config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(os.Getenv("R2_ACCESS_KEY_ID"), os.Getenv("R2_SECRET_ACCESS_KEY"), "")),
+		// R2 does not support the checksums the SDK sends by default.
+		config.WithRequestChecksumCalculation(aws.RequestChecksumCalculationWhenRequired),
+		config.WithResponseChecksumValidation(aws.ResponseChecksumValidationWhenRequired),
+	)
+	if err != nil {
+		return nil, err
 	}
-	w.ContentType = "application/wasm"
-	w.ContentEncoding = "gzip"
+	return s3.NewFromConfig(cfg, func(o *s3.Options) {
+		o.BaseEndpoint = aws.String(fmt.Sprintf("https://%s.r2.cloudflarestorage.com", os.Getenv("R2_ACCOUNT_ID")))
+	}), nil
+}
 
-	if _, err := io.Copy(w, r); err != nil {
+func uploadFile(ctx context.Context, client *s3.Client, name string, r io.Reader) error {
+	fmt.Printf("Uploading %s...\n", name)
+
+	if _, err := client.PutObject(ctx, &s3.PutObjectInput{
+		Bucket:          aws.String(bucket),
+		Key:             aws.String(keyPrefix + name),
+		Body:            r,
+		ContentType:     aws.String("application/wasm"),
+		ContentEncoding: aws.String("gzip"),
+	}); err != nil {
 		return err
 	}
 
@@ -128,12 +187,15 @@ func uploadFile(ctx context.Context, name string, r io.Reader) error {
 }
 
 func run() error {
-	// TODO: Update wasm_exec.js automatically
-	fmt.Printf("Do not forget updating wasm_exec.js!\n")
-
 	if *flagUpload {
-		if os.Getenv("GOOGLE_APPLICATION_CREDENTIALS") == "" {
-			return fmt.Errorf("GOOGLE_APPLICATION_CREDENTIALS must be set")
+		for _, env := range []string{"R2_ACCOUNT_ID", "R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY"} {
+			if os.Getenv(env) == "" {
+				return fmt.Errorf("%s must be set", env)
+			}
+		}
+
+		if err := updateWasmExec(*flagEbitenginePath); err != nil {
+			return err
 		}
 	}
 
@@ -142,7 +204,7 @@ func run() error {
 		return err
 	}
 
-	tmpout, err := ioutil.TempDir("", "")
+	tmpout, err := os.MkdirTemp("", "")
 	if err != nil {
 		return err
 	}
@@ -153,8 +215,11 @@ func run() error {
 
 	ctx := context.Background()
 
+	var s3Client *s3.Client
 	if *flagUpload {
-		if err := updateBucket(ctx); err != nil {
+		var err error
+		s3Client, err = newS3Client(ctx)
+		if err != nil {
 			return err
 		}
 	}
@@ -200,12 +265,22 @@ func run() error {
 				if err != nil {
 					return err
 				}
-				defer out.Close()
 
 				w := gzip.NewWriter(out)
-				defer w.Close()
-
 				if _, err := io.Copy(w, in); err != nil {
+					out.Close()
+					return err
+				}
+
+				// Flush and close before sending the name to the channel so that
+				// the consumer reads a fully written file. Otherwise the file may
+				// still grow while it is being uploaded, breaking the upload's
+				// Content-Length.
+				if err := w.Close(); err != nil {
+					out.Close()
+					return err
+				}
+				if err := out.Close(); err != nil {
 					return err
 				}
 
@@ -245,20 +320,24 @@ func run() error {
 				}
 				defer f.Close()
 
-				if err := uploadFile(ctx, name, f); err != nil {
+				if err := uploadFile(ctx, s3Client, name, f); err != nil {
 					return err
 				}
 
 				return nil
 			})
-			// There is a rate limit to upload files. Sleep to avoid exceeding the limit.
-			time.Sleep(1200 * time.Millisecond)
 		}
 		return g.Wait()
 	})
 
 	if err := g.Wait(); err != nil {
 		return err
+	}
+
+	if *flagUpload {
+		if err := stampWasmVersion(tmpout, es); err != nil {
+			return err
+		}
 	}
 
 	return nil

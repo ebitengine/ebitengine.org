@@ -11,12 +11,12 @@
     </style>
   </head>
   <body>
-    <script src="/scripts/wasm_exec.js?go1.21.1"></script>
+    <script src="/scripts/wasm_exec.js?DJSfSZb5qJ"></script>
     <script>
       window.addEventListener('DOMContentLoaded', async () => {
           const go = new Go();
           const name = window.location.search.substring(1);
-          let url = `https://storage.googleapis.com/ebiten-dot-org-wasm/${name}.wasm`;
+          let url = `https://res.ebitengine.org/wasm/${name}.wasm?v=ZPDWAKEgl_`;
           if (location.hostname === 'localhost') {
               const params = new URLSearchParams(window.parent.location.search);
               if (params.has('wasmurl')) {
