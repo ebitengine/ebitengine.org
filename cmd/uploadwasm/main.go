@@ -17,10 +17,10 @@ package main
 import (
 	"compress/gzip"
 	"context"
-	"crypto/sha256"
 	"encoding/base64"
 	"flag"
 	"fmt"
+	"hash/fnv"
 	"io"
 	"os"
 	"os/exec"
@@ -102,15 +102,16 @@ func updateWasmExec(dir string) error {
 		return err
 	}
 
-	sum := sha256.Sum256(content)
-	hash := base64.RawURLEncoding.EncodeToString(sum[:])[:10]
+	h := fnv.New128a()
+	h.Write(content)
+	hash := base64.RawURLEncoding.EncodeToString(h.Sum(nil))[:10]
 
 	htmlPath := filepath.Join("_site", "_wasm.html")
 	html, err := os.ReadFile(htmlPath)
 	if err != nil {
 		return err
 	}
-	html = wasmExecQueryRE.ReplaceAll(html, []byte("wasm_exec.js?"+hash))
+	html = wasmExecQueryRE.ReplaceAll(html, []byte("wasm_exec.js?v="+hash))
 	if err := os.WriteFile(htmlPath, html, 0o644); err != nil {
 		return err
 	}
@@ -129,7 +130,7 @@ func stampWasmVersion(dir string, names []string) error {
 	sorted := append([]string(nil), names...)
 	sort.Strings(sorted)
 
-	h := sha256.New()
+	h := fnv.New128a()
 	for _, name := range sorted {
 		content, err := os.ReadFile(filepath.Join(dir, name+".wasm"))
 		if err != nil {
