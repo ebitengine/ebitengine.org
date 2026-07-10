@@ -98,7 +98,7 @@ func updateWasmExec(dir string) error {
 		return err
 	}
 
-	if err := os.WriteFile(filepath.Join("_site", "scripts", "wasm_exec.js"), content, 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join("dist", "scripts", "wasm_exec.js"), content, 0o644); err != nil {
 		return err
 	}
 
@@ -106,7 +106,7 @@ func updateWasmExec(dir string) error {
 	h.Write(content)
 	hash := base64.RawURLEncoding.EncodeToString(h.Sum(nil))[:10]
 
-	htmlPath := filepath.Join("_site", "_wasm.html")
+	htmlPath := filepath.Join("dist", "_wasm.html")
 	html, err := os.ReadFile(htmlPath)
 	if err != nil {
 		return err
@@ -141,7 +141,7 @@ func stampWasmVersion(dir string, names []string) error {
 	}
 	hash := base64.RawURLEncoding.EncodeToString(h.Sum(nil))[:10]
 
-	htmlPath := filepath.Join("_site", "_wasm.html")
+	htmlPath := filepath.Join("dist", "_wasm.html")
 	html, err := os.ReadFile(htmlPath)
 	if err != nil {
 		return err
