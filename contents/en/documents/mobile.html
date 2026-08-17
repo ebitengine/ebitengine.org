@@ -69,7 +69,7 @@ public class EbitenView extends ViewGroup {
         // ...
     }
 }</code></pre>
-<p>Note that you have to call <code>Seq.setContext</code> at the Activity creation like this:</p>
+<p>Note that, with Ebitengine v2.9 or earlier, you have to call <code>Seq.setContext</code> at the Activity creation like this. As of Ebitengine v2.10, <code>EbitenView</code> calls <code>go.Seq.setContext(context.getApplicationContext())</code> by itself during its initialization, so you no longer have to call it manually. Keeping an existing call is harmless.</p>
 <pre><code>package your.package.name.yourgamemobile;
 
 import androidx.appcompat.app.AppCompatActivity;
