@@ -73,14 +73,14 @@
 <ul>
   <li><code>func Fragment() vec4</code></li>
   <li><code>func Fragment(dstPos vec4) vec4</code></li>
-  <li><code>func Fragment(dstPos vec4, srcPos vec2) vec4</code></li>
-  <li><code>func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4</code></li>
-  <li><code>func Fragment(dstPos vec4, srcPos vec2, color vec4, custom vec4) vec4</code></li>
+  <li><code>func Fragment(dstPos vec4, src0Pos vec2) vec4</code></li>
+  <li><code>func Fragment(dstPos vec4, src0Pos vec2, color vec4) vec4</code></li>
+  <li><code>func Fragment(dstPos vec4, src0Pos vec2, color vec4, custom vec4) vec4</code></li>
 </ul>
 <table>
   <tr><th>Name</th><th>Type</th><th>Description</th></tr>
   <tr><td><code>dstPos</code></td><td><code>vec4</code><td>The destination position in pixels. The 3rd and 4th components are always 0 and 1.</td></tr>
-  <tr><td><code>srcPos</code></td><td><code>vec2</code><td>The source texture's position in texels or pixels. The unit depends on the unit mode.</td></tr>
+  <tr><td><code>src0Pos</code></td><td><code>vec2</code><td>The 0th source image's position in texels or pixels. The unit depends on the unit mode.</td></tr>
   <tr><td><code>color</code></td><td><code>vec4</code><td>Supplemental color information given from vertices. Each component values are in between 0 and 1. This value is specified by <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#DrawRectShaderOptions.ColorScale"><code>DrawRectShaderOptions.ColorScale</code></a> or vertices information for <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.DrawTrianglesShader"><code>DrawTrianglesShader</code></a>.</tr>
   <tr><td><code>custom</code></td><td><code>vec4</code><td>Custom values for any purposes.</td></tr>
   <tr><td>(Returning value)</td><td><code>vec4</code><td>The current position's color. Each component values are in between 0 and 1.</td></tr>
