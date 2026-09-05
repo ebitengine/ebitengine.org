@@ -1,0 +1,206 @@
+<h1>Ebitengine 2.10 リリースノート</h1>
+<p><strong>このドキュメントはドラフトです。 v2.10.0 はまだリリースされていません。内容はリリースまでに変更される可能性があります。</strong></p>
+<h2>v2.10.0</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/143?closed=1">Issues for v2.10.0</a></p>
+<p>このリリースでは、デスクトップ環境での Pure Go 化、アプリケーションの仮想化 (VM)、シェーダーの事前コンパイルに対応しました。また、テキスト描画や IME 入力、ウィンドウ操作などを改善しました。</p>
+<p>Ebitengine 2.10 から Go 1.25 以上が必要になりました。</p>
+<h3>デスクトップ環境での Pure Go 化</h3>
+<p>Issue: <a href="https://github.com/hajimehoshi/ebiten/issues/1162">#1162</a></p>
+<p>macOS と Linux / BSD 向けの実装から Cgo への依存を取り除きました。これにより、デスクトップ向けの Ebitengine アプリケーションを Go だけでビルドできるようになりました。 C コンパイラーや開発用ヘッダーファイルのインストールが不要になります。また、別の OS 向けのクロスコンパイルも容易になります。ちなみに、 Windows 向けの実装はすでに Cgo が不要でした。</p>
+<p>OS の API や共有ライブラリの呼び出しには <a href="https://github.com/ebitengine/purego">PureGo</a> を使用しています。 Linux などでは、実行時のライブラリは引き続き必要です。これにはウィンドウシステムやグラフィックス、音声のライブラリが含まれます。また、モバイルや一部のゲーム機向けのビルドには引き続き Cgo が必要です。</p>
+<h3>アプリケーションの仮想化 (VM)</h3>
+<p>Issue: <a href="https://github.com/hajimehoshi/ebiten/issues/3438">#3438</a></p>
+<p>Ebitengine アプリケーションを別プロセスの「ゲスト」として実行できるようになりました。ゲストは「ホスト」から操作できます。ホストはゲストに入力を送ります。また、ゲームの更新や描画のタイミングを制御します。ゲストは描画命令をホストに送ります。実際の描画にはホスト側の描画バックエンドを使います。音声もプレイヤーごとのストリームとしてホストから取得できます。</p>
+<p>主な用途は次の 2 つです。</p>
+<ul>
+  <li>別の Ebitengine ゲームの埋め込み。ホストアプリケーション内にゲストのゲーム画面を表示できます。ゲームエディターのプレビューなどに利用できます。</li>
+  <li>プログラムや AI による自動テスト。ゲストに入力を送り、決まった回数だけゲームを更新できます。描画結果や音声を取得して検証できます。</li>
+</ul>
+<p><strong>すべての Ebitengine アプリケーションを VM ゲストとして実行できるわけではありません。</strong>作者が <code>ebitenginevm</code> ビルドタグを指定するか、 <code>ebiten.RunGameOptions.VMGuestEndpoint</code> を設定する必要があります。これは意図的な設計です。 VM 機能を使うと、外部プログラムからアプリケーションを簡単に操作できます。そのような操作を望まない作者もいるため、明示的に有効化する方式にしています。</p>
+<p>AI エージェント向けに、スキルファイル <a href="https://github.com/hajimehoshi/ebiten/blob/2.10/skills/run-ebitengine-app-headless/SKILL.md"><code>run-ebitengine-app-headless</code></a> を用意しています。このスキルを読み込ませると、 AI エージェントがアプリケーションを自動でデバッグできます。このテストはヘッドレステストです。テスト中にウィンドウが表示されないため、ユーザーの作業を妨げません。エージェントはゲストの実際の描画結果を画像として取得し、確認できます。入力を送って不具合を再現したり、音声を確認したりすることもできます。コードの修正後には、同じ操作で修正結果を検証できます。</p>
+<p>ホスト側は新しい実験的パッケージ <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/vmhost"><code>exp/vmhost</code></a> を使用します。ゲスト側は <code>ebitenginevm</code> ビルドタグを指定してビルドします。実行時には、環境変数 <code>EBITENGINE_VM_ENDPOINT</code> でホストの接続先を指定します。この方法ではソースコードの変更は不要ですが、ビルドし直す必要があります。ビルドタグを使わず、プログラムから <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameOptions.VMGuestEndpoint"><code>ebiten.RunGameOptions.VMGuestEndpoint</code></a> を指定することもできます。</p>
+<p>ゲストとしての実行はデスクトップ環境に対応しています。ゲストは自分のウィンドウや GPU を使いません。描画するホストにはグラフィックス環境が必要です。今回の VM 機能には、 GPU のない CI 環境向けのソフトウェアレンダラーは含まれていません。ホストとゲストには同じバージョンの Ebitengine を使用してください。 <code>exp/vmhost</code> は実験的パッケージです。今後 API が変更される可能性があります。</p>
+<h3>シェーダーの事前コンパイル</h3>
+<p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/2861">#2861</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3157">#3157</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3035">#3035</a></p>
+<p>新しい実験的パッケージ <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/shaderprecomp"><code>exp/shaderprecomp</code></a> により、事前にコンパイルしたシェーダーを利用できるようになりました。実行時のシェーダーコンパイル処理を減らし、ロード時間を短縮できます。</p>
+<p><code>shadercollector</code> ツールは、指定されたパッケージから Kage のソースを収集します。依存パッケージも収集の対象です。収集するシェーダーは、専用のディレクティブやマニフェストで指定します。収集したソースから、各描画バックエンド向けのソースを出力します。</p>
+<p>DirectX や Metal 向けには、利用者が出力されたソースを別途コンパイルする必要があります。各プラットフォームのコンパイラーでバイナリを生成してください。生成したバイナリはアプリケーションの初期化時に登録します。通常の <code>ebiten.NewShader</code> 呼び出しや描画処理はそのまま利用できます。具体的な手順は <a href="https://github.com/hajimehoshi/ebiten/tree/2.10/examples/shaderprecomp"><code>shaderprecomp</code> のサンプル</a>を参照してください。</p>
+<p>事前コンパイルによって、実行時のコンパイルがすべて不要になるわけではありません。 Kage の中間表現への変換は引き続き行われます。 OpenGL 向けには GLSL への変換を事前に行えます。ただし、 GPU ドライバーによる GLSL のコンパイルとリンクは実行時に行われます。</p>
+<p><code>shadercollector</code> は、各シェーダーのソースを識別する ID (<code>SourceID</code>) も出力します。この ID は、元の Kage ソースと事前コンパイル済みのデータを対応付けるために使います。同じ Kage ソースでも、 Ebitengine のバージョンが変わると ID が変わる可能性があります。 Ebitengine の更新時には、ソースの収集と事前コンパイルをやり直してください。 <code>exp/shaderprecomp</code> は実験的パッケージです。今後 API が変更される可能性があります。</p>
+<h3>Kage の変更</h3>
+<h4>新機能</h4>
+<ul>
+  <li>整数や固定長配列に対する <code>for range</code> が使えるようになりました (<a href="https://github.com/hajimehoshi/ebiten/issues/2905">#2905</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/1897">#1897</a>)。</li>
+  <li>ビット演算子 <code>&amp;^</code> と単項 <code>^</code> に対応しました (<a href="https://github.com/hajimehoshi/ebiten/issues/2753">#2753</a>)。</li>
+  <li><code>imageSrc1AtFromSrc0Pos</code> などの関数を追加しました。 0 番目の画像の座標を受け取ることを名前で明示しています。従来の <code>imageSrc1At</code> なども引き続き同じ動作をします (<a href="https://github.com/hajimehoshi/ebiten/issues/2813">#2813</a>)。</li>
+  <li><code>imageDstTextureSize</code> と <code>imageSrc0TextureSize</code> から <code>imageSrc3TextureSize</code> を追加しました。画像が格納されているテクスチャのサイズを取得できます (<a href="https://github.com/hajimehoshi/ebiten/issues/3476">#3476</a>)。</li>
+</ul>
+<h4>非推奨になった関数</h4>
+<p>以下の関数は非推奨になります。従来の関数も引き続き同じ動作をします。</p>
+<table>
+  <tr><th>2.9 以前</th><th>2.10 以降</th><th>Issue</th></tr>
+  <tr><td><code>imageSrc1At()</code> から <code>imageSrc3At()</code></td><td><code>imageSrc1AtFromSrc0Pos()</code> から <code>imageSrc3AtFromSrc0Pos()</code></td><td><a href="https://github.com/hajimehoshi/ebiten/issues/2813">#2813</a></td></tr>
+  <tr><td><code>imageSrc1UnsafeAt()</code> から <code>imageSrc3UnsafeAt()</code></td><td><code>imageSrc1UnsafeAtFromSrc0Pos()</code> から <code>imageSrc3UnsafeAtFromSrc0Pos()</code></td><td><a href="https://github.com/hajimehoshi/ebiten/issues/2813">#2813</a></td></tr>
+</table>
+<h4>バグ修正</h4>
+<ul>
+  <li>定数式のゼロ除算でコンパイラーがパニックする問題を修正しました。コンパイルエラーを返すようになりました (<a href="https://github.com/hajimehoshi/ebiten/issues/3533">#3533</a>)。</li>
+  <li>配列同士の <code>==</code> と <code>!=</code> による比較をコンパイルエラーにしました。従来は受け付けていましたが、描画バックエンドによってシェーダーのコンパイルに失敗していました (<a href="https://github.com/hajimehoshi/ebiten/issues/3535">#3535</a>)。</li>
+</ul>
+<h3>カラー絵文字とテキスト描画の改善</h3>
+<p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/2649">#2649</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2956">#2956</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3457">#3457</a></p>
+<p><code>text/v2</code> パッケージでカラー絵文字を描画できるようになりました。フォントに含まれるビットマップやカラーグリフを利用します。カラーグリフを持つフォントをアプリケーションで用意する必要があります。</p>
+<p>双方向テキストは従来から対応しています。今回は、左から右と右から左の文字が混在する場合の表示順序を修正しました。新しい <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#AdvanceAt"><code>text.AdvanceAt</code></a> 関数では、文字列中の指定位置に対応するキャレットの位置を取得できます。双方向テキストも考慮されます。</p>
+<h3>IME 入力の対応環境拡大</h3>
+<p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/2736">#2736</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2831">#2831</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3446">#3446</a></p>
+<p><code>exp/textinput</code> パッケージが Linux / UNIX と Android / iOS に対応しました。また、新しい <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/textinput#Composer"><code>textinput.Composer</code></a> により、変換中の文字列や確定された文字列をコールバックで受け取れるようになりました。独自のテキストエディターや入力欄に IME を組み込む際に利用できます。</p>
+<p>既存の <code>textinput.Field</code> は非推奨になります。新しく入力欄を実装する場合は <code>textinput.Composer</code> を使用してください。 <code>exp/textinput</code> は引き続き実験的パッケージです。</p>
+<h3>ウィンドウとデスクトップ操作の改善</h3>
+<ul>
+  <li>ウィンドウのリサイズ中の描画を改善しました。画面の歪みや、一時的に黒い領域が表示される問題を修正しました (<a href="https://github.com/hajimehoshi/ebiten/issues/2615">#2615</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3477">#3477</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3478">#3478</a>)。</li>
+  <li>システムのライトモード・ダークモードを取得できるようになりました。また、アプリケーションが希望するカラーモードを指定できます。デスクトップではウィンドウのタイトルバーの外観に反映されます (<a href="https://github.com/hajimehoshi/ebiten/issues/3386">#3386</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3387">#3387</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3480">#3480</a>)。</li>
+  <li>ウィンドウを表示せずにアプリケーションを実行できるようになりました。実行中に表示・非表示を切り替えることもできます (<a href="https://github.com/hajimehoshi/ebiten/issues/3470">#3470</a>)。</li>
+  <li>Windows で、実行ファイルに埋め込まれたアイコンをウィンドウのアイコンとして自動的に利用するようになりました (<a href="https://github.com/hajimehoshi/ebiten/issues/3459">#3459</a>)。</li>
+  <li>デスクトップでドロップされたファイルやディレクトリの絶対パスを <code>ebiten.AbsPather</code> インターフェイスで取得できるようになりました (<a href="https://github.com/hajimehoshi/ebiten/issues/3252">#3252</a>)。</li>
+</ul>
+<h3>その他の新機能</h3>
+<ul>
+  <li>Linux で、 X11 や Wayland を使用せず、フレームバッファーデバイス (fbdev) と EGL を使用して描画できるようになりました。対応するデバイスと EGL ドライバーが必要です。ウィンドウシステムのない携帯ゲーム機などで利用できます (<a href="https://github.com/hajimehoshi/ebiten/issues/3491">#3491</a>)。</li>
+  <li>Windows、 macOS、 Linux でゲームパッドの振動に対応しました。 Windows では XInput 対応のゲームパッドが対象です。 macOS では GameController フレームワークに対応したものが対象です。 Linux では振動機能に対応したものが対象です (<a href="https://github.com/hajimehoshi/ebiten/issues/2014">#2014</a>)。</li>
+  <li><code>(*audio.Player).SetVolume</code> に 1 を超える値を指定できるようになりました (<a href="https://github.com/hajimehoshi/ebiten/issues/3359">#3359</a>)。</li>
+  <li>AI エージェント向けの<a href="https://github.com/hajimehoshi/ebiten/tree/2.10/skills">スキルファイル</a>を追加しました。ヘッドレス実行によるアプリケーションの自動デバッグと、 Kage シェーダーの作成を支援します。利用する際は、目的に合う <code>SKILL.md</code> をエージェントに読み込ませてください。</li>
+</ul>
+<h3>新しい API</h3>
+<p>新しい実験的パッケージ <code>exp/vmhost</code> と <code>exp/shaderprecomp</code> に加えて、主に以下の API を追加しました。</p>
+<table>
+  <tr>
+    <th>API</th>
+    <th>説明</th>
+    <th>Issue</th>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#AbsPather"><code>ebiten.AbsPather</code></a></td>
+    <td>ドロップされたファイルやディレクトリの絶対パスを取得するインターフェイス。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3252">#3252</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorMode"><code>ebiten.ColorMode</code></a> と <code>ColorModeUnknown</code><br><code>ColorModeLight</code><br><code>ColorModeDark</code></td>
+    <td>ライトモード・ダークモードなどのカラーモードを表す型と定数。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3386">#3386</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SystemColorMode"><code>ebiten.SystemColorMode()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#PreferredColorMode"><code>ebiten.PreferredColorMode()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetPreferredColorMode"><code>ebiten.SetPreferredColorMode()</code></a></td>
+    <td>システムのカラーモードの取得と、アプリケーションが希望するカラーモードの取得・設定。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3386">#3386</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3480">#3480</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale.Set"><code>(*ebiten.ColorScale).Set()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale.SetWithColor"><code>(*ebiten.ColorScale).SetWithColor()</code></a></td>
+    <td>RGBA 値、または <code>color.Color</code> から色の倍率を設定。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3370">#3370</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#CursorPositionF"><code>ebiten.CursorPositionF()</code></a></td>
+    <td>マウスカーソルの座標を浮動小数点数で取得。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3394">#3394</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#TouchPositionF"><code>ebiten.TouchPositionF()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#TouchPositionFInPreviousTick"><code>inpututil.TouchPositionFInPreviousTick()</code></a></td>
+    <td>現在、または直前のティックのタッチ座標を浮動小数点数で取得。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3504">#3504</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#IsCapsLockOn"><code>ebiten.IsCapsLockOn()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#IsNumLockOn"><code>ebiten.IsNumLockOn()</code></a></td>
+    <td>Caps Lock と Num Lock のオン・オフ状態を取得。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3506">#3506</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MaxImageSize"><code>ebiten.MaxImageSize()</code></a></td>
+    <td>実行環境で利用できる画像の最大の幅・高さをピクセル単位で取得。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/1734">#1734</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ScreenSize"><code>ebiten.ScreenSize()</code></a></td>
+    <td><code>Game.Draw</code> に渡される画面画像のサイズをピクセル単位で取得。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/2986">#2986</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunOnMainThread"><code>ebiten.RunOnMainThread()</code></a></td>
+    <td>指定した関数をメインスレッドで同期的に実行。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3385">#3385</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#IsWindowVisible"><code>ebiten.IsWindowVisible()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetWindowVisible"><code>ebiten.SetWindowVisible()</code></a></td>
+    <td>ウィンドウの表示状態の取得と、表示・非表示の切り替え。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3470">#3470</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.RecyclableSubImage"><code>(*ebiten.Image).RecyclableSubImage()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.Recycle"><code>(*ebiten.Image).Recycle()</code></a></td>
+    <td>再利用可能なサブ画像を作成し、使用後に返却してメモリ確保を削減。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3423">#3423</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameOptions.VMGuestEndpoint"><code>ebiten.RunGameOptions.VMGuestEndpoint</code></a></td>
+    <td>VM ゲストとして実行する際のホストの接続先を指定。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3438">#3438</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.PauseAndStopReading"><code>(*audio.Player).PauseAndStopReading()</code></a></td>
+    <td>音声を一時停止し、再生元からの読み込みも停止。進行中の読み込みがあれば完了を待つ。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3510">#3510</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#AdvanceAt"><code>text.AdvanceAt()</code></a></td>
+    <td>文字列中のバイト位置に対応する、行の原点からキャレットまでの距離を取得。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3456">#3456</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#Glyph.AdvanceX"><code>text.Glyph.AdvanceX</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#Glyph.AdvanceY"><code>text.Glyph.AdvanceY</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#Glyph.Colored"><code>text.Glyph.Colored</code></a></td>
+    <td>グリフの横・縦方向の送り量と、カラーグリフかどうかを取得。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3449">#3449</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3496">#3496</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#LazyGlyph"><code>text.LazyGlyph</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#AppendLazyGlyphs"><code>text.AppendLazyGlyphs()</code></a></td>
+    <td>画像の生成を必要になるまで遅延させて、グリフの配置情報を取得。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3450">#3450</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#VariationAxis"><code>text.VariationAxis</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#GoTextFaceSource.AppendVariationAxes"><code>(*text.GoTextFaceSource).AppendVariationAxes()</code></a></td>
+    <td>可変フォントの軸と、各軸の最小値・既定値・最大値を取得。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3486">#3486</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/textinput#Composer"><code>textinput.Composer</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/textinput#SessionOptions"><code>textinput.SessionOptions</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/textinput#Composition"><code>textinput.Composition</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/textinput#Commit"><code>textinput.Commit</code></a></td>
+    <td>IME セッションを管理し、変換中の文字列や確定された文字列をコールバックで取得。</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3446">#3446</a></td>
+  </tr>
+</table>
+<h3>非推奨になった API</h3>
+<table>
+  <tr><th>2.9 以前</th><th>2.10 以降</th><th>Issue</th></tr>
+  <tr><td><code>(*audio.Player).Close()</code></td><td><code>(*audio.Player).PauseAndStopReading()</code></td><td><a href="https://github.com/hajimehoshi/ebiten/issues/3509">#3509</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3510">#3510</a></td></tr>
+  <tr><td><code>text.Advance()</code></td><td><code>text.AdvanceAt()</code></td><td><a href="https://github.com/hajimehoshi/ebiten/issues/3456">#3456</a></td></tr>
+  <tr><td><code>textinput.Field</code></td><td><code>textinput.Composer</code></td><td><a href="https://github.com/hajimehoshi/ebiten/issues/3446">#3446</a></td></tr>
+</table>
+<h3>バグ修正</h3>
+<p>このリリースは、以下の修正に加えて、バージョン 2.9 にあった全てのバグ修正を含みます。</p>
+<ul>
+  <li>小数のディスプレイスケールでウィンドウサイズやフルスクリーンの解像度が正しくならなかった問題の修正。また、ブラウザーで描画がぼやけていた問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/2978">#2978</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2225">#2225</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2958">#2958</a>)。</li>
+  <li>macOS で起動前にフルスクリーンを指定すると画面が黒いままになっていた問題の修正。また、 Vsync の無効化が動作しなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3508">#3508</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3392">#3392</a>)。</li>
+  <li>macOS の一部のゲームパッドでボタン入力が認識されなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3471">#3471</a>)。</li>
+  <li>修飾キーの入力状態が正しく更新されない問題の修正。また、ブラウザーでホイール入力が滑らかに取得できなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3422">#3422</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3453">#3453</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3460">#3460</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3390">#3390</a>)。</li>
+  <li>IME 入力が欠落する問題や、変換中にフォーカスを切り替えた場合の不具合の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3382">#3382</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3463">#3463</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3623">#3623</a>)。</li>
+  <li>Android での OpenGL コンテキスト喪失時の描画復元と、一時停止時に応答しなくなる問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3215">#3215</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3327">#3327</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3334">#3334</a>)。</li>
+  <li>Proton / DXVK 環境で DirectX の初期化時にクラッシュしていた問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3489">#3489</a>)。</li>
+  <li>拡大縮小して描画したテキストが描画先の端で欠ける問題の修正。また、同じフォントソースを並行して使用した場合の競合状態の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3529">#3529</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3605">#3605</a>)。</li>
+  <li>音声のリサンプリングやシークで、長さや再生位置が正しくなくなる問題の修正。また、ストリームが壊れる問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3352">#3352</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3545">#3545</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3589">#3589</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3643">#3643</a>)。</li>
+  <li>その他マイナーな問題の修正</li>
+</ul>
+<h3>パフォーマンス改善</h3>
+<ul>
+  <li>GPU リソースの復元方式を見直し、描画履歴を保持するための処理を削減 (<a href="https://github.com/hajimehoshi/ebiten/issues/3090">#3090</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3215">#3215</a>)。</li>
+  <li>ベクターグラフィックスの描画でテクスチャアトラスの使用量を削減 (<a href="https://github.com/hajimehoshi/ebiten/issues/3358">#3358</a>)。</li>
+  <li><code>text/v2</code> のグリフ画像の生成を遅延させ、不要な画像生成や描画呼び出しを削減 (<a href="https://github.com/hajimehoshi/ebiten/issues/3450">#3450</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3455">#3455</a>)。</li>
+  <li><code>(*ebiten.Image).RecyclableSubImage</code> と <code>Recycle</code> により、サブ画像のオブジェクトを再利用できるように変更。メモリ確保を削減できます。 <code>Recycle</code> は <code>RecyclableSubImage</code> で作成した画像にのみ使用できます (<a href="https://github.com/hajimehoshi/ebiten/issues/3423">#3423</a>)。</li>
+  <li>ウィンドウ関連の処理でロックの使用を削減 (<a href="https://github.com/hajimehoshi/ebiten/issues/3403">#3403</a>)。</li>
+  <li>その他マイナーなパフォーマンス改善</li>
+</ul>

@@ -1,0 +1,206 @@
+<h1>Ebitengine 2.10 Release Notes</h1>
+<p><strong>This document is a draft. v2.10.0 has not been released yet. The contents may change before the release.</strong></p>
+<h2>v2.10.0</h2>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/143?closed=1">Issues for v2.10.0</a></p>
+<p>This release brings pure Go support to desktop platforms, application virtualization (VM), and shader precompilation. It also improves text rendering, IME input, and window operations.</p>
+<p>Starting from Ebitengine 2.10, Go 1.25 or later is required.</p>
+<h3>Pure Go on Desktop Platforms</h3>
+<p>Issue: <a href="https://github.com/hajimehoshi/ebiten/issues/1162">#1162</a></p>
+<p>The macOS and Linux / BSD implementations no longer depend on Cgo. Ebitengine applications for desktop platforms can now be built with Go alone. A C compiler and development headers are no longer required. Cross-compiling for other operating systems is also easier. The Windows implementation already worked without Cgo.</p>
+<p>OS APIs and shared libraries are called through <a href="https://github.com/ebitengine/purego">PureGo</a>. Runtime libraries are still required on platforms such as Linux. These include libraries for the window system, graphics, and audio. Builds for mobile platforms and some consoles still require Cgo.</p>
+<h3>Application Virtualization (VM)</h3>
+<p>Issue: <a href="https://github.com/hajimehoshi/ebiten/issues/3438">#3438</a></p>
+<p>An Ebitengine application can now run as a "guest" in a separate process. A "host" can control the guest. The host sends input to the guest and controls when the game updates and draws. The guest sends drawing commands to the host. The host executes them through its graphics backend. The host can also receive audio as a separate stream for each player.</p>
+<p>The two main use cases are:</p>
+<ul>
+  <li>Embedding another Ebitengine game. Display the guest game inside a host application, for example as a preview in a game editor.</li>
+  <li>Automated testing from a program or an AI agent. Send input to the guest and advance the game by a specified number of ticks. Capture rendering and audio output to verify the results.</li>
+</ul>
+<p><strong>Not every Ebitengine application can run as a VM guest.</strong> The author must enable the <code>ebitenginevm</code> build tag or set <code>ebiten.RunGameOptions.VMGuestEndpoint</code>. This is deliberate. The VM feature makes it easy for an external program to manipulate an application. Some authors may not want to allow this, so the feature requires explicit opt-in.</p>
+<p>The <a href="https://github.com/hajimehoshi/ebiten/blob/2.10/skills/run-ebitengine-app-headless/SKILL.md"><code>run-ebitengine-app-headless</code></a> skill file is available for AI agents. With this skill, an AI agent can automatically debug your application. These tests are headless. No window appears during testing, so it does not interrupt your work. The agent can capture and inspect images of the guest's actual rendering output. It can also send input to reproduce bugs and examine audio output. After a code change, it can repeat the same operations to verify the fix.</p>
+<p>The host uses the new experimental <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/vmhost"><code>exp/vmhost</code></a> package. Build the guest with the <code>ebitenginevm</code> build tag. At runtime, specify the host endpoint with the <code>EBITENGINE_VM_ENDPOINT</code> environment variable. This approach requires no source changes, but the application must be rebuilt. Alternatively, set <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameOptions.VMGuestEndpoint"><code>ebiten.RunGameOptions.VMGuestEndpoint</code></a> in your program without using the build tag.</p>
+<p>Running as a guest is supported on desktop platforms. The guest does not use its own window or GPU. The host still needs a graphics environment to render. This VM feature does not include a software renderer for CI environments without a GPU. Use the same Ebitengine version for the host and guest. <code>exp/vmhost</code> is experimental, and its API may change in the future.</p>
+<h3>Shader Precompilation</h3>
+<p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/2861">#2861</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3157">#3157</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3035">#3035</a></p>
+<p>The new experimental <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/shaderprecomp"><code>exp/shaderprecomp</code></a> package allows applications to use precompiled shaders. This reduces runtime shader compilation work and can shorten loading times.</p>
+<p>The <code>shadercollector</code> tool collects Kage sources from the specified packages. Dependencies are included as well. Mark the shaders to collect with dedicated directives or a manifest. The tool outputs sources for each graphics backend.</p>
+<p>For DirectX and Metal, you must compile the output sources separately. Use the compiler for each platform to generate binaries. Register these binaries during application initialization. Existing <code>ebiten.NewShader</code> calls and drawing code can remain unchanged. See the <a href="https://github.com/hajimehoshi/ebiten/tree/2.10/examples/shaderprecomp"><code>shaderprecomp</code> example</a> for the steps.</p>
+<p>Precompilation does not eliminate all runtime compilation. Kage sources are still converted to an intermediate representation. For OpenGL, conversion to GLSL can be done in advance. However, the GPU driver still compiles and links GLSL at runtime.</p>
+<p><code>shadercollector</code> also outputs an ID (<code>SourceID</code>) that identifies each shader source. This ID associates the original Kage source with its precompiled data. Even for the same Kage source, the ID may change between Ebitengine versions. Collect and precompile the shaders again when updating Ebitengine. <code>exp/shaderprecomp</code> is experimental, and its API may change in the future.</p>
+<h3>Kage Changes</h3>
+<h4>New Features</h4>
+<ul>
+  <li>Added <code>for range</code> support for integers and fixed-size arrays (<a href="https://github.com/hajimehoshi/ebiten/issues/2905">#2905</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/1897">#1897</a>).</li>
+  <li>Added support for the bitwise <code>&amp;^</code> and unary <code>^</code> operators (<a href="https://github.com/hajimehoshi/ebiten/issues/2753">#2753</a>).</li>
+  <li>Added functions such as <code>imageSrc1AtFromSrc0Pos</code>. Their names explicitly indicate that they take coordinates of the 0th source image. Existing functions such as <code>imageSrc1At</code> continue to behave as before (<a href="https://github.com/hajimehoshi/ebiten/issues/2813">#2813</a>).</li>
+  <li>Added <code>imageDstTextureSize</code> and <code>imageSrc0TextureSize</code> through <code>imageSrc3TextureSize</code>. These return the size of the texture containing the image (<a href="https://github.com/hajimehoshi/ebiten/issues/3476">#3476</a>).</li>
+</ul>
+<h4>Deprecated Functions</h4>
+<p>The following functions are deprecated. The existing functions continue to behave as before.</p>
+<table>
+  <tr><th>2.9 and Earlier</th><th>2.10 and Later</th><th>Issue</th></tr>
+  <tr><td><code>imageSrc1At()</code> through <code>imageSrc3At()</code></td><td><code>imageSrc1AtFromSrc0Pos()</code> through <code>imageSrc3AtFromSrc0Pos()</code></td><td><a href="https://github.com/hajimehoshi/ebiten/issues/2813">#2813</a></td></tr>
+  <tr><td><code>imageSrc1UnsafeAt()</code> through <code>imageSrc3UnsafeAt()</code></td><td><code>imageSrc1UnsafeAtFromSrc0Pos()</code> through <code>imageSrc3UnsafeAtFromSrc0Pos()</code></td><td><a href="https://github.com/hajimehoshi/ebiten/issues/2813">#2813</a></td></tr>
+</table>
+<h4>Bug Fixes</h4>
+<ul>
+  <li>Fixed compiler panics caused by division by zero in constant expressions. These now produce compilation errors (<a href="https://github.com/hajimehoshi/ebiten/issues/3533">#3533</a>).</li>
+  <li>Comparing arrays with <code>==</code> or <code>!=</code> now produces a compilation error. These comparisons were previously accepted, but shader compilation failed on some graphics backends (<a href="https://github.com/hajimehoshi/ebiten/issues/3535">#3535</a>).</li>
+</ul>
+<h3>Color Emoji and Text Rendering Improvements</h3>
+<p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/2649">#2649</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/2956">#2956</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3457">#3457</a></p>
+<p>The <code>text/v2</code> package now renders color emoji. It uses bitmaps and color glyphs embedded in fonts. Your application must supply a font containing color glyphs.</p>
+<p>Bidirectional text was already supported. This release fixes the visual order of mixed left-to-right and right-to-left text. The new <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#AdvanceAt"><code>text.AdvanceAt</code></a> function returns the caret position for a specified position in the text. It also accounts for bidirectional text.</p>
+<h3>IME Input on More Platforms</h3>
+<p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/2736">#2736</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/2831">#2831</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3446">#3446</a></p>
+<p>The <code>exp/textinput</code> package now supports Linux / UNIX and Android / iOS. The new <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/textinput#Composer"><code>textinput.Composer</code></a> delivers composition and committed text through callbacks. It can be used to integrate IME input into custom text editors and input fields.</p>
+<p>The existing <code>textinput.Field</code> is deprecated. Use <code>textinput.Composer</code> for new input fields. <code>exp/textinput</code> remains experimental.</p>
+<h3>Window and Desktop Improvements</h3>
+<ul>
+  <li>Improved rendering during window resizing. Fixed distorted output and temporary black regions (<a href="https://github.com/hajimehoshi/ebiten/issues/2615">#2615</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3477">#3477</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3478">#3478</a>).</li>
+  <li>Added support for querying the system's light or dark mode. Applications can also specify their preferred color mode. On desktops, this affects the window title bar's appearance (<a href="https://github.com/hajimehoshi/ebiten/issues/3386">#3386</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3387">#3387</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3480">#3480</a>).</li>
+  <li>Applications can now run without showing a window. Window visibility can also be changed while the application is running (<a href="https://github.com/hajimehoshi/ebiten/issues/3470">#3470</a>).</li>
+  <li>On Windows, icons embedded in the executable are now used automatically as window icons (<a href="https://github.com/hajimehoshi/ebiten/issues/3459">#3459</a>).</li>
+  <li>On desktops, the <code>ebiten.AbsPather</code> interface provides absolute paths for dropped files and directories (<a href="https://github.com/hajimehoshi/ebiten/issues/3252">#3252</a>).</li>
+</ul>
+<h3>Other New Features</h3>
+<ul>
+  <li>Linux can now render using a framebuffer device (fbdev) and EGL without X11 or Wayland. A compatible device and EGL driver are required. This can be used on handheld consoles and other devices without a window system (<a href="https://github.com/hajimehoshi/ebiten/issues/3491">#3491</a>).</li>
+  <li>Added gamepad vibration support on Windows, macOS, and Linux. Windows supports XInput gamepads. macOS supports gamepads compatible with the GameController framework. Linux supports gamepads with rumble support (<a href="https://github.com/hajimehoshi/ebiten/issues/2014">#2014</a>).</li>
+  <li><code>(*audio.Player).SetVolume</code> now accepts values greater than 1 (<a href="https://github.com/hajimehoshi/ebiten/issues/3359">#3359</a>).</li>
+  <li>Added <a href="https://github.com/hajimehoshi/ebiten/tree/2.10/skills">skill files</a> for AI agents. They help with automated debugging through headless execution and with writing Kage shaders. Have your agent read the appropriate <code>SKILL.md</code> to use them.</li>
+</ul>
+<h3>New APIs</h3>
+<p>In addition to the new experimental packages <code>exp/vmhost</code> and <code>exp/shaderprecomp</code>, the main API additions are listed below.</p>
+<table>
+  <tr>
+    <th>API</th>
+    <th>Description</th>
+    <th>Issue</th>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#AbsPather"><code>ebiten.AbsPather</code></a></td>
+    <td>An interface for retrieving the absolute paths of dropped files and directories.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3252">#3252</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorMode"><code>ebiten.ColorMode</code></a> and <code>ColorModeUnknown</code><br><code>ColorModeLight</code><br><code>ColorModeDark</code></td>
+    <td>A type and constants representing color modes such as light and dark.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3386">#3386</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SystemColorMode"><code>ebiten.SystemColorMode()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#PreferredColorMode"><code>ebiten.PreferredColorMode()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetPreferredColorMode"><code>ebiten.SetPreferredColorMode()</code></a></td>
+    <td>Query the system color mode, and get or set the application's preferred color mode.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3386">#3386</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3480">#3480</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale.Set"><code>(*ebiten.ColorScale).Set()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale.SetWithColor"><code>(*ebiten.ColorScale).SetWithColor()</code></a></td>
+    <td>Set color scale factors from RGBA values or a <code>color.Color</code>.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3370">#3370</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#CursorPositionF"><code>ebiten.CursorPositionF()</code></a></td>
+    <td>Get mouse cursor coordinates as floating-point numbers.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3394">#3394</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#TouchPositionF"><code>ebiten.TouchPositionF()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/inpututil#TouchPositionFInPreviousTick"><code>inpututil.TouchPositionFInPreviousTick()</code></a></td>
+    <td>Get touch coordinates for the current or previous tick as floating-point numbers.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3504">#3504</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#IsCapsLockOn"><code>ebiten.IsCapsLockOn()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#IsNumLockOn"><code>ebiten.IsNumLockOn()</code></a></td>
+    <td>Query whether Caps Lock and Num Lock are on.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3506">#3506</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#MaxImageSize"><code>ebiten.MaxImageSize()</code></a></td>
+    <td>Get the device-dependent maximum image width and height in pixels.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/1734">#1734</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ScreenSize"><code>ebiten.ScreenSize()</code></a></td>
+    <td>Get the size in pixels of the screen image passed to <code>Game.Draw</code>.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/2986">#2986</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunOnMainThread"><code>ebiten.RunOnMainThread()</code></a></td>
+    <td>Run a function synchronously on the main thread.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3385">#3385</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#IsWindowVisible"><code>ebiten.IsWindowVisible()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetWindowVisible"><code>ebiten.SetWindowVisible()</code></a></td>
+    <td>Query window visibility and show or hide the window.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3470">#3470</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.RecyclableSubImage"><code>(*ebiten.Image).RecyclableSubImage()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.Recycle"><code>(*ebiten.Image).Recycle()</code></a></td>
+    <td>Create reusable sub-images and return them after use to reduce allocations.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3423">#3423</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameOptions.VMGuestEndpoint"><code>ebiten.RunGameOptions.VMGuestEndpoint</code></a></td>
+    <td>Specify the host endpoint when running as a VM guest.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3438">#3438</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/audio#Player.PauseAndStopReading"><code>(*audio.Player).PauseAndStopReading()</code></a></td>
+    <td>Pause audio playback and stop reading from the source. Wait for any ongoing read to finish.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3510">#3510</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#AdvanceAt"><code>text.AdvanceAt()</code></a></td>
+    <td>Get the distance from the line origin to the caret at a byte position in the text.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3456">#3456</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#Glyph.AdvanceX"><code>text.Glyph.AdvanceX</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#Glyph.AdvanceY"><code>text.Glyph.AdvanceY</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#Glyph.Colored"><code>text.Glyph.Colored</code></a></td>
+    <td>Get a glyph's horizontal and vertical advance, and whether it is a color glyph.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3449">#3449</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3496">#3496</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#LazyGlyph"><code>text.LazyGlyph</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#AppendLazyGlyphs"><code>text.AppendLazyGlyphs()</code></a></td>
+    <td>Get glyph layout information while deferring image creation until needed.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3450">#3450</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#VariationAxis"><code>text.VariationAxis</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#GoTextFaceSource.AppendVariationAxes"><code>(*text.GoTextFaceSource).AppendVariationAxes()</code></a></td>
+    <td>Get a variable font's axes, including their minimum, default, and maximum values.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3486">#3486</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/textinput#Composer"><code>textinput.Composer</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/textinput#SessionOptions"><code>textinput.SessionOptions</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/textinput#Composition"><code>textinput.Composition</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/textinput#Commit"><code>textinput.Commit</code></a></td>
+    <td>Manage IME sessions and receive composition and committed text through callbacks.</td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3446">#3446</a></td>
+  </tr>
+</table>
+<h3>Deprecated APIs</h3>
+<table>
+  <tr><th>2.9 and Earlier</th><th>2.10 and Later</th><th>Issue</th></tr>
+  <tr><td><code>(*audio.Player).Close()</code></td><td><code>(*audio.Player).PauseAndStopReading()</code></td><td><a href="https://github.com/hajimehoshi/ebiten/issues/3509">#3509</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3510">#3510</a></td></tr>
+  <tr><td><code>text.Advance()</code></td><td><code>text.AdvanceAt()</code></td><td><a href="https://github.com/hajimehoshi/ebiten/issues/3456">#3456</a></td></tr>
+  <tr><td><code>textinput.Field</code></td><td><code>textinput.Composer</code></td><td><a href="https://github.com/hajimehoshi/ebiten/issues/3446">#3446</a></td></tr>
+</table>
+<h3>Bug Fixes</h3>
+<p>In addition to the fixes below, this release includes all bug fixes from version 2.9.</p>
+<ul>
+  <li>Fixed incorrect window sizes and fullscreen resolutions at fractional display scales. Also fixed blurry rendering in browsers (<a href="https://github.com/hajimehoshi/ebiten/issues/2978">#2978</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/2225">#2225</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/2958">#2958</a>).</li>
+  <li>Fixed a black screen when fullscreen mode was set before startup on macOS. Also fixed disabling Vsync not working (<a href="https://github.com/hajimehoshi/ebiten/issues/3508">#3508</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3392">#3392</a>).</li>
+  <li>Fixed button input not being recognized on some gamepads on macOS (<a href="https://github.com/hajimehoshi/ebiten/issues/3471">#3471</a>).</li>
+  <li>Fixed modifier key states not being updated correctly. Also fixed wheel input not being smooth in browsers (<a href="https://github.com/hajimehoshi/ebiten/issues/3422">#3422</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3453">#3453</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3460">#3460</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3390">#3390</a>).</li>
+  <li>Fixed lost IME input and issues when switching focus during composition (<a href="https://github.com/hajimehoshi/ebiten/issues/3382">#3382</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3463">#3463</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3623">#3623</a>).</li>
+  <li>Fixed rendering restoration after OpenGL context loss on Android. Also fixed hangs when suspending an application (<a href="https://github.com/hajimehoshi/ebiten/issues/3215">#3215</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3327">#3327</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3334">#3334</a>).</li>
+  <li>Fixed crashes during DirectX initialization under Proton / DXVK (<a href="https://github.com/hajimehoshi/ebiten/issues/3489">#3489</a>).</li>
+  <li>Fixed scaled text being clipped at the destination edges. Also fixed data races when using the same font source concurrently (<a href="https://github.com/hajimehoshi/ebiten/issues/3529">#3529</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3605">#3605</a>).</li>
+  <li>Fixed incorrect lengths and playback positions during audio resampling and seeking. Also fixed stream corruption (<a href="https://github.com/hajimehoshi/ebiten/issues/3352">#3352</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3545">#3545</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3589">#3589</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3643">#3643</a>).</li>
+  <li>Other minor bug fixes.</li>
+</ul>
+<h3>Performance Improvements</h3>
+<ul>
+  <li>Changed GPU resource restoration to reduce the work needed to retain drawing history (<a href="https://github.com/hajimehoshi/ebiten/issues/3090">#3090</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3215">#3215</a>).</li>
+  <li>Reduced texture atlas usage for vector graphics (<a href="https://github.com/hajimehoshi/ebiten/issues/3358">#3358</a>).</li>
+  <li>Deferred glyph image creation in <code>text/v2</code> to reduce unnecessary image creation and draw calls (<a href="https://github.com/hajimehoshi/ebiten/issues/3450">#3450</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3455">#3455</a>).</li>
+  <li><code>(*ebiten.Image).RecyclableSubImage</code> and <code>Recycle</code> allow sub-image objects to be reused. This reduces memory allocations. <code>Recycle</code> can only be used on images created by <code>RecyclableSubImage</code> (<a href="https://github.com/hajimehoshi/ebiten/issues/3423">#3423</a>).</li>
+  <li>Reduced lock usage in window operations (<a href="https://github.com/hajimehoshi/ebiten/issues/3403">#3403</a>).</li>
+  <li>Other minor performance improvements.</li>
+</ul>
