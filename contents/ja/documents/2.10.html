@@ -2,27 +2,27 @@
 <p><strong>このドキュメントはドラフトです。 v2.10.0 はまだリリースされていません。内容はリリースまでに変更される可能性があります。</strong></p>
 <h2>v2.10.0</h2>
 <p><a href="https://github.com/hajimehoshi/ebiten/milestone/143?closed=1">Issues for v2.10.0</a></p>
-<p>このリリースでは、デスクトップ環境での Pure Go 化、アプリケーションの仮想化 (VM)、シェーダーの事前コンパイルに対応しました。また、テキスト描画や IME 入力、ウィンドウ操作などを改善しました。</p>
-<p>Ebitengine 2.10 から Go 1.25 以上が必要になりました。</p>
+<p>このリリースでは、<strong>デスクトップ環境での Pure Go 化、アプリケーションの仮想化 (VM)、シェーダーの事前コンパイル</strong>に対応しました。また、テキスト描画や IME 入力、ウィンドウ操作などを改善しました。</p>
+<p>Ebitengine 2.10 から <strong>Go 1.25 以上が必要</strong>になりました。</p>
 <h3>デスクトップ環境での Pure Go 化</h3>
 <p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/1162">#1162</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2284">#2284</a></p>
-<p>macOS と Linux / BSD 向けの実装から Cgo への依存を取り除きました。これにより、デスクトップ向けの Ebitengine アプリケーションを Go だけでビルドできるようになりました。 C コンパイラーや開発用ヘッダーファイルのインストールが不要になります。また、別の OS 向けのクロスコンパイルも容易になります。ちなみに、 Windows 向けの実装はすでに Cgo が不要でした。</p>
+<p>macOS と Linux / BSD 向けの実装から Cgo への依存を取り除きました。これにより、<strong>デスクトップ向けの Ebitengine アプリケーションを Go だけでビルドできるようになりました。</strong> C コンパイラーや開発用ヘッダーファイルのインストールが不要になります。また、別の OS 向けのクロスコンパイルも容易になります。ちなみに、 Windows 向けの実装はすでに Cgo が不要でした。</p>
 <p>OS の API や共有ライブラリの呼び出しには <a href="https://github.com/ebitengine/purego">PureGo</a> を使用しています。 Linux などでは、実行時のライブラリは引き続き必要です。これにはウィンドウシステムやグラフィックス、音声のライブラリが含まれます。また、モバイルや一部のゲーム機向けのビルドには引き続き Cgo が必要です。</p>
 <h3>アプリケーションの仮想化 (VM)</h3>
 <p>Issue: <a href="https://github.com/hajimehoshi/ebiten/issues/3438">#3438</a></p>
-<p>Ebitengine アプリケーションを別プロセスの「ゲスト」として実行できるようになりました。ゲストは「ホスト」から操作できます。ホストはゲストに入力を送ります。また、ゲームの更新や描画のタイミングを制御します。ゲストは描画命令をホストに送ります。実際の描画にはホスト側の描画バックエンドを使います。音声もプレイヤーごとのストリームとしてホストから取得できます。</p>
+<p><strong>Ebitengine アプリケーションを別プロセスの「ゲスト」として実行できるようになりました。</strong>ゲストは「ホスト」から操作できます。ホストはゲストに入力を送ります。また、ゲームの更新や描画のタイミングを制御します。ゲストは描画命令をホストに送ります。実際の描画にはホスト側の描画バックエンドを使います。音声もプレイヤーごとのストリームとしてホストから取得できます。</p>
 <p>主な用途は次の 2 つです。</p>
 <ul>
-  <li>別の Ebitengine ゲームの埋め込み。ホストアプリケーション内にゲストのゲーム画面を表示できます。ゲームエディターのプレビューなどに利用できます。</li>
-  <li>プログラムや AI による自動テスト。ゲストに入力を送り、決まった回数だけゲームを更新できます。描画結果や音声を取得して検証できます。</li>
+  <li><strong>別の Ebitengine ゲームの埋め込み。</strong>ホストアプリケーション内にゲストのゲーム画面を表示できます。ゲームエディターのプレビューなどに利用できます。</li>
+  <li><strong>プログラムや AI による自動テスト。</strong>ゲストに入力を送り、決まった回数だけゲームを更新できます。描画結果や音声を取得して検証できます。</li>
 </ul>
 <p><strong>すべての Ebitengine アプリケーションを VM ゲストとして実行できるわけではありません。</strong>作者が <code>ebitenginevm</code> ビルドタグを指定するか、 <code>ebiten.RunGameOptions.VMGuestEndpoint</code> を設定する必要があります。これは意図的な設計です。 VM 機能を使うと、外部プログラムからアプリケーションを簡単に操作できます。そのような操作を望まない作者もいるため、明示的に有効化する方式にしています。</p>
-<p>AI エージェント向けに、スキルファイル <a href="https://github.com/hajimehoshi/ebiten/blob/2.10/skills/run-ebitengine-app-headless/SKILL.md"><code>run-ebitengine-app-headless</code></a> を用意しています。このスキルを読み込ませると、 AI エージェントがアプリケーションを自動でデバッグできます。このテストはヘッドレステストです。テスト中にウィンドウが表示されないため、ユーザーの作業を妨げません。エージェントはゲストの実際の描画結果を画像として取得し、確認できます。入力を送って不具合を再現したり、音声を確認したりすることもできます。コードの修正後には、同じ操作で修正結果を検証できます。</p>
+<p>AI エージェント向けに、スキルファイル <a href="https://github.com/hajimehoshi/ebiten/blob/2.10/skills/run-ebitengine-app-headless/SKILL.md"><code>run-ebitengine-app-headless</code></a> を用意しています。<strong>このスキルを読み込ませると、 AI エージェントがアプリケーションを自動でデバッグできます。</strong>このテストはヘッドレステストです。テスト中にウィンドウが表示されないため、ユーザーの作業を妨げません。エージェントはゲストの実際の描画結果を画像として取得し、確認できます。入力を送って不具合を再現したり、音声を確認したりすることもできます。コードの修正後には、同じ操作で修正結果を検証できます。</p>
 <p>ホスト側は新しい実験的パッケージ <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/vmhost"><code>exp/vmhost</code></a> を使用します。ゲスト側は <code>ebitenginevm</code> ビルドタグを指定してビルドします。実行時には、環境変数 <code>EBITENGINE_VM_ENDPOINT</code> でホストの接続先を指定します。この方法ではソースコードの変更は不要ですが、ビルドし直す必要があります。ビルドタグを使わず、プログラムから <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameOptions.VMGuestEndpoint"><code>ebiten.RunGameOptions.VMGuestEndpoint</code></a> を指定することもできます。</p>
 <p>ゲストとしての実行はデスクトップ環境に対応しています。ゲストは自分のウィンドウや GPU を使いません。描画するホストにはグラフィックス環境が必要です。今回の VM 機能には、 GPU のない CI 環境向けのソフトウェアレンダラーは含まれていません。ホストとゲストには同じバージョンの Ebitengine を使用してください。 <code>exp/vmhost</code> は実験的パッケージです。今後 API が変更される可能性があります。</p>
 <h3>シェーダーの事前コンパイル</h3>
 <p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/2861">#2861</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3157">#3157</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3035">#3035</a></p>
-<p>新しい実験的パッケージ <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/shaderprecomp"><code>exp/shaderprecomp</code></a> により、事前にコンパイルしたシェーダーを利用できるようになりました。実行時のシェーダーコンパイル処理を減らし、ロード時間を短縮できます。</p>
+<p>新しい実験的パッケージ <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/shaderprecomp"><code>exp/shaderprecomp</code></a> により、事前にコンパイルしたシェーダーを利用できるようになりました。<strong>実行時のシェーダーコンパイル処理を減らし、ロード時間を短縮できます。</strong></p>
 <p><code>shadercollector</code> ツールは、指定されたパッケージから Kage のソースを収集します。依存パッケージも収集の対象です。収集するシェーダーは、専用のディレクティブやマニフェストで指定します。収集したソースから、各描画バックエンド向けのソースを出力します。</p>
 <p>DirectX や Metal 向けには、利用者が出力されたソースを別途コンパイルする必要があります。各プラットフォームのコンパイラーでバイナリを生成してください。生成したバイナリはアプリケーションの初期化時に登録します。通常の <code>ebiten.NewShader</code> 呼び出しや描画処理はそのまま利用できます。具体的な手順は <a href="https://github.com/hajimehoshi/ebiten/tree/2.10/examples/shaderprecomp"><code>shaderprecomp</code> のサンプル</a>を参照してください。</p>
 <p>事前コンパイルによって、実行時のコンパイルがすべて不要になるわけではありません。 Kage の中間表現への変換は引き続き行われます。 OpenGL 向けには GLSL への変換を事前に行えます。ただし、 GPU ドライバーによる GLSL のコンパイルとリンクは実行時に行われます。</p>
@@ -49,17 +49,17 @@
 </ul>
 <h3>カラー絵文字とテキスト描画の改善</h3>
 <p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/2649">#2649</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2956">#2956</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3456">#3456</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3457">#3457</a></p>
-<p><code>text/v2</code> パッケージでカラー絵文字を描画できるようになりました。フォントに含まれるビットマップやカラーグリフを利用します。カラーグリフを持つフォントをアプリケーションで用意する必要があります。</p>
+<p><strong><code>text/v2</code> パッケージでカラー絵文字を描画できるようになりました。</strong>フォントに含まれるビットマップやカラーグリフを利用します。カラーグリフを持つフォントをアプリケーションで用意する必要があります。</p>
 <p>双方向テキストは従来から対応しています。今回は、左から右と右から左の文字が混在する場合の表示順序を修正しました。新しい <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#AdvanceAt"><code>text.AdvanceAt</code></a> 関数では、文字列中の指定位置に対応するキャレットの位置を取得できます。双方向テキストも考慮されます。</p>
 <h3>IME 入力の対応環境拡大</h3>
 <p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/2736">#2736</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2831">#2831</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3446">#3446</a></p>
-<p><code>exp/textinput</code> パッケージが Linux / UNIX と Android / iOS に対応しました。また、新しい <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/textinput#Composer"><code>textinput.Composer</code></a> により、変換中の文字列や確定された文字列をコールバックで受け取れるようになりました。独自のテキストエディターや入力欄に IME を組み込む際に利用できます。</p>
+<p><strong><code>exp/textinput</code> パッケージが Linux / UNIX と Android / iOS に対応しました。</strong>また、新しい <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/textinput#Composer"><code>textinput.Composer</code></a> により、変換中の文字列や確定された文字列をコールバックで受け取れるようになりました。独自のテキストエディターや入力欄に IME を組み込む際に利用できます。</p>
 <p>既存の <code>textinput.Field</code> は非推奨になります。新しく入力欄を実装する場合は <code>textinput.Composer</code> を使用してください。 <code>exp/textinput</code> は引き続き実験的パッケージです。</p>
 <h3>ウィンドウとデスクトップ操作の改善</h3>
 <ul>
-  <li>ウィンドウのリサイズ中の描画を改善しました。画面の歪みや、一時的に黒い領域が表示される問題を修正しました (<a href="https://github.com/hajimehoshi/ebiten/issues/2615">#2615</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3477">#3477</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3478">#3478</a>)。</li>
-  <li>システムのライトモード・ダークモードを取得できるようになりました。また、アプリケーションが希望するカラーモードを指定できます。デスクトップではウィンドウのタイトルバーの外観に反映されます (<a href="https://github.com/hajimehoshi/ebiten/issues/3386">#3386</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3387">#3387</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3480">#3480</a>)。</li>
-  <li>ウィンドウを表示せずにアプリケーションを実行できるようになりました。実行中に表示・非表示を切り替えることもできます (<a href="https://github.com/hajimehoshi/ebiten/issues/3470">#3470</a>)。</li>
+  <li><strong>ウィンドウのリサイズ中の描画を改善しました。</strong>画面の歪みや、一時的に黒い領域が表示される問題を修正しました (<a href="https://github.com/hajimehoshi/ebiten/issues/2615">#2615</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3477">#3477</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3478">#3478</a>)。</li>
+  <li><strong>システムのライトモード・ダークモードを取得できるようになりました。</strong>また、アプリケーションが希望するカラーモードを指定できます。デスクトップではウィンドウのタイトルバーの外観に反映されます (<a href="https://github.com/hajimehoshi/ebiten/issues/3386">#3386</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3387">#3387</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3480">#3480</a>)。</li>
+  <li><strong>ウィンドウを表示せずにアプリケーションを実行できるようになりました。</strong>実行中に表示・非表示を切り替えることもできます (<a href="https://github.com/hajimehoshi/ebiten/issues/3470">#3470</a>)。</li>
   <li>Windows で、実行ファイルに埋め込まれたアイコンをウィンドウのアイコンとして自動的に利用するようになりました (<a href="https://github.com/hajimehoshi/ebiten/issues/3459">#3459</a>)。</li>
   <li>デスクトップでドロップされたファイルやディレクトリの絶対パスを <code>ebiten.AbsPather</code> インターフェイスで取得できるようになりました (<a href="https://github.com/hajimehoshi/ebiten/issues/3252">#3252</a>)。</li>
 </ul>
