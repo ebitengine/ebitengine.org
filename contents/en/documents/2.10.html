@@ -5,7 +5,7 @@
 <p>This release brings pure Go support to desktop platforms, application virtualization (VM), and shader precompilation. It also improves text rendering, IME input, and window operations.</p>
 <p>Starting from Ebitengine 2.10, Go 1.25 or later is required.</p>
 <h3>Pure Go on Desktop Platforms</h3>
-<p>Issue: <a href="https://github.com/hajimehoshi/ebiten/issues/1162">#1162</a></p>
+<p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/1162">#1162</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/2284">#2284</a></p>
 <p>The macOS and Linux / BSD implementations no longer depend on Cgo. Ebitengine applications for desktop platforms can now be built with Go alone. A C compiler and development headers are no longer required. Cross-compiling for other operating systems is also easier. The Windows implementation already worked without Cgo.</p>
 <p>OS APIs and shared libraries are called through <a href="https://github.com/ebitengine/purego">PureGo</a>. Runtime libraries are still required on platforms such as Linux. These include libraries for the window system, graphics, and audio. Builds for mobile platforms and some consoles still require Cgo.</p>
 <h3>Application Virtualization (VM)</h3>
@@ -48,7 +48,7 @@
   <li>Comparing arrays with <code>==</code> or <code>!=</code> now produces a compilation error. These comparisons were previously accepted, but shader compilation failed on some graphics backends (<a href="https://github.com/hajimehoshi/ebiten/issues/3535">#3535</a>).</li>
 </ul>
 <h3>Color Emoji and Text Rendering Improvements</h3>
-<p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/2649">#2649</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/2956">#2956</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3457">#3457</a></p>
+<p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/2649">#2649</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/2956">#2956</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3456">#3456</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3457">#3457</a></p>
 <p>The <code>text/v2</code> package now renders color emoji. It uses bitmaps and color glyphs embedded in fonts. Your application must supply a font containing color glyphs.</p>
 <p>Bidirectional text was already supported. This release fixes the visual order of mixed left-to-right and right-to-left text. The new <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#AdvanceAt"><code>text.AdvanceAt</code></a> function returns the caret position for a specified position in the text. It also accounts for bidirectional text.</p>
 <h3>IME Input on More Platforms</h3>
@@ -91,7 +91,7 @@
   <tr>
     <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SystemColorMode"><code>ebiten.SystemColorMode()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#PreferredColorMode"><code>ebiten.PreferredColorMode()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetPreferredColorMode"><code>ebiten.SetPreferredColorMode()</code></a></td>
     <td>Query the system color mode, and get or set the application's preferred color mode.</td>
-    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3386">#3386</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3480">#3480</a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3386">#3386</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3387">#3387</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3480">#3480</a></td>
   </tr>
   <tr>
     <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale.Set"><code>(*ebiten.ColorScale).Set()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale.SetWithColor"><code>(*ebiten.ColorScale).SetWithColor()</code></a></td>
@@ -136,7 +136,7 @@
   <tr>
     <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.RecyclableSubImage"><code>(*ebiten.Image).RecyclableSubImage()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.Recycle"><code>(*ebiten.Image).Recycle()</code></a></td>
     <td>Create reusable sub-images and return them after use to reduce allocations.</td>
-    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3423">#3423</a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3418">#3418</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3423">#3423</a></td>
   </tr>
   <tr>
     <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameOptions.VMGuestEndpoint"><code>ebiten.RunGameOptions.VMGuestEndpoint</code></a></td>
@@ -187,12 +187,12 @@
   <li>Fixed incorrect window sizes and fullscreen resolutions at fractional display scales. Also fixed blurry rendering in browsers (<a href="https://github.com/hajimehoshi/ebiten/issues/2978">#2978</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/2225">#2225</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/2958">#2958</a>).</li>
   <li>Fixed a black screen when fullscreen mode was set before startup on macOS. Also fixed disabling Vsync not working (<a href="https://github.com/hajimehoshi/ebiten/issues/3508">#3508</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3392">#3392</a>).</li>
   <li>Fixed button input not being recognized on some gamepads on macOS (<a href="https://github.com/hajimehoshi/ebiten/issues/3471">#3471</a>).</li>
-  <li>Fixed modifier key states not being updated correctly. Also fixed wheel input not being smooth in browsers (<a href="https://github.com/hajimehoshi/ebiten/issues/3422">#3422</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3453">#3453</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3460">#3460</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3390">#3390</a>).</li>
+  <li>Fixed modifier key states not being updated correctly. Also fixed wheel input not being smooth in browsers (<a href="https://github.com/hajimehoshi/ebiten/issues/3422">#3422</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3453">#3453</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3460">#3460</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3467">#3467</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3390">#3390</a>).</li>
   <li>Fixed lost IME input and issues when switching focus during composition (<a href="https://github.com/hajimehoshi/ebiten/issues/3382">#3382</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3463">#3463</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3623">#3623</a>).</li>
   <li>Fixed rendering restoration after OpenGL context loss on Android. Also fixed hangs when suspending an application (<a href="https://github.com/hajimehoshi/ebiten/issues/3215">#3215</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3327">#3327</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3334">#3334</a>).</li>
   <li>Fixed crashes during DirectX initialization under Proton / DXVK (<a href="https://github.com/hajimehoshi/ebiten/issues/3489">#3489</a>).</li>
   <li>Fixed scaled text being clipped at the destination edges. Also fixed data races when using the same font source concurrently (<a href="https://github.com/hajimehoshi/ebiten/issues/3529">#3529</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3605">#3605</a>).</li>
-  <li>Fixed incorrect lengths and playback positions during audio resampling and seeking. Also fixed stream corruption (<a href="https://github.com/hajimehoshi/ebiten/issues/3352">#3352</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3545">#3545</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3589">#3589</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3643">#3643</a>).</li>
+  <li>Fixed incorrect lengths and playback positions during audio resampling and seeking. Also fixed stream corruption (<a href="https://github.com/hajimehoshi/ebiten/issues/3352">#3352</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3545">#3545</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3583">#3583</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3584">#3584</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3587">#3587</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3589">#3589</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3643">#3643</a>).</li>
   <li>Other minor bug fixes.</li>
 </ul>
 <h3>Performance Improvements</h3>
@@ -200,7 +200,7 @@
   <li>Changed GPU resource restoration to reduce the work needed to retain drawing history (<a href="https://github.com/hajimehoshi/ebiten/issues/3090">#3090</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3215">#3215</a>).</li>
   <li>Reduced texture atlas usage for vector graphics (<a href="https://github.com/hajimehoshi/ebiten/issues/3358">#3358</a>).</li>
   <li>Deferred glyph image creation in <code>text/v2</code> to reduce unnecessary image creation and draw calls (<a href="https://github.com/hajimehoshi/ebiten/issues/3450">#3450</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3455">#3455</a>).</li>
-  <li><code>(*ebiten.Image).RecyclableSubImage</code> and <code>Recycle</code> allow sub-image objects to be reused. This reduces memory allocations. <code>Recycle</code> can only be used on images created by <code>RecyclableSubImage</code> (<a href="https://github.com/hajimehoshi/ebiten/issues/3423">#3423</a>).</li>
+  <li><code>(*ebiten.Image).RecyclableSubImage</code> and <code>Recycle</code> allow sub-image objects to be reused. This reduces memory allocations. <code>Recycle</code> can only be used on images created by <code>RecyclableSubImage</code> (<a href="https://github.com/hajimehoshi/ebiten/issues/3418">#3418</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3423">#3423</a>).</li>
   <li>Reduced lock usage in window operations (<a href="https://github.com/hajimehoshi/ebiten/issues/3403">#3403</a>).</li>
   <li>Other minor performance improvements.</li>
 </ul>

@@ -5,7 +5,7 @@
 <p>このリリースでは、デスクトップ環境での Pure Go 化、アプリケーションの仮想化 (VM)、シェーダーの事前コンパイルに対応しました。また、テキスト描画や IME 入力、ウィンドウ操作などを改善しました。</p>
 <p>Ebitengine 2.10 から Go 1.25 以上が必要になりました。</p>
 <h3>デスクトップ環境での Pure Go 化</h3>
-<p>Issue: <a href="https://github.com/hajimehoshi/ebiten/issues/1162">#1162</a></p>
+<p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/1162">#1162</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2284">#2284</a></p>
 <p>macOS と Linux / BSD 向けの実装から Cgo への依存を取り除きました。これにより、デスクトップ向けの Ebitengine アプリケーションを Go だけでビルドできるようになりました。 C コンパイラーや開発用ヘッダーファイルのインストールが不要になります。また、別の OS 向けのクロスコンパイルも容易になります。ちなみに、 Windows 向けの実装はすでに Cgo が不要でした。</p>
 <p>OS の API や共有ライブラリの呼び出しには <a href="https://github.com/ebitengine/purego">PureGo</a> を使用しています。 Linux などでは、実行時のライブラリは引き続き必要です。これにはウィンドウシステムやグラフィックス、音声のライブラリが含まれます。また、モバイルや一部のゲーム機向けのビルドには引き続き Cgo が必要です。</p>
 <h3>アプリケーションの仮想化 (VM)</h3>
@@ -48,7 +48,7 @@
   <li>配列同士の <code>==</code> と <code>!=</code> による比較をコンパイルエラーにしました。従来は受け付けていましたが、描画バックエンドによってシェーダーのコンパイルに失敗していました (<a href="https://github.com/hajimehoshi/ebiten/issues/3535">#3535</a>)。</li>
 </ul>
 <h3>カラー絵文字とテキスト描画の改善</h3>
-<p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/2649">#2649</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2956">#2956</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3457">#3457</a></p>
+<p>Issues: <a href="https://github.com/hajimehoshi/ebiten/issues/2649">#2649</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2956">#2956</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3456">#3456</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3457">#3457</a></p>
 <p><code>text/v2</code> パッケージでカラー絵文字を描画できるようになりました。フォントに含まれるビットマップやカラーグリフを利用します。カラーグリフを持つフォントをアプリケーションで用意する必要があります。</p>
 <p>双方向テキストは従来から対応しています。今回は、左から右と右から左の文字が混在する場合の表示順序を修正しました。新しい <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/text/v2#AdvanceAt"><code>text.AdvanceAt</code></a> 関数では、文字列中の指定位置に対応するキャレットの位置を取得できます。双方向テキストも考慮されます。</p>
 <h3>IME 入力の対応環境拡大</h3>
@@ -91,7 +91,7 @@
   <tr>
     <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SystemColorMode"><code>ebiten.SystemColorMode()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#PreferredColorMode"><code>ebiten.PreferredColorMode()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetPreferredColorMode"><code>ebiten.SetPreferredColorMode()</code></a></td>
     <td>システムのカラーモードの取得と、アプリケーションが希望するカラーモードの取得・設定。</td>
-    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3386">#3386</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3480">#3480</a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3386">#3386</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3387">#3387</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3480">#3480</a></td>
   </tr>
   <tr>
     <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale.Set"><code>(*ebiten.ColorScale).Set()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#ColorScale.SetWithColor"><code>(*ebiten.ColorScale).SetWithColor()</code></a></td>
@@ -136,7 +136,7 @@
   <tr>
     <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.RecyclableSubImage"><code>(*ebiten.Image).RecyclableSubImage()</code></a><br><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#Image.Recycle"><code>(*ebiten.Image).Recycle()</code></a></td>
     <td>再利用可能なサブ画像を作成し、使用後に返却してメモリ確保を削減。</td>
-    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3423">#3423</a></td>
+    <td><a href="https://github.com/hajimehoshi/ebiten/issues/3418">#3418</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3423">#3423</a></td>
   </tr>
   <tr>
     <td><a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#RunGameOptions.VMGuestEndpoint"><code>ebiten.RunGameOptions.VMGuestEndpoint</code></a></td>
@@ -187,12 +187,12 @@
   <li>小数のディスプレイスケールでウィンドウサイズやフルスクリーンの解像度が正しくならなかった問題の修正。また、ブラウザーで描画がぼやけていた問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/2978">#2978</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2225">#2225</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/2958">#2958</a>)。</li>
   <li>macOS で起動前にフルスクリーンを指定すると画面が黒いままになっていた問題の修正。また、 Vsync の無効化が動作しなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3508">#3508</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3392">#3392</a>)。</li>
   <li>macOS の一部のゲームパッドでボタン入力が認識されなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3471">#3471</a>)。</li>
-  <li>修飾キーの入力状態が正しく更新されない問題の修正。また、ブラウザーでホイール入力が滑らかに取得できなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3422">#3422</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3453">#3453</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3460">#3460</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3390">#3390</a>)。</li>
+  <li>修飾キーの入力状態が正しく更新されない問題の修正。また、ブラウザーでホイール入力が滑らかに取得できなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3422">#3422</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3453">#3453</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3460">#3460</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3467">#3467</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3390">#3390</a>)。</li>
   <li>IME 入力が欠落する問題や、変換中にフォーカスを切り替えた場合の不具合の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3382">#3382</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3463">#3463</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3623">#3623</a>)。</li>
   <li>Android での OpenGL コンテキスト喪失時の描画復元と、一時停止時に応答しなくなる問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3215">#3215</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3327">#3327</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3334">#3334</a>)。</li>
   <li>Proton / DXVK 環境で DirectX の初期化時にクラッシュしていた問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3489">#3489</a>)。</li>
   <li>拡大縮小して描画したテキストが描画先の端で欠ける問題の修正。また、同じフォントソースを並行して使用した場合の競合状態の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3529">#3529</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3605">#3605</a>)。</li>
-  <li>音声のリサンプリングやシークで、長さや再生位置が正しくなくなる問題の修正。また、ストリームが壊れる問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3352">#3352</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3545">#3545</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3589">#3589</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3643">#3643</a>)。</li>
+  <li>音声のリサンプリングやシークで、長さや再生位置が正しくなくなる問題の修正。また、ストリームが壊れる問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3352">#3352</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3545">#3545</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3583">#3583</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3584">#3584</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3587">#3587</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3589">#3589</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3643">#3643</a>)。</li>
   <li>その他マイナーな問題の修正</li>
 </ul>
 <h3>パフォーマンス改善</h3>
@@ -200,7 +200,7 @@
   <li>GPU リソースの復元方式を見直し、描画履歴を保持するための処理を削減 (<a href="https://github.com/hajimehoshi/ebiten/issues/3090">#3090</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3215">#3215</a>)。</li>
   <li>ベクターグラフィックスの描画でテクスチャアトラスの使用量を削減 (<a href="https://github.com/hajimehoshi/ebiten/issues/3358">#3358</a>)。</li>
   <li><code>text/v2</code> のグリフ画像の生成を遅延させ、不要な画像生成や描画呼び出しを削減 (<a href="https://github.com/hajimehoshi/ebiten/issues/3450">#3450</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3455">#3455</a>)。</li>
-  <li><code>(*ebiten.Image).RecyclableSubImage</code> と <code>Recycle</code> により、サブ画像のオブジェクトを再利用できるように変更。メモリ確保を削減できます。 <code>Recycle</code> は <code>RecyclableSubImage</code> で作成した画像にのみ使用できます (<a href="https://github.com/hajimehoshi/ebiten/issues/3423">#3423</a>)。</li>
+  <li><code>(*ebiten.Image).RecyclableSubImage</code> と <code>Recycle</code> により、サブ画像のオブジェクトを再利用できるように変更。メモリ確保を削減できます。 <code>Recycle</code> は <code>RecyclableSubImage</code> で作成した画像にのみ使用できます (<a href="https://github.com/hajimehoshi/ebiten/issues/3418">#3418</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3423">#3423</a>)。</li>
   <li>ウィンドウ関連の処理でロックの使用を削減 (<a href="https://github.com/hajimehoshi/ebiten/issues/3403">#3403</a>)。</li>
   <li>その他マイナーなパフォーマンス改善</li>
 </ul>
