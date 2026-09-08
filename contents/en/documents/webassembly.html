@@ -16,21 +16,13 @@ Remove-Item Env:GOOS
 Remove-Item Env:GOARCH</code></pre>
 <h3>Copying <code>wasm_exec.js</code> to execute the WebAssembly binary</h3>
 <p>On a Unix/Linux shell:</p>
-<pre><code># Go 1.24 and newer
-cp $(go env GOROOT)/lib/wasm/wasm_exec.js .
-
-# Go 1.23 and older
-cp $(go env GOROOT)/misc/wasm/wasm_exec.js .</code></pre>
+<pre><code>cp $(go env GOROOT)/lib/wasm/wasm_exec.js .</code></pre>
 <p>On Windows PowerShell:</p>
 <pre><code>$goroot = go env GOROOT
 
-# Go 1.24 and newer
-cp $goroot\lib\wasm\wasm_exec.js .
-
-# Go 1.23 and older
-cp $goroot\misc\wasm\wasm_exec.js .</code></pre>
-<p>If <code>wasm_exec.js</code> cannot be found, download the <code>wasm_exec.js</code> for the same version of Go you used to compile the game from <a href="https://go.googlesource.com/go">the official repository</a> or <a href="https://github.com/golang/go">the GitHub repository</a>. For example, if you used Go 1.24.5, the path to <code>wasm_exec.js</code> would be:</p>
-<pre><code>https://raw.githubusercontent.com/golang/go/refs/tags/go1.24.5/lib/wasm/wasm_exec.js</code></pre>
+cp $goroot\lib\wasm\wasm_exec.js .</code></pre>
+<p>If <code>wasm_exec.js</code> cannot be found, download the <code>wasm_exec.js</code> for the same version of Go you used to compile the game from <a href="https://go.googlesource.com/go">the official repository</a> or <a href="https://github.com/golang/go">the GitHub repository</a>. For example, if you used Go 1.25.0, the path to <code>wasm_exec.js</code> would be:</p>
+<pre><code>https://raw.githubusercontent.com/golang/go/refs/tags/go1.25.0/lib/wasm/wasm_exec.js</code></pre>
 <h3>Creating an HTML</h3>
 <p>Create this HTML:</p>
 <pre><code>&lt;!DOCTYPE html&gt;

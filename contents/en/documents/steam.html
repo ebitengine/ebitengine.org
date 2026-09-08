@@ -35,12 +35,13 @@ go build -o yourgame_windows_amd64.exe -ldflags="-X=runtime.godebugDefault=async
 Remove-Item Env:GOARCH</code></pre>
 <p>When building in a POSIX shell, it looks like this:</p>
 <pre><code>env GOOS=windows GOARCH=amd64 go build -o yourgame_windows_amd64.exe -ldflags="-X=runtime.godebugDefault=asyncpreemptoff=1 -H=windowsgui" .</code></pre>
-<p>Icons are not mandatory. If you wish, use a resource embedding tool as appropriate. During game execution, you can change the icon displayed in the taskbar by calling <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetWindowIcon"><code>ebiten.SetWindowIcon</code></a>.</p>
+<p>Icons are not mandatory. If you wish, use a resource embedding tool as appropriate. As of v2.10, Ebitengine automatically uses icons embedded in the executable as window icons. During game execution, you can change the icon displayed in the taskbar by calling <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetWindowIcon"><code>ebiten.SetWindowIcon</code></a>.</p>
 <p>Once the <code>exe</code> file is created in this manner, compress it into a zip file and upload it to Steamworks as a build.</p>
 <h2>macOS</h2>
 <p>On macOS, you need to create an application in the <code>.app</code> format. In addition, you must obtain notarization from Apple (<a href="https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution">Notarization</a>). To receive notarization, you must be registered with <a href="https://developer.apple.com/">Apple Developer</a>.</p>
 <p>In writing this article, I referred to the blog post “<a href="https://coldandold.com/posts/releasing-steam-game-on-mac/">Releasing Steam Games on Mac Is a Monster Pain</a>”.</p>
 <p>First, prepare an icon file in the <code>icns</code> format. This format can be created simply by opening a PNG or similar in <code>Preview.app</code> and exporting it. If it does not appear in the export format list, hold down the Option key while opening the list.</p>
+<p>The example below targets macOS 12 or later, the minimum supported by <a href="https://go.dev/doc/go1.25#darwin">Go 1.25</a>. Packaging and notarization still require Apple's tools.</p>
 <p>Next, create the minimal <code>.app</code> as follows. For the architecture, create a universal binary for amd64 (Intel) and arm64 (ARM) using the <code>lipo</code> command.</p>
 <pre><code>name=yourgame
 app_name=YourGame.app
@@ -49,8 +50,8 @@ bundle_id=com.example.yourgame
 rm -rf ${app_name}
 mkdir -p ${app_name}/Contents/MacOS
 mkdir -p ${app_name}/Contents/Resources
-env CGO_ENABLED=1 CGO_CFLAGS=-mmacosx-version-min=10.12 CGO_LDFLAGS=-mmacosx-version-min=10.12 GOARCH=amd64 go build -o ${name}_amd64 .
-env CGO_ENABLED=1 CGO_CFLAGS=-mmacosx-version-min=10.12 CGO_LDFLAGS=-mmacosx-version-min=10.12 GOARCH=arm64 go build -o ${name}_arm64 .
+env CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ${name}_amd64 .
+env CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o ${name}_arm64 .
 lipo ${name}_amd64 ${name}_arm64 -create -output ${app_name}/Contents/MacOS/${name}
 rm ${name}_amd64
 rm ${name}_arm64
@@ -76,7 +77,7 @@ echo '&lt;?xml version="1.0" encoding="UTF-8"?&gt;
     &lt;key&gt;NSHighResolutionCapable&lt;/key&gt;
     &lt;true /&gt;
     &lt;key&gt;LSMinimumSystemVersion&lt;/key&gt;
-    &lt;string&gt;10.12.0&lt;/string&gt;
+    &lt;string&gt;12.0&lt;/string&gt;
   &lt;/dict&gt;
 &lt;/plist&gt;' |
     sed -e "s/{{.Name}}/${name}/g" |
@@ -122,36 +123,12 @@ func main() {
 <p>When uploading the resulting <code>.app</code> to Steamworks as a build, do not create a zip file using the <code>zip</code> command or Finder’s menu. The notarized <code>.app</code> contains special files that will be lost if you create a zip in the normal way. Instead, use the <code>ditto</code> command to create the zip file.</p>
 <pre><code>ditto -c -k --keepParent YourGame.app yourgame_darwin.zip</code></pre>
 <h2>Linux</h2>
-<p>For Linux, Valve’s <a href="https://github.com/ValveSoftware/steam-runtime">Steam Runtime</a> is provided as a Dockerfile. Building in that environment is the simplest approach. As of January 2025, please refer to the <a href="https://repo.steampowered.com/steamrt-images-sniper/snapshots/">Sniper</a> Docker image. Note that 32-bit Linux does not appear to be supported.</p>
-<pre><code>name=yourgame
-STEAM_RUNTIME_VERSION=3.0.20250108.112707
-GO_VERSION=$(go env GOVERSION)
-
-mkdir -p .cache/${STEAM_RUNTIME_VERSION}
-
-# Download binaries for amd64.
-if [[ ! -f .cache/${STEAM_RUNTIME_VERSION}/com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.Dockerfile ]]; then
-    (cd .cache/${STEAM_RUNTIME_VERSION}; curl --location --remote-name https://repo.steampowered.com/steamrt-images-sniper/snapshots/${STEAM_RUNTIME_VERSION}/com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.Dockerfile)
-fi
-if [[ ! -f .cache/${STEAM_RUNTIME_VERSION}/com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.tar.gz ]]; then
-    (cd .cache/${STEAM_RUNTIME_VERSION}; curl --location --remote-name https://repo.steampowered.com/steamrt-images-sniper/snapshots/${STEAM_RUNTIME_VERSION}/com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.tar.gz)
-fi
-if [[ ! -f .cache/${GO_VERSION}.linux-amd64.tar.gz ]]; then
-    (cd .cache; curl --location --remote-name https://golang.org/dl/${GO_VERSION}.linux-amd64.tar.gz)
-fi
-
-# Build for amd64
-(cd .cache/${STEAM_RUNTIME_VERSION}; docker build -f com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.Dockerfile -t steamrt_sniper_amd64:latest .)
-docker run --rm --workdir=/work --volume $(pwd):/work steamrt_sniper_amd64:latest /bin/sh -c "
-export PATH=\$PATH:/usr/local/go/bin
-export CGO_CFLAGS=-std=gnu99
-
-rm -rf /usr/local/go &amp;&amp; tar -C /usr/local -xzf .cache/${GO_VERSION}.linux-amd64.tar.gz
-
-go build -o ${name}_linux_amd64 .
-"</code></pre>
+<p>Linux builds use pure Go. Build for Linux directly with Go:</p>
+<pre><code>env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o yourgame_linux_amd64 .</code></pre>
+<p>The game still uses shared libraries at runtime. If other dependencies in your game require Cgo, follow their build requirements.</p>
 <p>Compress the resulting <code>yourgame_linux_amd64</code> into a zip file and upload it to Steamworks as a build.</p>
-<h2>Others</h2>
+<h2>Tips</h2>
 <ul>
-  <li>It is strongly recommended to configure your account to allow the download of the <a href="https://partner.steamgames.com/doc/store/testing">Dev Comp package</a>. By replacing the executable in the original location where Steam downloads the game (<code>steamapps/common/yourgame</code>), you can perform tests that are close to the production environment.</li>
+  <li>For testing through Steam, ensure that your <a href="https://partner.steamgames.com/doc/store/testing">Dev Comp package</a> includes the game's depots, then install the game using your developer account. You can replace the installed executable (<code>steamapps/common/yourgame</code>) with a local build and launch the game from your Steam library.</li>
+  <li>For more information about the runtime environment for Linux games, see Valve's <a href="https://gitlab.steamos.cloud/steamrt/steam-runtime-tools/-/blob/main/docs/slr-for-game-developers.md">Steam Linux Runtime guide for game developers</a>.</li>
 </ul>

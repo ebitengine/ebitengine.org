@@ -9,7 +9,7 @@
 <h3>Why did you name the lib "Ebitengine"?</h3>
 <p>This is a portmanteau of an Ebiten and an Engine. An Ebiten is delicious.</p>
 <h3>Is it possible to cross-compile an application with Ebitengine?</h3>
-<p>Yes and no. If the target is Windows or Wasm, yes. Otherwise, it is almost impossible to cross-compile due to Cgo unfortunately. See also <a href="https://github.com/golang/go/issues/18296">Go issue #18296</a>.</p>
+<p>Yes. As of Ebitengine v2.10, desktop builds (Windows, macOS, Linux, and FreeBSD) do not require Cgo. Set <code>GOOS</code> and <code>GOARCH</code> for the target platform, and <code>CGO_ENABLED=0</code> to build without a C compiler. WebAssembly can also be cross-compiled. Mobile builds still require platform-specific tools and Cgo; see <a href="./mobile.html">Mobile</a>. Other libraries used by your game may have their own build requirements.</p>
 <h2>Graphics</h2>
 <h3>How can I draw lines?</h3>
 <p>Use <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/vector#StrokeLine"><code>vector.StrokeLine</code></a>.</p>

@@ -13,49 +13,83 @@
 </div>
 
 <h2>Installing Go</h2>
-<p>Install <a href="https://golang.org/">Go</a> on your machine. Ebitengine requires Go 1.22 or later.</p>
+<p>Install <a href="https://golang.org/">Go</a> on your machine. Ebitengine requires Go 1.25 or later.</p>
 
-<div data-tags="windows">
-  <p>Note that you do NOT need a C compiler for Ebitengine on Windows.</p>
-</div>
+<p>As of Ebitengine v2.10, desktop builds (Windows, macOS, Linux, and FreeBSD) use pure Go. No C compiler or development headers are required. Mobile builds still require Cgo; see <a href="./mobile.html">Mobile</a>.</p>
 
-<div data-tags="!windows">
-  <h2>Installing a C compiler</h2>
-  <p>A C compiler is required as Ebitengine uses not only Go but also C.</p>
-  <div data-tags="darwin">
-    <p>On the latest macOS, just type <code>clang</code> on your terminal and a dialog would appear if you don't have clang compiler. Follow the instruction to install it.</p>
-    <p>You might find the following error when executing clang.</p>
-    <pre><code>xcrun: error: invalid active developer path (/Library/Developer/CommandLineTools), missing xcrun at: /Library/Developer/CommandLineTools/usr/bin/xcrun</code></pre>
-    <p>In this case, run <code>xcode-select --install</code> and install commandline tools.</p>
-  </div>
-  <div data-tags="linux">
-    <p>Use your distribution's package manager. For example, Ubuntu can use <code>apt</code>.</p>
-    <pre><code>apt install gcc</code></pre>
-  </div>
-  <div data-tags="freebsd">
-    <p>Use <code>pkg</code>.</p>
-    <pre><code>pkg install clang</code></pre>
-  </div>
-</div>
-
-<div data-tags="!windows,!darwin">
-  <h2>Installing dependencies</h2>
+<div data-tags="linux freebsd">
+  <h2>Runtime libraries</h2>
+  <p>These instructions cover the standard X11 desktop backend in Ebitengine v2.10. A running X server (or XWayland in a Wayland session) and a working graphics driver are required. Installing client libraries alone does not set up a desktop environment. Development packages and <code>pkg-config</code> are not required.</p>
+  <p>The graphics backend loads <code>libX11</code> and OpenGL libraries (<code>libGL</code> / <code>libGLX</code>). The commands below use Mesa as the OpenGL implementation. If you already use a working proprietary graphics driver, keep your distribution's driver setup instead of installing the Mesa packages.</p>
+  <p>The <a href="https://github.com/hajimehoshi/ebiten/blob/2.10/internal/glfw/x11_init_linbsd.go">X11 extension libraries</a> (<code>libXcursor</code>, <code>libXi</code>, <code>libXinerama</code>, <code>libXrandr</code>, <code>libXrender</code>, and <code>libXext</code>) are optional, but recommended for cursor, input, monitor, and window features. They are listed separately below. The package manager installs transitive dependencies automatically, so some packages may already be present.</p>
+  <p>For audio, <a href="https://github.com/ebitengine/oto/blob/v3.5.0/driver_unix.go">Oto first connects to a PulseAudio-compatible server</a>, including PipeWire's PulseAudio service. This uses a Go client and does not require <code>libpulse</code>. Only the ALSA fallback needs <code>libasound.so.2</code>, provided by the audio packages below. Installing the ALSA library alone does not configure audio devices or permissions.</p>
   <div data-tags="linux">
     <h3>Debian / Ubuntu</h3>
-    <pre><code>sudo apt install libc6-dev libgl1-mesa-dev libxcursor-dev libxi-dev libxinerama-dev libxrandr-dev libxxf86vm-dev libasound2-dev pkg-config</code></pre>
+    <p>The ALSA command below is for Debian 13 and Ubuntu 24.04 or later. On Debian 12 and Ubuntu 22.04, use <code>libasound2</code> instead of <code>libasound2t64</code>.</p>
+    <pre><code># Graphics (Mesa)
+sudo apt install libx11-6 libgl1 libglx-mesa0
+
+# X11 extensions (optional, recommended)
+sudo apt install libxcursor1 libxi6 libxinerama1 libxrandr2 libxrender1 libxext6
+
+# ALSA fallback (optional)
+sudo apt install libasound2t64</code></pre>
     <h3>Fedora</h3>
-    <pre><code>sudo dnf install libglvnd-devel libXrandr-devel libXcursor-devel libXinerama-devel libXi-devel libXxf86vm-devel alsa-lib-devel pkg-config</code></pre>
+    <pre><code># Graphics (Mesa)
+sudo dnf install libX11 libglvnd-glx mesa-libGL mesa-dri-drivers
+
+# X11 extensions (optional, recommended)
+sudo dnf install libXcursor libXi libXinerama libXrandr libXrender libXext
+
+# ALSA fallback (optional)
+sudo dnf install alsa-lib</code></pre>
     <h3>Solus</h3>
-    <pre><code>sudo eopkg install libglvnd-devel libx11-devel libxrandr-devel libxinerama-devel libxcursor-devel libxi-devel libxxf86vm-devel alsa-lib-devel pkg-config</code></pre>
+    <pre><code># Graphics (Mesa)
+sudo eopkg install libx11 libglvnd mesalib
+
+# X11 extensions (optional, recommended)
+sudo eopkg install libxcursor libxi libxinerama libxrandr libxrender libxext
+
+# ALSA fallback (optional)
+sudo eopkg install alsa-lib</code></pre>
     <h3>Arch</h3>
-    <pre><code>sudo pacman -S mesa libxrandr libxcursor libxinerama libxi pkg-config</code></pre>
+    <pre><code># Graphics (Mesa)
+sudo pacman -S libx11 libglvnd mesa
+
+# X11 extensions (optional, recommended)
+sudo pacman -S libxcursor libxi libxinerama libxrandr libxrender libxext
+
+# ALSA fallback (optional)
+sudo pacman -S alsa-lib</code></pre>
     <h3>Alpine</h3>
-    <pre><code>sudo apk add alsa-lib-dev libx11-dev libxrandr-dev libxcursor-dev libxinerama-dev libxi-dev mesa-dev pkgconf</code></pre>
+    <pre><code># Graphics (Mesa)
+sudo apk add libx11 mesa-gl mesa-dri-gallium
+
+# X11 extensions (optional, recommended)
+sudo apk add libxcursor libxi libxinerama libxrandr libxrender libxext
+
+# ALSA fallback (optional)
+sudo apk add alsa-lib</code></pre>
     <h3>Void</h3>
-    <pre><code>sudo xbps-install libXcursor-devel libXi-devel libXinerama-devel libXrandr-devel libXxf86vm-devel MesaLib-devel pkg-config</code></pre>
+    <pre><code># Graphics (Mesa)
+sudo xbps-install libX11 libglvnd mesa-dri
+
+# X11 extensions (optional, recommended)
+sudo xbps-install libXcursor libXi libXinerama libXrandr libXrender libXext
+
+# ALSA fallback (optional)
+sudo xbps-install alsa-lib</code></pre>
   </div>
   <div data-tags="freebsd">
-    <pre><code>pkg install alsa-lib libxcursor libxi libxinerama libxrandr mesa-libs pkgconf</code></pre>
+    <h3>FreeBSD</h3>
+    <pre><code># Graphics (Mesa)
+pkg install libX11 libglvnd mesa-libs mesa-dri
+
+# X11 extensions (optional, recommended)
+pkg install libXcursor libXi libXinerama libXrandr libXrender libXext
+
+# ALSA fallback (optional)
+pkg install alsa-lib</code></pre>
   </div>
 </div>
 

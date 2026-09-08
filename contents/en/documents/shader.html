@@ -54,12 +54,12 @@
   <li><code>import</code></li>
   <li><code>switch</code></li>
   <li><code>goto</code></li>
-  <li><code>for-range</code></li>
   <li>Goroutines</li>
   <li><code>defer</code></li>
   <li><code>init</code> functions</li>
   <li>Method definition</li>
 </ul>
+<p>As of v2.10, <code>for range</code> supports integers and fixed-size arrays. The bitwise <code>&amp;^</code> and unary <code>^</code> operators are also supported. Arrays cannot be compared with <code>==</code> or <code>!=</code>.</p>
 <h3>Unit mode</h3>
 <p>The unit mode was added to Kage as of v2.6. These comments work as compiler directives to specify the unit mode.</p>
 <ul>
@@ -184,17 +184,21 @@ v2.xyz = v2.xxx        // Get vec3(1, 1, 1), and set it to all the components to
 <h3>Built-in functions (images)</h3>
 <table>
   <tr><th>Function</th><th>Description</th></tr>
-  <tr><th><code>imageSrc<i>N</i>At(pos vec2) vec4</code></th><td>Returns the color value as <code>vec4</code> at the given position <code>pos</code> of the source image <code><i>N</i></code> in texels or pixels . The unit depends on the unit mode. <code><i>N</i></code> is 0 to 3. <code>pos</code> is always a position of 0th texture, whichever <code><i>N</i></code> is. For <code><i>N</i></code> ≧ 1, Kage automatically converts the given position to an appropriate position of the <code><i>N</i></code>-th texture.</td></tr>
-  <tr><th><code>imageSrc<i>N</i>UnsafeAt(pos vec2) vec4</code></th><td>Returns the color value as <code>vec4</code> at the given position <code>pos</code> of the source image <i>N</i> in texels or pixels . The unit depends on the unit mode. <i>N</i> is 0 to 3. <code>pos</code> is always a position of 0th texture, whichever <code><i>N</i></code> is. For <code><i>N</i></code> ≧ 1, Kage automatically converts the given position to an appropriate position of the <code><i>N</i></code>-th texture.<br>The difference from the safe version (<code>imageSrc<i>N</i>At</code>) is the returning value when the position is out of the bounds. The safe version returns <code>vec4(0)</code> in this case, while the unsafe version's returning value is undefined. The unsafe version is faster. If you are sure that the position is in the bounds, you can use the unsafe version for performance.</td></tr>
+  <tr><th><code>imageSrc0At(pos vec2) vec4</code></th><td>Returns the color at <code>pos</code> in the 0th source image's texture coordinates. The unit depends on the unit mode. Returns <code>vec4(0)</code> outside the image bounds.</td></tr>
+  <tr><th><code>imageSrc0UnsafeAt(pos vec2) vec4</code></th><td>Like <code>imageSrc0At</code>, but the result is undefined outside the image bounds. This can be faster when the position is known to be in bounds.</td></tr>
+  <tr><th><code>imageSrc<i>N</i>AtFromSrc0Pos(pos vec2) vec4</code></th><td>Returns the color of source image <code><i>N</i></code> at the position corresponding to <code>pos</code> in the 0th source image's texture. <code><i>N</i></code> is 1 to 3. Kage converts the coordinates to the target texture. The unit depends on the unit mode. Returns <code>vec4(0)</code> outside the image bounds. (v2.10.0)</td></tr>
+  <tr><th><code>imageSrc<i>N</i>UnsafeAtFromSrc0Pos(pos vec2) vec4</code></th><td>Like <code>imageSrc<i>N</i>AtFromSrc0Pos</code>, but the result is undefined outside the image bounds. <code><i>N</i></code> is 1 to 3. This can be faster when the position is known to be in bounds. (v2.10.0)</td></tr>
   <tr><th><code>imageSrc<i>N</i>Origin() vec2</code></th><td>Returns the upper-left position of the source image <code><i>N</i></code> in texels or pixels on the texture. The unit depends on the unit mode.</td></tr>
   <tr><th><code>imageSrc<i>N</i>Size() vec2</code></th><td>Returns the size of the source image <code><i>N</i></code> in texels or pixels on the texture. The unit depends on the unit mode.</td></tr>
   <tr><th><code>imageDstOrigin() vec2</code></th><td>Returns the upper-left position of the destination image in texels or pixels on the texture. The unit depends on the unit mode.</td></tr>
   <tr><th><code>imageDstSize() vec2</code></th><td>Returns the size of the destination image in texels or pixels on the texture. The unit depends on the unit mode.</td></tr>
+  <tr><th><code>imageSrc<i>N</i>TextureSize() vec2</code></th><td>Returns the size in pixels of the texture containing source image <code><i>N</i></code>, regardless of unit mode. <code><i>N</i></code> is 0 to 3. This can be larger than the image. (v2.10.0)</td></tr>
+  <tr><th><code>imageDstTextureSize() vec2</code></th><td>Returns the size in pixels of the texture containing the destination image, regardless of unit mode. This can be larger than the image. No longer deprecated as of v2.10.</td></tr>
 </table>
+<p>As of v2.10, <code>imageSrc1At</code> through <code>imageSrc3At</code> and <code>imageSrc1UnsafeAt</code> through <code>imageSrc3UnsafeAt</code> are deprecated. Use the corresponding <code>AtFromSrc0Pos</code> and <code>UnsafeAtFromSrc0Pos</code> functions. The old names retain the same behavior.</p>
 <p>These functions are deprecated as of the version 2.6.</p>
 <table>
   <tr><th><code>imageSrcTextureSize() vec2</code></th><td>Returns the source image's texture size in pixels</td></tr>
-  <tr><th><code>imageDstTextureSize() vec2</code></th><td>Returns the destination image's texture size in pixels</td></tr>
   <tr><th><code>imageSrcRegionOnTexture() (vec2, vec2)</code></th><td>Returns the source image's origin position and the size on the texture in texels or pixels. The unit depends on the unit mode.</td></tr>
   <tr><th><code>imageDstRegionOnTexture() (vec2, vec2)</code></th><td>Returns the destination image's origin position and the size on the texture in texels or pixels. The unit depends on the unit mode (v2.1.0)</td></tr>
 </table>
@@ -208,6 +212,8 @@ v2.xyz = v2.xxx        // Get vec3(1, 1, 1), and set it to all the components to
   (\text{pixels}) &= (\text{texels}) \cdot (\text{the texture's size in pixels}) \\
   \end{aligned}</p>
 <p class="img"><img src="/images/documents/shader/textureandimage.png" width="456"></p>
+<h2>Shader precompilation</h2>
+<p>As of v2.10, the experimental <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/shaderprecomp"><code>exp/shaderprecomp</code></a> package can reduce runtime shader compilation work. Collect shaders with <code>shadercollector</code>, compile the generated sources for DirectX or Metal, and register the results during initialization. Existing <code>ebiten.NewShader</code> calls remain unchanged. OpenGL drivers still compile and link GLSL at runtime. Collect and precompile again when updating Ebitengine. See the <a href="./2.10.html#Shader_Precompilation">release notes</a> and the <a href="https://github.com/hajimehoshi/ebiten/tree/2.10/examples/shaderprecomp">example</a> for details.</p>
 <h2>Tutorials</h2>
 <ul>
   <li><a href="https://github.com/tinne26/kage-desk">Kage's desk</a></li>

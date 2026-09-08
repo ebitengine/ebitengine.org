@@ -54,12 +54,12 @@
   <li><code>import</code></li>
   <li><code>switch</code></li>
   <li><code>goto</code></li>
-  <li><code>for-range</code></li>
   <li>ゴルーチン</li>
   <li><code>defer</code></li>
   <li><code>init</code> 関数</li>
   <li>メソッド定義</li>
 </ul>
+<p>v2.10 から、整数や固定長配列に対して <code>for range</code> を使用できます。ビット演算子 <code>&amp;^</code> と単項 <code>^</code> も使用できます。配列を <code>==</code> や <code>!=</code> で比較することはできません。</p>
 <h3>単位モード</h3>
 <p>バージョン 2.6 から、 Kage に単位モードが加わりました。次のコメントがコンパイラディレクティブとなり、単位モードを指定できます。</p>
 <ul>
@@ -184,17 +184,21 @@ v2.xyz = v2.xxx        // Get vec3(1, 1, 1), and set it to all the components to
 <h3>組み込み関数 (画像)</h3>
 <table>
   <tr><th>関数</th><th>説明</span></th></tr>
-  <tr><th><code>imageSrc<i>N</i>At(pos vec2) vec4</code></th><td>描画元画像 <code><i>N</i></code> の、与えられたテクセルまたはピクセル単位の位置 <code>pos</code> の色を <code>vec4</code> で返す。単位は単位モードによる。 <code><i>N</i></code> は 0 から 3 の値を取る。 <code>pos</code> は、 <code><i>N</i></code> の値に関わらず、常に 0 番目のテクスチャの位置である。 <code><i>N</i></code> ≧ 1 については、 Kage が自動的に <code><i>N</i></code> 番目のテクスチャの適切な位置に変換する。</td></tr>
-  <tr><th><code>imageSrc<i>N</i>UnsafeAt(pos vec2) vec4</code></th><td>描画元画像 <code><i>N</i></code> の、与えられたテクセルまたはピクセル単位の位置 <code>pos</code> の色を <code>vec4</code> で返す。単位は単位モードによる。 <code><i>N</i></code> は 0 から 3 の値を取る。 <code>pos</code> は、 <code><i>N</i></code> の値に関わらず、常に 0 番目のテクスチャの位置である。 <code><i>N</i></code> ≧ 1 については、 Kage が自動的に <code><i>N</i></code> 番目のテクスチャの適切な位置に変換する。<br>セーフバージョン (<code>imageSrc<i>N</i>At</code>) との違いは、画像の境界外の位置を指定したときの戻り値である。セーフバージョンはこの場合 <code>vec4(0)</code> を返すが、アンセーフバージョンは未定義である。アンセーフバージョンは高速に動作する。もし位置が画像の境界内にあることが確実ならば、パフォーマンスのためにアンセーフバージョンを使ってもよい。</td></tr>
+  <tr><th><code>imageSrc0At(pos vec2) vec4</code></th><td>0 番目の描画元画像のテクスチャ座標 <code>pos</code> における色を返す。単位は単位モードによる。画像の境界外では <code>vec4(0)</code> を返す。</td></tr>
+  <tr><th><code>imageSrc0UnsafeAt(pos vec2) vec4</code></th><td><code>imageSrc0At</code> と同様だが、画像の境界外での戻り値は未定義。位置が境界内であることが確実な場合、高速に動作する。</td></tr>
+  <tr><th><code>imageSrc<i>N</i>AtFromSrc0Pos(pos vec2) vec4</code></th><td>0 番目の描画元画像のテクスチャ座標 <code>pos</code> に対応する、描画元画像 <code><i>N</i></code> の色を返す。 <code><i>N</i></code> は 1 から 3。 Kage が対象のテクスチャ座標に変換する。単位は単位モードによる。画像の境界外では <code>vec4(0)</code> を返す。 (v2.10.0)</td></tr>
+  <tr><th><code>imageSrc<i>N</i>UnsafeAtFromSrc0Pos(pos vec2) vec4</code></th><td><code>imageSrc<i>N</i>AtFromSrc0Pos</code> と同様だが、画像の境界外での戻り値は未定義。 <code><i>N</i></code> は 1 から 3。位置が境界内であることが確実な場合、高速に動作する。 (v2.10.0)</td></tr>
   <tr><th><code>imageSrc<i>N</i>Origin() vec2</code></th><td>描画元画像 <code><i>N</i></code> のテクスチャ上における左上位置を、テクセルまたはピクセルで返す。単位は単位モードによる。</td></tr>
   <tr><th><code>imageSrc<i>N</i>Size() vec2</code></th><td>描画元画像 <code><i>N</i></code> の大きさを、テクセルまたはピクセルで返す。単位は単位モードによる。</td></tr>
   <tr><th><code>imageDstOrigin() vec2</code></th><td>描画先画像 <code><i>N</i></code> のテクスチャ上における左上位置を、テクセルまたはピクセルで返す。単位は単位モードによる。</td></tr>
   <tr><th><code>imageDstSize() vec2</code></th><td>描画先画像 <code><i>N</i></code> の大きさを、テクセルまたはピクセルで返す。単位は単位モードによる。</td></tr>
+  <tr><th><code>imageSrc<i>N</i>TextureSize() vec2</code></th><td>描画元画像 <code><i>N</i></code> を格納するテクスチャの大きさを、単位モードに関わらずピクセルで返す。 <code><i>N</i></code> は 0 から 3。画像自体より大きい場合がある。 (v2.10.0)</td></tr>
+  <tr><th><code>imageDstTextureSize() vec2</code></th><td>描画先画像を格納するテクスチャの大きさを、単位モードに関わらずピクセルで返す。画像自体より大きい場合がある。 v2.10 から非推奨ではなくなった。</td></tr>
 </table>
+<p>v2.10 から、 <code>imageSrc1At</code> から <code>imageSrc3At</code>、および <code>imageSrc1UnsafeAt</code> から <code>imageSrc3UnsafeAt</code> は非推奨です。対応する <code>AtFromSrc0Pos</code>、 <code>UnsafeAtFromSrc0Pos</code> 関数を使用してください。従来の名前も引き続き同じ動作をします。</p>
 <p>バージョン 2.6 から、次の関数は非推奨になりました。</p>
 <table>
   <tr><th><code>imageSrcTextureSize() vec2</code></th><td>描画元画像のテクスチャの大きさをピクセル単位で返す。</td></tr>
-  <tr><th><code>imageDstTextureSize() vec2</code></th><td>描画先画像のテクスチャの大きさをピクセル単位で返す。</td></tr>
   <tr><th><code>imageSrcRegionOnTexture() (vec2, vec2)</code></th><td>描画元画像の、テクスチャ上の左上位置と大きさをテクセルまたはピクセル単位で返す。単位は単位モードによる。</td></tr>
   <tr><th><code>imageDstRegionOnTexture() (vec2, vec2)</code></th><td>描画先画像の、テクスチャ上の左上位置と大きさをテクセルまたはピクセル単位で返す。単位は単位モードによる。 (v2.1.0)</td></tr>
 </table>
@@ -208,6 +212,8 @@ v2.xyz = v2.xxx        // Get vec3(1, 1, 1), and set it to all the components to
   (\text{pixels}) &= (\text{texels}) \cdot (\text{the texture's size in pixels}) \\
   \end{aligned}</p>
 <p class="img"><img src="/images/documents/shader/textureandimage.png" width="456"></p>
+<h2>シェーダーの事前コンパイル</h2>
+<p>v2.10 から、実験的パッケージ <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2/exp/shaderprecomp"><code>exp/shaderprecomp</code></a> で実行時のシェーダーコンパイル処理を減らせます。 <code>shadercollector</code> でシェーダーを収集し、生成されたソースを DirectX や Metal 向けにコンパイルして、初期化時に登録します。既存の <code>ebiten.NewShader</code> 呼び出しはそのまま使えます。 OpenGL ドライバーによる GLSL のコンパイルとリンクは引き続き実行時に行われます。 Ebitengine の更新時には収集と事前コンパイルをやり直してください。詳しくは<a href="./2.10.html#シェーダーの事前コンパイル">リリースノート</a>と<a href="https://github.com/hajimehoshi/ebiten/tree/2.10/examples/shaderprecomp">サンプル</a>を参照してください。</p>
 <h2>チュートリアル</h2>
 <ul>
   <li><a href="https://github.com/tinne26/kage-desk">Kage's desk</a> (英語)</li>

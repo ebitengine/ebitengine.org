@@ -1,0 +1,16 @@
+<h1>v2.10.0 がリリースされました</h1>
+<p class="meta">Hajime Hoshi<br><span id="meta-created">2026-09-07</span></p>
+<p>v2.10.0 がリリースされました! 詳しくは<a href="/ja/documents/2.10.html">リリースノート</a>を参照してください。</p>
+<p>すべてのコントリビューターと、<a href="https://github.com/sponsors/hajimehoshi">GitHub Sponsors</a> および <a href="https://www.patreon.com/hajimehoshi_">Patreon</a> のスポンサーの皆様に感謝いたします。どうもありがとうございます!</p>
+<p>Ebitengine v2.10 は Go 1.25 以降が必要です。新しい主な機能は次のとおりです:</p>
+<dl>
+  <dt><a href="/ja/documents/2.10.html#デスクトップ環境での_Pure_Go_化">デスクトップ環境での Pure Go 化</a></dt>
+  <dd>macOS と Linux / BSD 向けのビルドが Cgo 不要になりました。すべてのデスクトップ向けのゲームを Go だけでビルドでき、クロスコンパイルも容易になります。</dd>
+  <dt><a href="/ja/documents/2.10.html#アプリケーションの仮想化_(VM)">アプリケーションの仮想化 (VM)</a></dt>
+  <dd>Ebitengine アプリケーションをホストから操作するゲストとして実行できます。別のアプリケーションへのゲームの埋め込みや、入力の送信、描画や音声の取得による自動テストが可能です。ビルドタグで明示的に有効にすると、プログラムや AI エージェントによるヘッドレステストに利用できます。</dd>
+  <dt><a href="/ja/documents/2.10.html#シェーダーの事前コンパイル">シェーダーの事前コンパイル</a></dt>
+  <dd>実験的パッケージ <code>exp/shaderprecomp</code> により、実行時のシェーダーコンパイル処理を減らし、ロード時間を短縮できます。</dd>
+  <dt><a href="/ja/documents/2.10.html#カラー絵文字とテキスト描画の改善">カラー絵文字とテキスト描画の改善</a></dt>
+  <dd><code>text/v2</code> パッケージがカラー絵文字の描画に対応し、双方向テキストの処理を改善しました。 IME 入力もより多くの環境に対応しました。</dd>
+</dl>
+<p>フィードバックお待ちしております!</p>

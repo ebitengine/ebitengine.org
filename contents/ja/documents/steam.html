@@ -35,13 +35,14 @@ go build -o yourgame_windows_amd64.exe -ldflags="-X=runtime.godebugDefault=async
 Remove-Item Env:GOARCH</code></pre>
 <p>POSIX シェルでビルドする場合は次のようになります。</p>
 <pre><code>env GOOS=windows GOARCH=amd64 go build -o yourgame_windows_amd64.exe -ldflags="-X=runtime.godebugDefault=asyncpreemptoff=1 -H=windowsgui" .</code></pre>
-<p>アイコンは必須ではありません。気になる方はリソースを埋め込むツールを適宜使ってください。ゲーム実行中に <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetWindowIcon"><code>ebiten.SetWindowIcon</code></a> を呼ぶことで、タスクバーに表示されるアイコンを変更することはできます。</p>
+<p>アイコンは必須ではありません。気になる方はリソースを埋め込むツールを適宜使ってください。v2.10 から、実行ファイルに埋め込まれたアイコンは自動的にウィンドウアイコンとして使われます。ゲーム実行中に <a href="https://pkg.go.dev/github.com/hajimehoshi/ebiten/v2#SetWindowIcon"><code>ebiten.SetWindowIcon</code></a> を呼ぶことで、タスクバーに表示されるアイコンを変更することはできます。</p>
 <p>こうして出来上がった <code>exe</code> ファイルを zip で固めて、 Steamworks にビルドとしてアップロードしてください。</p>
 <h2>macOS</h2>
 <p>macOS の場合は <code>.app</code> 形式のアプリケーションを作る必要があります。また Apple から<a href="https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution">公証 (Notarization)</a> を受ける必要があります。公証を受けるためには <a href="https://developer.apple.com/">Apple Developer</a> の登録が必須です。</p>
 <p>本記事作成にあたって、ブログ記事「<a href="https://coldandold.com/posts/releasing-steam-game-on-mac/">Releasing Steam Games on Mac Is a Monster Pain</a>」を参考にしました。</p>
 <p>まずアイコンファイルを <code>icns</code> 形式で用意します。この形式は PNG などを <code>Preview.app</code> で開いてエクスポートするだけで作れます。エクスポートのフォーマット一覧に出てこない場合は、 Option キーを押しながらフォーマット一覧を開くと出てきます。</p>
 <p>次に必要最小限の <code>.app</code> を次のように作ります。アーキテクチャとして、 amd64 (Intel) と arm64 (ARM) のユニバーサルバイナリを <code>lipo</code> コマンドで作成します。</p>
+<p>次の例は <a href="https://go.dev/doc/go1.25#darwin">Go 1.25</a> がサポートする最小バージョンの macOS 12 以降を対象としています。パッケージの作成や公証には引き続き Apple のツールが必要です。</p>
 <pre><code>name=yourgame
 app_name=YourGame.app
 bundle_id=com.example.yourgame
@@ -49,8 +50,8 @@ bundle_id=com.example.yourgame
 rm -rf ${app_name}
 mkdir -p ${app_name}/Contents/MacOS
 mkdir -p ${app_name}/Contents/Resources
-env CGO_ENABLED=1 CGO_CFLAGS=-mmacosx-version-min=10.12 CGO_LDFLAGS=-mmacosx-version-min=10.12 GOARCH=amd64 go build -o ${name}_amd64 .
-env CGO_ENABLED=1 CGO_CFLAGS=-mmacosx-version-min=10.12 CGO_LDFLAGS=-mmacosx-version-min=10.12 GOARCH=arm64 go build -o ${name}_arm64 .
+env CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o ${name}_amd64 .
+env CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -o ${name}_arm64 .
 lipo ${name}_amd64 ${name}_arm64 -create -output ${app_name}/Contents/MacOS/${name}
 rm ${name}_amd64
 rm ${name}_arm64
@@ -76,7 +77,7 @@ echo '&lt;?xml version="1.0" encoding="UTF-8"?&gt;
     &lt;key&gt;NSHighResolutionCapable&lt;/key&gt;
     &lt;true /&gt;
     &lt;key&gt;LSMinimumSystemVersion&lt;/key&gt;
-    &lt;string&gt;10.12.0&lt;/string&gt;
+    &lt;string&gt;12.0&lt;/string&gt;
   &lt;/dict&gt;
 &lt;/plist&gt;' |
     sed -e "s/{{.Name}}/${name}/g" |
@@ -122,36 +123,12 @@ func main() {
 <p>こうして出来上がった <code>.app</code> を Steamworks にビルドとしてアップロードする際、 <code>zip</code> コマンドや Finder のメニューで zip ファイルを作ってはいけません。公証を受けた <code>.app</code> には特殊なファイルをが含まれていて、普通に zip を作ろうとするとそのファイルが欠落してしまいます。代わりに <code>ditto</code> コマンドを使って zip ファイルを作ります。</p>
 <pre><code>ditto -c -k --keepParent YourGame.app yourgame_darwin_amd64.zip</code></pre>
 <h2>Linux</h2>
-<p>Linux の場合は <a href="https://github.com/ValveSoftware/steam-runtime">Steam Runtime</a> が Dockerfile として用意されています。その環境下でビルドするのが最も簡単です。 2025 年 1 月現在の Docker イメージは <a href="https://repo.steampowered.com/steamrt-images-sniper/snapshots/">Sniper</a> をご参照ください。 32bit Linux には対応していないようです。</p>
-<pre><code>name=yourgame
-STEAM_RUNTIME_VERSION=3.0.20250108.112707
-GO_VERSION=$(go env GOVERSION)
-
-mkdir -p .cache/${STEAM_RUNTIME_VERSION}
-
-# Download binaries for amd64.
-if [[ ! -f .cache/${STEAM_RUNTIME_VERSION}/com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.Dockerfile ]]; then
-    (cd .cache/${STEAM_RUNTIME_VERSION}; curl --location --remote-name https://repo.steampowered.com/steamrt-images-sniper/snapshots/${STEAM_RUNTIME_VERSION}/com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.Dockerfile)
-fi
-if [[ ! -f .cache/${STEAM_RUNTIME_VERSION}/com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.tar.gz ]]; then
-    (cd .cache/${STEAM_RUNTIME_VERSION}; curl --location --remote-name https://repo.steampowered.com/steamrt-images-sniper/snapshots/${STEAM_RUNTIME_VERSION}/com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.tar.gz)
-fi
-if [[ ! -f .cache/${GO_VERSION}.linux-amd64.tar.gz ]]; then
-    (cd .cache; curl --location --remote-name https://golang.org/dl/${GO_VERSION}.linux-amd64.tar.gz)
-fi
-
-# Build for amd64
-(cd .cache/${STEAM_RUNTIME_VERSION}; docker build -f com.valvesoftware.SteamRuntime.Sdk-amd64,i386-sniper-sysroot.Dockerfile -t steamrt_sniper_amd64:latest .)
-docker run --rm --workdir=/work --volume $(pwd):/work steamrt_sniper_amd64:latest /bin/sh -c "
-export PATH=\$PATH:/usr/local/go/bin
-export CGO_CFLAGS=-std=gnu99
-
-rm -rf /usr/local/go &amp;&amp; tar -C /usr/local -xzf .cache/${GO_VERSION}.linux-amd64.tar.gz
-
-go build -o ${name}_linux_amd64 .
-"</code></pre>
+<p>Linux 向けのビルドは Pure Go です。 Go で直接 Linux 向けにビルドできます:</p>
+<pre><code>env CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o yourgame_linux_amd64 .</code></pre>
+<p>実行時には引き続き共有ライブラリを使用します。ゲームのほかの依存ライブラリが Cgo を必要とする場合は、そのビルド要件に従ってください。</p>
 <p>出来上がった <code>yourgame_linux_amd64</code> をそれぞれ zip に固めて、 Steamworks にビルドとしてアップロードしてください。</p>
-<h2>その他</h2>
+<h2>ヒント</h2>
 <ul>
-  <li><a href="https://partner.steamgames.com/doc/store/testing">Dev Comp パッケージ</a>をダウンロードできるようにアカウントを設定することを強く推奨します。 Steam でゲームがダウンロードされる本来の箇所 (<code>steamapps/common/yourgame</code>) で実行ファイルを置き換えることで、本番に近いテストが行なえます。</li>
+  <li>Steam 経由でテストするには、<a href="https://partner.steamgames.com/doc/store/testing">Dev Comp パッケージ</a>にゲームのデポが含まれていることを確認し、開発者アカウントでゲームをインストールしてください。インストール先 (<code>steamapps/common/yourgame</code>) の実行ファイルをローカルビルドで置き換え、 Steam ライブラリからゲームを起動できます。</li>
+  <li>Linux ゲームの実行環境について詳しくは、 Valve の <a href="https://gitlab.steamos.cloud/steamrt/steam-runtime-tools/-/blob/main/docs/slr-for-game-developers.md">Steam Linux Runtime guide for game developers</a> (英語) を参照してください。</li>
 </ul>
