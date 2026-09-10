@@ -213,7 +213,7 @@
   <li>Fixed an issue where a hidden or fully covered window could keep displaying an old frame after becoming visible again (<a href="https://github.com/hajimehoshi/ebiten/issues/3698">#3698</a>).</li>
   <li>Fixed incorrect cursor hit testing and cursor-image updates on monitors to the left of the primary display on Windows (<a href="https://github.com/hajimehoshi/ebiten/issues/3696">#3696</a>).</li>
   <li>Fixed potential buffer overruns when reading gamepad device names on Windows and macOS (<a href="https://github.com/hajimehoshi/ebiten/issues/3693">#3693</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3695">#3695</a>).</li>
-  <li>Fixed a crash during gamepad polling on Linux when receiving certain device notifications, such as a notification queue overflow (<a href="https://github.com/hajimehoshi/ebiten/issues/3694">#3694</a>).</li>
+  <li>Fixed a crash during gamepad polling on Linux that could be triggered by a device notification queue overflow or other device notification events (<a href="https://github.com/hajimehoshi/ebiten/issues/3694">#3694</a>).</li>
   <li>Fixed gamepad buttons remaining incorrectly pressed or released after an input event queue overflow on Linux (<a href="https://github.com/hajimehoshi/ebiten/issues/3697">#3697</a>).</li>
   <li>Fixed unsafe pointer handling that could cause memory corruption or incorrect behavior in OpenGL context operations on macOS and gamepad vibration on macOS and iOS (<a href="https://github.com/hajimehoshi/ebiten/issues/3701">#3701</a>).</li>
   <li>Fixed <code>cmd/ebitenmobile</code> builds failing with Go 1.25 because helper dependencies could resolve to versions requiring a newer Go toolchain (<a href="https://github.com/hajimehoshi/ebiten/issues/3688">#3688</a>).</li>
