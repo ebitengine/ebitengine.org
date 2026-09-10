@@ -1,5 +1,6 @@
 <h1>Ebitengine 2.10 リリースノート</h1>
 <h2>v2.10.0</h2>
+<p>リリース日: 2026-09-08</p>
 <p><a href="https://github.com/hajimehoshi/ebiten/milestone/143?closed=1">Issues for v2.10.0</a></p>
 <p>このリリースでは、<strong>デスクトップ環境での Pure Go 化、アプリケーションの仮想化 (VM)、シェーダーの事前コンパイル</strong>に対応しました。また、テキスト描画や IME 入力、ウィンドウ操作などを改善しました。</p>
 <p>Ebitengine 2.10 から <strong>Go 1.25 以上が必要</strong>になりました。</p>
@@ -202,4 +203,18 @@
   <li><code>(*ebiten.Image).RecyclableSubImage</code> と <code>Recycle</code> により、サブ画像のオブジェクトを再利用できるように変更。メモリ確保を削減できます。 <code>Recycle</code> は <code>RecyclableSubImage</code> で作成した画像にのみ使用できます (<a href="https://github.com/hajimehoshi/ebiten/issues/3418">#3418</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3423">#3423</a>)。</li>
   <li>ウィンドウ関連の処理でロックの使用を削減 (<a href="https://github.com/hajimehoshi/ebiten/issues/3403">#3403</a>)。</li>
   <li>その他マイナーなパフォーマンス改善</li>
+</ul>
+<h2>v2.10.1</h2>
+<p>リリース日: 2026-09-10</p>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/158?closed=1">Issues for v2.10.1</a></p>
+<h3>バグ修正</h3>
+<ul>
+  <li>デスクトップでウィンドウが非表示、最小化、または完全に覆われている間にメモリ使用量が増え続け、メモリ不足によるクラッシュや、ウィンドウを再表示したときの長時間のフリーズが発生することがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3686">#3686</a>)。</li>
+  <li>非表示、または完全に覆われていたウィンドウを再表示したときに、古いフレームが表示され続けることがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3698">#3698</a>)。</li>
+  <li>Windows でプライマリーディスプレイの左側に配置されたモニター上で、カーソルの位置判定やカーソル画像の更新が正しく動作しなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3696">#3696</a>)。</li>
+  <li>Windows と macOS でゲームパッドのデバイス名を読み取る際に、バッファーの範囲外に書き込む可能性があった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3693">#3693</a>、 <a href="https://github.com/hajimehoshi/ebiten/issues/3695">#3695</a>)。</li>
+  <li>Linux でゲームパッドのポーリング中に、通知キューのオーバーフローなど特定のデバイス通知を受け取るとクラッシュしていた問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3694">#3694</a>)。</li>
+  <li>Linux で入力イベントキューがオーバーフローした後に、ゲームパッドのボタンが誤って押されたまま、または離されたままになることがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3697">#3697</a>)。</li>
+  <li>macOS の OpenGL コンテキスト操作と macOS / iOS のゲームパッド振動で、不正なポインターの扱いによりメモリ破壊や誤動作が発生する可能性があった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3701">#3701</a>)。</li>
+  <li><code>cmd/ebitenmobile</code> の補助ツールの依存関係に新しい Go を要求するバージョンが選ばれ、 Go 1.25 でのビルドが失敗することがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3688">#3688</a>)。</li>
 </ul>

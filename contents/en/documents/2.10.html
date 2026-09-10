@@ -1,5 +1,6 @@
 <h1>Ebitengine 2.10 Release Notes</h1>
 <h2>v2.10.0</h2>
+<p>Release date: 2026-09-08</p>
 <p><a href="https://github.com/hajimehoshi/ebiten/milestone/143?closed=1">Issues for v2.10.0</a></p>
 <p>This release brings <strong>pure Go support to desktop platforms, application virtualization (VM), and shader precompilation</strong>. It also improves text rendering, IME input, and window operations.</p>
 <p>Starting from Ebitengine 2.10, <strong>Go 1.25 or later is required</strong>.</p>
@@ -202,4 +203,18 @@
   <li><code>(*ebiten.Image).RecyclableSubImage</code> and <code>Recycle</code> allow sub-image objects to be reused. This reduces memory allocations. <code>Recycle</code> can only be used on images created by <code>RecyclableSubImage</code> (<a href="https://github.com/hajimehoshi/ebiten/issues/3418">#3418</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3423">#3423</a>).</li>
   <li>Reduced lock usage in window operations (<a href="https://github.com/hajimehoshi/ebiten/issues/3403">#3403</a>).</li>
   <li>Other minor performance improvements.</li>
+</ul>
+<h2>v2.10.1</h2>
+<p>Release date: 2026-09-10</p>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/158?closed=1">Issues for v2.10.1</a></p>
+<h3>Bug Fixes</h3>
+<ul>
+  <li>Fixed unbounded memory growth while a desktop window was hidden, minimized, or fully covered, which could cause an out-of-memory crash or a long freeze when restoring the window (<a href="https://github.com/hajimehoshi/ebiten/issues/3686">#3686</a>).</li>
+  <li>Fixed an issue where a hidden or fully covered window could keep displaying an old frame after becoming visible again (<a href="https://github.com/hajimehoshi/ebiten/issues/3698">#3698</a>).</li>
+  <li>Fixed incorrect cursor hit testing and cursor-image updates on monitors to the left of the primary display on Windows (<a href="https://github.com/hajimehoshi/ebiten/issues/3696">#3696</a>).</li>
+  <li>Fixed potential buffer overruns when reading gamepad device names on Windows and macOS (<a href="https://github.com/hajimehoshi/ebiten/issues/3693">#3693</a>, <a href="https://github.com/hajimehoshi/ebiten/issues/3695">#3695</a>).</li>
+  <li>Fixed a crash during gamepad polling on Linux when receiving certain device notifications, such as a notification queue overflow (<a href="https://github.com/hajimehoshi/ebiten/issues/3694">#3694</a>).</li>
+  <li>Fixed gamepad buttons remaining incorrectly pressed or released after an input event queue overflow on Linux (<a href="https://github.com/hajimehoshi/ebiten/issues/3697">#3697</a>).</li>
+  <li>Fixed unsafe pointer handling that could cause memory corruption or incorrect behavior in OpenGL context operations on macOS and gamepad vibration on macOS and iOS (<a href="https://github.com/hajimehoshi/ebiten/issues/3701">#3701</a>).</li>
+  <li>Fixed <code>cmd/ebitenmobile</code> builds failing with Go 1.25 because helper dependencies could resolve to versions requiring a newer Go toolchain (<a href="https://github.com/hajimehoshi/ebiten/issues/3688">#3688</a>).</li>
 </ul>
