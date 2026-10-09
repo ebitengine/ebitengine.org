@@ -242,3 +242,12 @@
   <li>macOS で一部の USB ゲームパッドが認識されなかった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3736">#3736</a>)。</li>
   <li>macOS でウィンドウのサイズ変更が有効で、ウィンドウサイズがディスプレイの論理解像度を超えている場合に、クラッシュすることがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3740">#3740</a>)。</li>
 </ul>
+<h2>v2.10.5</h2>
+<p>リリース日: 2026-10-10</p>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/162?closed=1">Issues for v2.10.5</a></p>
+<h3>バグ修正</h3>
+<ul>
+  <li><code>vector.StrokeCircle</code> で特定の位置に円を描画すると、一部が欠けることがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3858">#3858</a>)。</li>
+  <li><code>text/v2</code> で横書きと縦書きのフェイスが同じフォントソースを共有している場合に、グリフの向きが正しくなくなることがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3875">#3875</a>)。</li>
+  <li><code>text/v2</code> でフェイスのサイズやフォントバリエーションを変更した後に <code>LazyGlyph.Image</code> を呼ぶと、その後のテキスト描画で誤ったグリフ画像が使われることがあった問題の修正 (<a href="https://github.com/hajimehoshi/ebiten/issues/3874">#3874</a>)。</li>
+</ul>

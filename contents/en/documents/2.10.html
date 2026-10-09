@@ -242,3 +242,12 @@
   <li>Fixed an issue where some USB gamepads were not recognized on macOS (<a href="https://github.com/hajimehoshi/ebiten/issues/3736">#3736</a>).</li>
   <li>Fixed a crash on macOS that could occur when window resizing was enabled and the window size exceeded the display's logical resolution (<a href="https://github.com/hajimehoshi/ebiten/issues/3740">#3740</a>).</li>
 </ul>
+<h2>v2.10.5</h2>
+<p>Release date: 2026-10-10</p>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/162?closed=1">Issues for v2.10.5</a></p>
+<h3>Bug Fixes</h3>
+<ul>
+  <li>Fixed an issue where <code>vector.StrokeCircle</code> could draw incomplete circles at certain positions (<a href="https://github.com/hajimehoshi/ebiten/issues/3858">#3858</a>).</li>
+  <li>Fixed incorrect glyph orientation in <code>text/v2</code> when horizontal and vertical faces shared the same font source (<a href="https://github.com/hajimehoshi/ebiten/issues/3875">#3875</a>).</li>
+  <li>Fixed an issue in <code>text/v2</code> where calling <code>LazyGlyph.Image</code> after changing a face's size or font variations could cause subsequent text to use incorrect glyph images (<a href="https://github.com/hajimehoshi/ebiten/issues/3874">#3874</a>).</li>
+</ul>
