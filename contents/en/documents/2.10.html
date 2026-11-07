@@ -251,3 +251,10 @@
   <li>Fixed incorrect glyph orientation in <code>text/v2</code> when horizontal and vertical faces shared the same font source (<a href="https://github.com/hajimehoshi/ebiten/issues/3875">#3875</a>).</li>
   <li>Fixed an issue in <code>text/v2</code> where calling <code>LazyGlyph.Image</code> after changing a face's size or font variations could cause subsequent text to use incorrect glyph images (<a href="https://github.com/hajimehoshi/ebiten/issues/3874">#3874</a>).</li>
 </ul>
+<h2>v2.10.6</h2>
+<p>Release date: 2026-11-07</p>
+<p><a href="https://github.com/hajimehoshi/ebiten/milestone/163?closed=1">Issues for v2.10.6</a></p>
+<h3>Bug Fixes</h3>
+<ul>
+  <li>Fixed uneven update timing that could cause visible stuttering when the frame rate was close to the TPS, an integer multiple of it, or the TPS divided by an integer, including at startup and after a long frame (<a href="https://github.com/hajimehoshi/ebiten/issues/4015">#4015</a>).</li>
+</ul>
